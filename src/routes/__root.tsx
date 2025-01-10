@@ -8,8 +8,7 @@ export const Route = createRootRoute({
 
 function RootComponent() {
   return (
-    <>
-      <div className="p-2 flex gap-2 text-lg">
+    <div className="flex flex-col w-full h-full">
         <Link
           params={{ userId: "sss" }}
           to="/lobby/$userId"
@@ -19,10 +18,10 @@ function RootComponent() {
         >
           Lobby
         </Link>
-      </div>
-      <hr />
+        <div className="flex-1">
       <Outlet />
+        </div>
       <TanStackRouterDevtools position="bottom-right" />
-    </>
+    </div>
   );
 }

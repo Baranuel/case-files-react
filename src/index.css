@@ -2,40 +2,8 @@
 @import "tailwindcss/components";
 @import "tailwindcss/utilities";
 
-
-::view-transition {
-    animation: none;
-    mix-blend-mode: normal;
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
 }
-
-::view-transition-old(preview) {
-    z-index: 1;
-}
-
-::view-transition-new(preview) {
-    z-index: 2;
-}
-
-
-
-.mdxeditor-root-contenteditable {
-    & > div:nth-child(1) {
-        overflow: hidden;
-        height: 100%;
-    }
-}
-
-.mdxeditor-popup-container {
-    display: none;
-}
-
-
-.no-scrollbar::-webkit-scrollbar {
-    display: none;
-}
-
-.no-scrollbar {
-    -ms-overflow-style: none;
-    scrollbar-width: none;
-}
-

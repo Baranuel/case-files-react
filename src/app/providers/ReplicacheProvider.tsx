@@ -1,41 +1,35 @@
-import {
-  ReactNode,
-  useEffect,
-  useState,
-} from "react";
+import { ReactNode, useEffect, useState } from "react";
 import { Replicache } from "replicache";
 import { createGenericContext } from "./genericContext";
-import { BASE_API_URL } from "../../constants";
+import { ReplicacheContext } from "@/lib/replicache/types";
+import { createReplicacheInstance } from "@/lib/replicache/create-instance";
 
-interface ReplicacheContextType {
-  rep: Replicache | null;
-}
+type ReplicacheContextType = {
+  rep: ReplicacheContext | null;
+};
 
 interface ReplicacheProviderProps {
   children: ReactNode;
   boardId: string;
 }
 
-const [useReplicache, ReplicacheContextProvider] = createGenericContext<ReplicacheContextType>();
+const [useReplicache, ReplicacheContextProvider] =
+  createGenericContext<ReplicacheContextType>();
 
-const ReplicacheProvider = ({
-  children,
-  boardId,
-}: ReplicacheProviderProps) => {
-  const [rep, setRep] = useState<Replicache | null>(null);
-  
+const ReplicacheProvider = ({ children, boardId }: ReplicacheProviderProps) => {
+  const [rep, setRep] = useState<ReplicacheContextType>({ rep: null });
+
   useEffect(() => {
-    const rep = new Replicache({
-      name: `case-files-${boardId}`,
-      licenseKey: import.meta.env.VITE_REPLICACHE_LICENSE_KEY,
-      pushURL: `${BASE_API_URL}/replicache/push/${boardId}`,
-      pullURL: `${BASE_API_URL}/replicache/pull/${boardId}`,
-    });
-    setRep(rep);
+    const rep = createReplicacheInstance(boardId);
+    setRep({ rep });
+
+    return () => {
+      rep.close();
+    };
   }, [boardId]);
 
   return (
-    <ReplicacheContextProvider value={{ rep }}>
+    <ReplicacheContextProvider value={rep}>
       {children}
     </ReplicacheContextProvider>
   );
