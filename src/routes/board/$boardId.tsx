@@ -1,9 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { CanvasProvider } from "@/app/providers/CanvasProvider";
-import { ReplicacheProvider } from "@/app/providers/ReplicacheProvider";
 
-import { TriggerReplicachePull } from "@/components/TriggerReplicachePull";
-import { Canvas } from "@/features/canvas-board/components/Canvas";
+import { Board } from "@/features/canvas-board/components/Board";
 
 export const Route = createFileRoute("/board/$boardId")({
   component: RouteComponent,
@@ -12,12 +9,5 @@ export const Route = createFileRoute("/board/$boardId")({
 function RouteComponent() {
   const { boardId } = Route.useParams();
 
-  return (
-    <ReplicacheProvider boardId={boardId}>
-      <TriggerReplicachePull boardId={boardId} />
-      <CanvasProvider>
-        <Canvas />
-      </CanvasProvider>
-    </ReplicacheProvider>
-  );
+  return <Board boardId={boardId} />
 }

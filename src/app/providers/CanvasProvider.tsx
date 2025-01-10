@@ -1,4 +1,4 @@
-import { ReactNode, useMemo, useRef } from "react";
+import { ReactNode, useMemo, useRef, useState } from "react";
 import { createGenericContext } from "./genericContext";
 import { Element } from "@/types";
 import { useVisibleElements } from "@/features/canvas-board/hooks/use-visible-elements";
@@ -10,6 +10,8 @@ interface CanvasContextType {
   elements: Element[];
   setElements: (elements: Element[]) => void;
   canvasRef: React.RefObject<HTMLCanvasElement>;
+  selectedItemId: Element['id'] | null;
+  setSelectedItemId: (id: Element['id'] | null) => void;
 }
 
 interface CanvasProviderProps {
@@ -22,7 +24,8 @@ const [useCanvas, CanvasContextProvider] =
 const CanvasProvider = ({ children }: CanvasProviderProps) => {
   const rep = useReplicache();
   const canvasRef = useRef<HTMLCanvasElement>(null);
-  
+  const [selectedItemId, setSelectedItemId] = useState<Element['id'] | null>(null);
+
   const elementsList = useSubscribe(rep, getAllElements, {
     default: [],
   });
@@ -36,8 +39,10 @@ const CanvasProvider = ({ children }: CanvasProviderProps) => {
       elements,
       setElements,
       canvasRef,
+      selectedItemId,
+      setSelectedItemId,
     };
-  }, [elements, setElements, canvasRef]);
+  }, [elements, setElements, canvasRef, selectedItemId, setSelectedItemId]);
 
   return (
     <CanvasContextProvider value={value}>{children}</CanvasContextProvider>

@@ -4,8 +4,9 @@ import { renderCanvas } from "../utils/render-canvas";
 import { useCamera } from "../hooks/use-camera";
 
 
+
 export const Canvas = () => {
-    const {elements, canvasRef} = useCanvas();
+    const {elements, canvasRef, setSelectedItemId, selectedItemId} = useCanvas();
 
     const {camera} = useCamera(canvasRef.current);
     
@@ -23,9 +24,25 @@ export const Canvas = () => {
         return () => cancelAnimationFrame(frame);
     }, [handleRenderCanvas]);
 
+    const handleCanvasClick = useCallback((event: MouseEvent) => {
+
+            if(selectedItemId) return setSelectedItemId(null);
+            setSelectedItemId(Math.random().toString());
+
+    }, [setSelectedItemId, selectedItemId]);
+
+    // canvas event listeners
+    useEffect(() => {
+        const canvas = canvasRef.current;
+        if(!canvas) return;
+
+        canvas.addEventListener('click', handleCanvasClick);
+        return () => canvas.removeEventListener('click', handleCanvasClick);
+    }, [handleCanvasClick]);
 
 
-    //event listeners
+
+    //window event listeners
     useEffect(() => {
         const canvas = canvasRef.current;
         if(!canvas) return;
@@ -35,7 +52,7 @@ export const Canvas = () => {
     }, [handleRenderCanvas]);
 
     return <canvas
-     className="bg-[#f5e6d3] w-full h-full" 
+     className="bg-[#2c2420] w-full h-full rounded-lg" 
      ref={canvasRef}
-     ></canvas>;
+     ></canvas>
 }
