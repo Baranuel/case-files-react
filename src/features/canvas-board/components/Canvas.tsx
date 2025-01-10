@@ -1,23 +1,41 @@
 import { useCanvas } from "@/app/providers/CanvasProvider";
-import { useEffect } from "react";
+import { useCallback,  useEffect,  useLayoutEffect } from "react";
+import { renderCanvas } from "../utils/render-canvas";
+import { useCamera } from "../hooks/use-camera";
 
-export const Canvas= () => {
+
+export const Canvas = () => {
     const {elements, canvasRef} = useCanvas();
 
+    const {camera} = useCamera(canvasRef.current);
+    
+    const handleRenderCanvas = useCallback(() => {
+        const canvas = canvasRef.current;
+        if(!canvas) return;
+
+        renderCanvas(canvas, camera, elements);
+    }, [canvasRef, elements, camera]);
+
+
+    //main render loop
+    useLayoutEffect(() => {
+        const frame = requestAnimationFrame(handleRenderCanvas);
+        return () => cancelAnimationFrame(frame);
+    }, [handleRenderCanvas]);
+
+
+
+    //event listeners
     useEffect(() => {
         const canvas = canvasRef.current;
         if(!canvas) return;
 
-        const dpr = window.devicePixelRatio;
-        const ctx = canvas.getContext("2d");
-        if(!ctx) return;
+        window.addEventListener('resize', handleRenderCanvas);
+        return () => window.removeEventListener('resize', handleRenderCanvas);
+    }, [handleRenderCanvas]);
 
-        ctx.scale(dpr, dpr);
-        ctx.clearRect(0, 0, canvas.width, canvas.height);
-
-       
-
-    }, [elements]);
-
-    return <canvas className="bg-[#f5e6d3] w-full h-full" ref={canvasRef}></canvas>;
+    return <canvas
+     className="bg-[#f5e6d3] w-full h-full" 
+     ref={canvasRef}
+     ></canvas>;
 }

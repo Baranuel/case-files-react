@@ -1,12 +1,9 @@
 import { ReactNode, useEffect, useState } from "react";
-import { Replicache } from "replicache";
 import { createGenericContext } from "./genericContext";
 import { ReplicacheContext } from "@/lib/replicache/types";
 import { createReplicacheInstance } from "@/lib/replicache/create-instance";
 
-type ReplicacheContextType = {
-  rep: ReplicacheContext | null;
-};
+type ReplicacheContextType =  ReplicacheContext
 
 interface ReplicacheProviderProps {
   children: ReactNode;
@@ -17,16 +14,20 @@ const [useReplicache, ReplicacheContextProvider] =
   createGenericContext<ReplicacheContextType>();
 
 const ReplicacheProvider = ({ children, boardId }: ReplicacheProviderProps) => {
-  const [rep, setRep] = useState<ReplicacheContextType>({ rep: null });
+  const [rep, setRep] = useState<ReplicacheContextType>();
 
   useEffect(() => {
     const rep = createReplicacheInstance(boardId);
-    setRep({ rep });
+    setRep(rep);
 
     return () => {
       rep.close();
     };
   }, [boardId]);
+
+  if (!rep) {
+    return 'loading'
+  }
 
   return (
     <ReplicacheContextProvider value={rep}>

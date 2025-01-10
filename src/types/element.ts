@@ -15,4 +15,5 @@ export type Element = {
     content: string;
     position: ElementPosition;
     imageUrl: string | null;
+    layer: number;
 }

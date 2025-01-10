@@ -5,7 +5,7 @@ import useWebSocket, { ReadyState } from "react-use-websocket";
 import { BASE_WS_URL } from "@/constants";
 
 export const TriggerReplicachePull= ({boardId}: {boardId: string}) => {
-    const {rep} = useReplicache()   
+    const rep = useReplicache()   
     const {lastMessage, readyState} = useWebSocket(`${BASE_WS_URL}/${boardId}`) 
 
     const pullNewData = async () => {
