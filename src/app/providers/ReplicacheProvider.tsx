@@ -5,7 +5,7 @@ import {
 } from "react";
 import { Replicache } from "replicache";
 import { createGenericContext } from "./genericContext";
-import { BASE_API_URL } from "../constants";
+import { BASE_API_URL } from "../../constants";
 
 interface ReplicacheContextType {
   rep: Replicache | null;

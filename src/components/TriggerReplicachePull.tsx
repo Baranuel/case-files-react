@@ -1,8 +1,8 @@
 
 import { useEffect } from "react";
-import { useReplicache } from "../providers/ReplicacheProvider";
+import { useReplicache } from "@/app/providers/ReplicacheProvider";
 import useWebSocket, { ReadyState } from "react-use-websocket";
-import { BASE_WS_URL } from "../constants";
+import { BASE_WS_URL } from "@/constants";
 
 export const TriggerReplicachePull= ({boardId}: {boardId: string}) => {
     const {rep} = useReplicache()   

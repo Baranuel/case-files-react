@@ -14,7 +14,7 @@ import { Route as rootRoute } from './routes/__root'
 import { Route as IndexImport } from './routes/index'
 import { Route as LobbyIndexImport } from './routes/lobby/index'
 import { Route as LobbyUserIdImport } from './routes/lobby/$userId'
-import { Route as AppBoardIdImport } from './routes/app/$boardId'
+import { Route as BoardBoardIdImport } from './routes/board/$boardId'
 
 // Create/Update Routes
 
@@ -36,9 +36,9 @@ const LobbyUserIdRoute = LobbyUserIdImport.update({
   getParentRoute: () => rootRoute,
 } as any)
 
-const AppBoardIdRoute = AppBoardIdImport.update({
-  id: '/app/$boardId',
-  path: '/app/$boardId',
+const BoardBoardIdRoute = BoardBoardIdImport.update({
+  id: '/board/$boardId',
+  path: '/board/$boardId',
   getParentRoute: () => rootRoute,
 } as any)
 
@@ -53,11 +53,11 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexImport
       parentRoute: typeof rootRoute
     }
-    '/app/$boardId': {
-      id: '/app/$boardId'
-      path: '/app/$boardId'
-      fullPath: '/app/$boardId'
-      preLoaderRoute: typeof AppBoardIdImport
+    '/board/$boardId': {
+      id: '/board/$boardId'
+      path: '/board/$boardId'
+      fullPath: '/board/$boardId'
+      preLoaderRoute: typeof BoardBoardIdImport
       parentRoute: typeof rootRoute
     }
     '/lobby/$userId': {
@@ -81,14 +81,14 @@ declare module '@tanstack/react-router' {
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
-  '/app/$boardId': typeof AppBoardIdRoute
+  '/board/$boardId': typeof BoardBoardIdRoute
   '/lobby/$userId': typeof LobbyUserIdRoute
   '/lobby': typeof LobbyIndexRoute
 }
 
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
-  '/app/$boardId': typeof AppBoardIdRoute
+  '/board/$boardId': typeof BoardBoardIdRoute
   '/lobby/$userId': typeof LobbyUserIdRoute
   '/lobby': typeof LobbyIndexRoute
 }
@@ -96,30 +96,30 @@ export interface FileRoutesByTo {
 export interface FileRoutesById {
   __root__: typeof rootRoute
   '/': typeof IndexRoute
-  '/app/$boardId': typeof AppBoardIdRoute
+  '/board/$boardId': typeof BoardBoardIdRoute
   '/lobby/$userId': typeof LobbyUserIdRoute
   '/lobby/': typeof LobbyIndexRoute
 }
 
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/app/$boardId' | '/lobby/$userId' | '/lobby'
+  fullPaths: '/' | '/board/$boardId' | '/lobby/$userId' | '/lobby'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/app/$boardId' | '/lobby/$userId' | '/lobby'
-  id: '__root__' | '/' | '/app/$boardId' | '/lobby/$userId' | '/lobby/'
+  to: '/' | '/board/$boardId' | '/lobby/$userId' | '/lobby'
+  id: '__root__' | '/' | '/board/$boardId' | '/lobby/$userId' | '/lobby/'
   fileRoutesById: FileRoutesById
 }
 
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
-  AppBoardIdRoute: typeof AppBoardIdRoute
+  BoardBoardIdRoute: typeof BoardBoardIdRoute
   LobbyUserIdRoute: typeof LobbyUserIdRoute
   LobbyIndexRoute: typeof LobbyIndexRoute
 }
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
-  AppBoardIdRoute: AppBoardIdRoute,
+  BoardBoardIdRoute: BoardBoardIdRoute,
   LobbyUserIdRoute: LobbyUserIdRoute,
   LobbyIndexRoute: LobbyIndexRoute,
 }
@@ -135,7 +135,7 @@ export const routeTree = rootRoute
       "filePath": "__root.tsx",
       "children": [
         "/",
-        "/app/$boardId",
+        "/board/$boardId",
         "/lobby/$userId",
         "/lobby/"
       ]
@@ -143,8 +143,8 @@ export const routeTree = rootRoute
     "/": {
       "filePath": "index.tsx"
     },
-    "/app/$boardId": {
-      "filePath": "app/$boardId.tsx"
+    "/board/$boardId": {
+      "filePath": "board/$boardId.tsx"
     },
     "/lobby/$userId": {
       "filePath": "lobby/$userId.tsx"

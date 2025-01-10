@@ -53,7 +53,7 @@ function RouteComponent() {
           {projects.map((project) => (
             <Link
               key={project.id}
-              to="/app/$boardId"
+              to="/board/$boardId"
               params={{boardId: project.id}}
             >
             <div 

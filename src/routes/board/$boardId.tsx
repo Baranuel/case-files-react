@@ -1,10 +1,10 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { ReplicacheProvider } from "../../providers/ReplicacheProvider";
-import useWebSocket from "react-use-websocket";
-import { CanvasProvider } from "../../providers/CanvasProvider";
-import { TriggerReplicachePull } from "../../components/TriggerReplicachePull";
+import { CanvasProvider } from "@/app/providers/CanvasProvider";
+import { ReplicacheProvider } from "@/app/providers/ReplicacheProvider";
 
-export const Route = createFileRoute("/app/$boardId")({
+import { TriggerReplicachePull } from "@/components/TriggerReplicachePull";
+
+export const Route = createFileRoute("/board/$boardId")({
   component: RouteComponent,
 });
 
