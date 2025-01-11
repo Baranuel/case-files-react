@@ -6,6 +6,7 @@ import { Canvas } from "./Canvas";
 import { Toolbar } from "./Toolbar";
 
 export const Board = ({boardId}: {boardId: string}) => {
+
   return (
     <ReplicacheProvider boardId={boardId}>
       <TriggerReplicachePull boardId={boardId} />

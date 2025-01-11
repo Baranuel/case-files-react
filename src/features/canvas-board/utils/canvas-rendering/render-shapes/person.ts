@@ -1,5 +1,6 @@
 import { Element } from "@/types/element";
 import { config } from "../../../config";
+import { getImageCache, loadAndCacheImage } from "@/utils/image-cache";
 
 
 export const handleRenderPerson = (ctx: CanvasRenderingContext2D, element: Element) => {
@@ -12,6 +13,12 @@ export const handleRenderPerson = (ctx: CanvasRenderingContext2D, element: Eleme
 
     ctx.fillStyle = color ?? 'red';
     ctx.fillRect(x1, y1, width, height);
+
+    if(element.imageUrl){
+        const image = getImageCache(element.imageUrl)
+        if(!image) return
+        ctx.drawImage(image, x1, y1, width, height)
+    }
 }
 
 export const handleRenderPersonGhost = (ctx: CanvasRenderingContext2D, element: Element) => {

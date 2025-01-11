@@ -16,7 +16,7 @@ export const getAllElements = async (tx: ReadTransaction) => {
             y2: 100
         },
         content: "This is a person",
-        imageUrl: null,
+        imageUrl: 'https://fastly.picsum.photos/id/457/200/300.jpg?hmac=RK07I110orPDAIl8q1vdjOgPnPvEX278Jy74cgjosyo' ,
         layer: 1,
         title: "John Doe"
     },{
@@ -29,7 +29,7 @@ export const getAllElements = async (tx: ReadTransaction) => {
             y2: 200
         },
         content: "This is a person",
-        imageUrl: null,
+        imageUrl:'/vite.svg',
         layer: 1,
         title: "John Doe"
     }] as Element[]

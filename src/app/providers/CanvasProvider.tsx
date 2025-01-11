@@ -1,4 +1,4 @@
-import { ReactNode, useEffect, useMemo, useRef, useState } from "react";
+import { ReactNode, useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { createGenericContext } from "./genericContext";
 import { ActionType, Element, Tool } from "@/types";
 import { useSubscribe } from "replicache-react";
@@ -6,6 +6,7 @@ import { getAllElements } from "@/lib/replicache/queries";
 import { useReplicache } from "./ReplicacheProvider";
 import { useVisibleElements } from "@/features/canvas-board/hooks/use-visible-elements";
 import { Camera } from "@/features/canvas-board/types";
+import { useImageCache } from "@/features/canvas-board/hooks/use-image-cache";
 
 interface CanvasContextType {
   elementsList: Element[];
@@ -38,28 +39,21 @@ const CanvasProvider = ({ children }: CanvasProviderProps) => {
   const [action, setAction] = useState<ActionType | null>(null);
   const [tool, setTool] = useState<Tool>('select');
   const {visibleElements, setVisibleElements} = useVisibleElements(elementsList);
-
-  console.log(visibleElements.length);
-
-
-  const value = useMemo(() => {
-    return {
-      elementsList,
-      camera,
-      canvasRef,
-      selectedItemId,
-      setSelectedItemId,
-      visibleElements,
-      setVisibleElements,
-      setCamera,
-      action,
-      setAction,
-      tool,
-      setTool
-    };
-  }, [elementsList, camera, canvasRef, selectedItemId, setSelectedItemId, visibleElements, setVisibleElements, action, setAction, tool, setTool]);
-
-
+  
+  const value = useMemo(() => ({
+    elementsList,
+    camera,
+    canvasRef,
+    selectedItemId,
+    setSelectedItemId,
+    visibleElements,
+    setVisibleElements,
+    setCamera,
+    action,
+    setAction,
+    tool,
+    setTool
+  }), [elementsList, camera, selectedItemId, visibleElements, action, tool]);
 
   return (
     <CanvasContextProvider value={value}>{children}</CanvasContextProvider>
