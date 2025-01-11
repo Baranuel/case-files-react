@@ -1,58 +1,49 @@
 import { useCanvas } from "@/app/providers/CanvasProvider";
-import { useCallback,  useEffect,  useLayoutEffect } from "react";
-import { renderCanvas } from "../utils/render-canvas";
-import { useCamera } from "../hooks/use-camera";
-
+import { useCallback,  useEffect,  useLayoutEffect, useState } from "react";
+import { useCanvasEvents } from "../hooks/use-canvas-events";
+import { useUpdateCamera } from "../hooks/use-update-camera";
+import { renderCanvas } from "../utils/canvas-rendering/handle-render-canvas";
 
 
 export const Canvas = () => {
-    const {elements, canvasRef, setSelectedItemId, selectedItemId} = useCanvas();
+    const {visibleElements, canvasRef, camera} = useCanvas();
+    const {handleMouseDown, handleMouseUp, handleMouseMove, handleMouseLeave} = useCanvasEvents();
+    const {handleWheel} = useUpdateCamera();
 
-    const {camera} = useCamera(canvasRef.current);
-    
+
     const handleRenderCanvas = useCallback(() => {
         const canvas = canvasRef.current;
         if(!canvas) return;
 
-        renderCanvas(canvas, camera, elements);
-    }, [canvasRef, elements, camera]);
+        renderCanvas(canvas, camera, visibleElements);
+    }, [canvasRef, renderCanvas, visibleElements, camera]);
 
 
-    //main render loop
     useLayoutEffect(() => {
         const frame = requestAnimationFrame(handleRenderCanvas);
         return () => cancelAnimationFrame(frame);
     }, [handleRenderCanvas]);
+    
 
-    const handleCanvasClick = useCallback((event: MouseEvent) => {
-
-            if(selectedItemId) return setSelectedItemId(null);
-            setSelectedItemId(Math.random().toString());
-
-    }, [setSelectedItemId, selectedItemId]);
-
-    // canvas event listeners
     useEffect(() => {
         const canvas = canvasRef.current;
-        if(!canvas) return;
-
-        canvas.addEventListener('click', handleCanvasClick);
-        return () => canvas.removeEventListener('click', handleCanvasClick);
-    }, [handleCanvasClick]);
-
-
-
-    //window event listeners
-    useEffect(() => {
-        const canvas = canvasRef.current;
-        if(!canvas) return;
-
+        if (!canvas) return;
+        canvas.addEventListener('wheel', handleWheel);
         window.addEventListener('resize', handleRenderCanvas);
-        return () => window.removeEventListener('resize', handleRenderCanvas);
-    }, [handleRenderCanvas]);
+        return () => {
+            canvas.removeEventListener('wheel', handleWheel);
+            window.removeEventListener('resize', handleRenderCanvas);
+        };
+    }, [canvasRef, handleWheel, handleRenderCanvas, handleMouseDown, handleMouseUp, handleMouseMove]);
+
+    
 
     return <canvas
-     className="bg-[#2c2420] w-full h-full rounded-lg" 
+     className="bg-neutral-900 w-full h-full rounded-lg shadow-lg"   
+     onMouseDown={handleMouseDown}
+     onMouseUp={handleMouseUp}
+     onMouseMove={handleMouseMove}
+     onMouseLeave={handleMouseLeave}
      ref={canvasRef}
      ></canvas>
 }

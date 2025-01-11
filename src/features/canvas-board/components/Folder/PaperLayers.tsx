@@ -30,8 +30,8 @@ export const PaperLayers = ({
           viewTransitionName: "selected-item-paper-layers",
         }}
         className={cn(
-          `bg-[#ECD5B8] absolute w-full h-[97%] top-[1.5%] -z-10 shadow-lg border border-[#D4B492]`,
-          !isOpen ? `-translate-x-[32%]` : "translate-x-0"
+          `bg-[#E4C18D] absolute w-full h-[98%] top-[1%] rounded-lg -z-10 shadow-lg border border-[#D4B492] `,
+          !isOpen ? `-translate-x-[30%]` : "translate-x-2"
         )}
       />
     </>

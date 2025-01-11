@@ -4,11 +4,12 @@ import { PaperLayers } from "./Folder/PaperLayers";
 
 
 export function SelectedItem() {
-  const { selectedItemId } = useCanvas();
+  const { selectedItemId, visibleElements } = useCanvas();
+  const element = visibleElements.find(el => el.id === selectedItemId);
   
   const mainContent = (
     <>
-      <h1 className="text-2xl font-bold text-[#8B4513] mb-6">Selected Item</h1>
+      <h1 className="text-2xl font-bold text-[#8B4513] mb-6">Selected Item{element?.id}</h1>
       
       <div className="space-y-4">
         <div className="bg-[#ECD5B8] p-4 rounded-lg border border-[#D4B492]">
@@ -58,7 +59,7 @@ export function SelectedItem() {
   );
 
   return (
-    <div className="flex w-full h-full relative">
+    <div style={{viewTransitionName: 'selected-item-wrapper'}} className={ `flex w-full h-full relative ${!selectedItemId ? '-rotate-[12deg]' : 'rotate-0'}` }>
       <Folder isOpen={!!selectedItemId} />
       <PaperLayers
         isOpen={!!selectedItemId}

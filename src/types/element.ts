@@ -17,3 +17,11 @@ export type Element = {
     imageUrl: string | null;
     layer: number;
 }
+
+export type PositionWithinElement = 'start' | 'end' | 'line_middle' | 'tl' | 'tr' | 'tm' | 'bl' | 'br' | 'bm' | 'ml' | 'mr' | 'inside' | null ;
+
+export type EnrichedElement = Element & {
+    positionWithinElement: PositionWithinElement;
+    offsetX: number;
+    offsetY: number;
+}

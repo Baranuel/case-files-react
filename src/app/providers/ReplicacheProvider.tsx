@@ -1,4 +1,4 @@
-import { ReactNode, useEffect, useState } from "react";
+import { ReactNode, useEffect, useState, useMemo } from "react";
 import { createGenericContext } from "./genericContext";
 import { ReplicacheContext } from "@/lib/replicache/types";
 import { createReplicacheInstance } from "@/lib/replicache/create-instance";
@@ -25,12 +25,14 @@ const ReplicacheProvider = ({ children, boardId }: ReplicacheProviderProps) => {
     };
   }, [boardId]);
 
-  if (!rep) {
+  const memoizedValue = useMemo(() => rep, [rep]);
+
+  if (!memoizedValue) {
     return 'loading'
   }
 
   return (
-    <ReplicacheContextProvider value={rep}>
+    <ReplicacheContextProvider value={memoizedValue}>
       {children}
     </ReplicacheContextProvider>
   );

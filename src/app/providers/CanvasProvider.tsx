@@ -1,17 +1,25 @@
-import { ReactNode, useMemo, useRef, useState } from "react";
+import { ReactNode, useEffect, useMemo, useRef, useState } from "react";
 import { createGenericContext } from "./genericContext";
-import { Element } from "@/types";
-import { useVisibleElements } from "@/features/canvas-board/hooks/use-visible-elements";
+import { ActionType, Element, Tool } from "@/types";
 import { useSubscribe } from "replicache-react";
 import { getAllElements } from "@/lib/replicache/queries";
 import { useReplicache } from "./ReplicacheProvider";
+import { useVisibleElements } from "@/features/canvas-board/hooks/use-visible-elements";
+import { Camera } from "@/features/canvas-board/types";
 
 interface CanvasContextType {
-  elements: Element[];
-  setElements: (elements: Element[]) => void;
+  elementsList: Element[];
   canvasRef: React.RefObject<HTMLCanvasElement>;
+  visibleElements: Element[];
+  tool: Tool;
   selectedItemId: Element['id'] | null;
-  setSelectedItemId: (id: Element['id'] | null) => void;
+  camera: Camera;
+  action: ActionType | null;
+  setVisibleElements: React.Dispatch<React.SetStateAction<Element[]>>;
+  setSelectedItemId: React.Dispatch<React.SetStateAction<Element['id'] | null>>;
+  setCamera: React.Dispatch<React.SetStateAction<Camera>>;
+  setAction: React.Dispatch<React.SetStateAction<ActionType | null>>;
+  setTool: React.Dispatch<React.SetStateAction<Tool>>;
 }
 
 interface CanvasProviderProps {
@@ -22,27 +30,36 @@ const [useCanvas, CanvasContextProvider] =
   createGenericContext<CanvasContextType>();
 
 const CanvasProvider = ({ children }: CanvasProviderProps) => {
-  const rep = useReplicache();
   const canvasRef = useRef<HTMLCanvasElement>(null);
+  const rep = useReplicache();
+  const elementsList = useSubscribe(rep, getAllElements, {default: []});
+  const [camera, setCamera] = useState<Camera>({x1: 0, y1: 0, zoom: 1});
   const [selectedItemId, setSelectedItemId] = useState<Element['id'] | null>(null);
+  const [action, setAction] = useState<ActionType | null>(null);
+  const [tool, setTool] = useState<Tool>('select');
+  const {visibleElements, setVisibleElements} = useVisibleElements(elementsList);
 
-  const elementsList = useSubscribe(rep, getAllElements, {
-    default: [],
-  });
-
-  const { boardElements: elements, setBoardElements: setElements } =
-    useVisibleElements(elementsList);
+  console.log(visibleElements.length);
 
 
   const value = useMemo(() => {
     return {
-      elements,
-      setElements,
+      elementsList,
+      camera,
       canvasRef,
       selectedItemId,
       setSelectedItemId,
+      visibleElements,
+      setVisibleElements,
+      setCamera,
+      action,
+      setAction,
+      tool,
+      setTool
     };
-  }, [elements, setElements, canvasRef, selectedItemId, setSelectedItemId]);
+  }, [elementsList, camera, canvasRef, selectedItemId, setSelectedItemId, visibleElements, setVisibleElements, action, setAction, tool, setTool]);
+
+
 
   return (
     <CanvasContextProvider value={value}>{children}</CanvasContextProvider>

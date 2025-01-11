@@ -31,7 +31,8 @@ export const zoomAtPoint = (x1: number, y1: number , camera: Camera, zoomFactor:
 export const panCamera = (deltaX: number, deltaY: number, camera: Camera): Camera => {
     return {
         ...camera,
-        ...toCanvasPosition(deltaX, deltaY, camera)
+        x1: camera.x1 + deltaX / camera.zoom,
+        y1: camera.y1 + deltaY / camera.zoom
     }
 }
 
