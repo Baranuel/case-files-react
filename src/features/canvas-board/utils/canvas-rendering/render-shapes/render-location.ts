@@ -37,11 +37,8 @@ export const handleRenderLocation = (ctx: CanvasRenderingContext2D, element: Ele
     const height = Math.max(y2 - y1, minHeight);
 
     ctx.save()  
-    ctx.strokeStyle = textColor;
     ctx.fillStyle = color;
-    ctx.lineWidth = 1
     ctx.fillRect(x1, y1, width, height);
-    ctx.strokeRect(x1, y1, width, height);
 
     // image
     const { imageHeight, imageWidth} = drawImage(ctx, element.imageUrl, x1, y1, height, width, padding, color)
@@ -78,7 +75,7 @@ export const handleRenderLocationGhost = (ctx: CanvasRenderingContext2D, element
     const width = Math.max(x2 - x1, minWidth);
     const height = Math.max(y2 - y1, minHeight);
     ctx.globalAlpha = 0.2
-    ctx.strokeStyle = textColor;
+    ctx.strokeStyle = color;
     ctx.lineWidth = 2;
     ctx.save()
     ctx.strokeRect(x1, y1, width, height);

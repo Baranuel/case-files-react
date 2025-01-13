@@ -6,9 +6,9 @@ import { BASE_URL } from "@/constants";
 export const location: LocationDefinition = {
     minWidth: 175,
     minHeight: 200,
-    color: '#1a1614',
-    polaroidBgColor: '#1a1614',
-    textColor: '#fcd34d',
+    color: '#fcd34d',
+    polaroidBgColor: 'transparent',
+    textColor: '#2C2420',
     padding: 15,
     gap: 20
 }
