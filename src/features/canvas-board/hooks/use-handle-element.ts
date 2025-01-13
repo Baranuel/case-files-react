@@ -5,7 +5,7 @@ import { getDefaultShape } from "../utils/default-shape-definition";
 
 export const useHandleElement = () => {
 
-    const {visibleElements, setVisibleElements, selectedItemId, clientElementsRef, setClientElementsRef} = useCanvas();
+    const {visibleElements, setVisibleElements, selectedItemId, clientElementsRef, setClientElementsRef, ghostElementsRef, setGhostElementsRef} = useCanvas();
 
     const clientElements = clientElementsRef.current;
 
@@ -41,15 +41,8 @@ export const useHandleElement = () => {
 
     const handleGhostElement = useCallback((x1: number, y1: number, tool: Tool) => {
         const ghostElement = getDefaultShape(tool, x1, y1, 'ghost');
-        if(tool === 'select') return setVisibleElements(p => p.filter(el => !el.id.includes('ghost-element')));
-        if(ghostElement)  {
-            const newElements = [...visibleElements];
-            const ghostElementIndex = newElements.findIndex(el => el.id === ghostElement.id);
-            if(ghostElementIndex === -1) newElements.push(ghostElement);
-            else newElements.splice(ghostElementIndex, 1, ghostElement);
-            setVisibleElements(newElements);
-        }
-    }, [visibleElements, setVisibleElements]);
+        if(ghostElement) setGhostElementsRef(ghostElement);
+    }, [setGhostElementsRef]);
 
 
 
@@ -58,12 +51,9 @@ export const useHandleElement = () => {
         if(!defaultShape) return 
 
         const newElements = [...clientElements ?? []]
-        const findElementIndex = newElements.findIndex(el => el.id === defaultShape.id);
-        if(findElementIndex === -1) newElements.push(defaultShape);
-        else newElements.splice(findElementIndex, 1, defaultShape);
+        newElements.push(defaultShape);
         setClientElementsRef(newElements);
-
-    }, [visibleElements, setVisibleElements]);
+    }, [clientElements, setClientElementsRef]);
 
 
     return {

@@ -16,12 +16,14 @@ interface CanvasContextType {
   clientElementsRef: React.RefObject<Element[]>;
   action: ActionType | null;
   visibleElements: Element[];
+  ghostElementsRef: React.RefObject<Element | null>;
   setVisibleElements: React.Dispatch<React.SetStateAction<Element[]>>;
   setSelectedItemId: React.Dispatch<React.SetStateAction<Element['id'] | null>>;
   setCamera: (camera: Camera | ((prev: Camera) => Camera)) => void;
   setClientElementsRef: (elements: Element[] | ((prev: Element[]) => Element[])) => void;
   setAction: React.Dispatch<React.SetStateAction<ActionType | null>>;
   setTool: React.Dispatch<React.SetStateAction<Tool>>;
+  setGhostElementsRef: (element: Element | null) => void;
 }
 
 interface CanvasProviderProps {
@@ -40,7 +42,7 @@ const CanvasProvider = ({ children }: CanvasProviderProps) => {
   const [tool, setTool] = useState<Tool>('select');
   const {visibleElements, setVisibleElements} = useVisibleElements(elementsList);
 
-
+  console.log('render')
 
   // setup ref so we don't rerender the entire react tree when the camera changes
   const cameraRef = useRef<Camera>({x1: 0, y1: 0, zoom: 1});
@@ -63,6 +65,11 @@ const CanvasProvider = ({ children }: CanvasProviderProps) => {
     }
   }
 
+  const ghostElementsRef = useRef<Element | null>(null);
+  const setGhostElementsRef = (element: Element | null) => {
+    ghostElementsRef.current = element;
+  }
+
 
   
 useEffect(() => {
@@ -83,7 +90,9 @@ useEffect(() => {
     setCamera: setCameraRef,
     setClientElementsRef,
     visibleElements,
-    setVisibleElements
+    setVisibleElements,
+    ghostElementsRef,
+    setGhostElementsRef
   }), [elementsList, cameraRef, selectedItemId, action, tool, visibleElements]);
 
   return (

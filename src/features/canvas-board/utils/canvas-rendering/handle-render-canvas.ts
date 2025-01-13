@@ -21,7 +21,7 @@ export const drawBackground = (ctx: CanvasRenderingContext2D, canvas: HTMLCanvas
     }
 }
 
-export const renderCanvas = (canvas: HTMLCanvasElement, camera: Camera, elements: Element[]) => {
+export const renderCanvas = (canvas: HTMLCanvasElement, camera: Camera, elements: Element[], ghostElement: Element | null) => {
     const width = canvas.getBoundingClientRect().width;
     const height = canvas.getBoundingClientRect().height;
     
@@ -45,6 +45,6 @@ export const renderCanvas = (canvas: HTMLCanvasElement, camera: Camera, elements
 
     drawBackground(ctx, canvas, camera);
     elements.forEach(element => handleRenderElement(ctx, element));
-    
+    if(ghostElement) handleRenderElement(ctx, ghostElement);
     ctx.restore()
 }

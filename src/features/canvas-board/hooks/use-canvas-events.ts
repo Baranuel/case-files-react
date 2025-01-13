@@ -9,7 +9,7 @@ import { EnrichedElement } from "@/types";
 
 export const useCanvasEvents = () => {
     
-    const {setSelectedItemId,tool, action, setAction, canvasRef, setVisibleElements, setTool, cameraRef, clientElementsRef, visibleElements} = useCanvas();
+    const {setSelectedItemId,tool, action, setAction, canvasRef, setTool, cameraRef,setGhostElementsRef, visibleElements} = useCanvas();
     const {handleMoveElement, handleGhostElement, handleCreateElement} = useHandleElement();
     
     const lastPositionRef = useRef<{x1: number, y1: number}>({x1: 0, y1: 0});
@@ -54,8 +54,8 @@ export const useCanvasEvents = () => {
 
         setAction(null);
         setTool('select');
-        setVisibleElements(prev => prev.filter(el => !el.id.includes('ghost-element')));
-    }, [camera, setAction, handleSelectElementId, setTool, setVisibleElements]);
+        setGhostElementsRef(null);
+    }, [camera, setAction, handleSelectElementId, setTool, setGhostElementsRef]);
 
     const handleMouseMove = useCallback((e: React.MouseEvent<HTMLCanvasElement>) => {
         if (!canvas || !camera) return;
@@ -68,8 +68,8 @@ export const useCanvasEvents = () => {
     }, [camera, action, handleMoveElement, canvasRef, handleGhostElement, tool]);
 
     const handleMouseLeave = useCallback(() => {
-        setVisibleElements(prev => prev.filter(el => !el.id.includes('ghost-element')));
-    }, [setVisibleElements]);
+        setGhostElementsRef(null);
+    }, [setGhostElementsRef]);
 
     return useMemo(() => ({
         handleMouseDown,
