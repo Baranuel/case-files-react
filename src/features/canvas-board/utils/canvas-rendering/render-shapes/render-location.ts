@@ -17,10 +17,6 @@ const drawImage = (ctx: CanvasRenderingContext2D, imageUrl: string | null, x1: n
         imageWidth
     }
 
-    ctx.save()
-    ctx.fillStyle = bgColor
-    ctx.fillRect(imageX, imageY, imageWidth, imageHeight)
-    ctx.restore()
 
     if(!imageUrl) return dimensions
 
@@ -42,8 +38,9 @@ export const handleRenderLocation = (ctx: CanvasRenderingContext2D, element: Ele
 
     ctx.save()  
     ctx.strokeStyle = textColor;
-    ctx.fillStyle = polaroidBgColor;
+    ctx.fillStyle = color;
     ctx.lineWidth = 1
+    ctx.fillRect(x1, y1, width, height);
     ctx.strokeRect(x1, y1, width, height);
 
     // image
