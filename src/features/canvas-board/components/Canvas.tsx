@@ -12,17 +12,19 @@ import { renderCanvas } from "../utils/canvas-rendering/handle-render-canvas";
 import { useImageCache } from "../hooks/use-image-cache";
 
 export const Canvas = () => {
-  const { visibleElements, elementsList,  canvasRef, camera, } = useCanvas();
+  const { visibleElements,  canvasRef,cameraRef } = useCanvas();
   const { cacheLoaded } = useImageCache(visibleElements);
   const { handleMouseDown, handleMouseUp, handleMouseMove, handleMouseLeave } = useCanvasEvents();
   const { handleWheel } = useUpdateCamera();
 
   const handleRenderCanvas = useCallback(() => {
     const canvas = canvasRef.current;
-    if (!canvas) return;
+    const camera = cameraRef.current;
+    if (!canvas || !camera) return;
 
     renderCanvas(canvas, camera, visibleElements);
-  }, [canvasRef, camera, visibleElements, cacheLoaded]);
+    requestAnimationFrame(handleRenderCanvas);
+  }, [canvasRef, cameraRef, visibleElements, cacheLoaded]);
 
   useLayoutEffect(() => {
     const frame = requestAnimationFrame(handleRenderCanvas);
