@@ -9,12 +9,13 @@ import { EnrichedElement } from "@/types";
 
 export const useCanvasEvents = () => {
     
-    const {setSelectedItemId,tool, visibleElements, camera, action, setAction, canvasRef, setVisibleElements, setTool} = useCanvas();
+    const {setSelectedItemId,tool, visibleElements, action, setAction, canvasRef, setVisibleElements, setTool, cameraRef} = useCanvas();
     const {handleMoveElement, handleGhostElement, handleCreateElement} = useHandleElement();
     
     const lastPositionRef = useRef<{x1: number, y1: number}>({x1: 0, y1: 0});
     const foundElementRef = useRef<EnrichedElement | null>(null);
-    
+    const camera = cameraRef.current;
+    const canvas = canvasRef.current;
 
     const handleSelectElementId = useCallback((element: EnrichedElement | null) => {
         if(element?.id.includes('ghost-element')) return;
@@ -24,6 +25,7 @@ export const useCanvasEvents = () => {
     }, [setSelectedItemId]);
 
     const handleMouseDown = useCallback((e: React.MouseEvent<HTMLCanvasElement>) => {
+        if(!camera) return;
         const {x1, y1} = getMouseCoordinates(e, camera);
         lastPositionRef.current = {x1, y1};
 
@@ -41,6 +43,7 @@ export const useCanvasEvents = () => {
     }, [camera, visibleElements, tool, setAction, handleCreateElement]);
 
     const handleMouseUp = useCallback((e: React.MouseEvent<HTMLCanvasElement>) => {
+        if(!camera) return;
         const {x1, y1} = getMouseCoordinates(e, camera);
         const lastPos = lastPositionRef.current;
         const isSamePosition = Math.abs(x1 - lastPos.x1) < 5 && Math.abs(y1 - lastPos.y1) < 5;
@@ -56,8 +59,7 @@ export const useCanvasEvents = () => {
     }, [camera, setAction, handleSelectElementId, setTool, setVisibleElements]);
 
     const handleMouseMove = useCallback((e: React.MouseEvent<HTMLCanvasElement>) => {
-        const canvas = canvasRef.current;
-        if (!canvas) return;
+        if (!canvas || !camera) return;
         const {x1, y1} = getMouseCoordinates(e, camera);
         if(tool !== 'select') requestAnimationFrame(() => handleGhostElement(x1, y1, tool));
 

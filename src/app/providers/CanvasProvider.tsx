@@ -33,12 +33,14 @@ const CanvasProvider = ({ children }: CanvasProviderProps) => {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const rep = useReplicache();
   const elementsList = useSubscribe(rep, getAllElements, {default: []});
-  const [camera, setCamera] = useState<Camera>({x1: 0, y1: 0, zoom: 1});
   const [selectedItemId, setSelectedItemId] = useState<Element['id'] | null>(null);
   const [action, setAction] = useState<ActionType | null>(null);
   const [tool, setTool] = useState<Tool>('select');
   const {visibleElements, setVisibleElements} = useVisibleElements(elementsList);
 
+
+
+  // setup ref so we don't rerender the entire react tree when the camera changes
   const cameraRef = useRef<Camera>({x1: 0, y1: 0, zoom: 1});
 
   const setCameraRef = (camera: Camera | ((prev: Camera) => Camera)) => {
@@ -49,8 +51,8 @@ const CanvasProvider = ({ children }: CanvasProviderProps) => {
     }
   }
 
-  const clientElements = useRef<Element[]>([]);
 
+  const clientElements = useRef<Element[]>([]);
   const setClientElements = (elements: Element[] | ((prev: Element[]) => Element[])) => {
     if (typeof elements === 'function') {
       clientElements.current = elements(clientElements.current);
@@ -76,7 +78,7 @@ const CanvasProvider = ({ children }: CanvasProviderProps) => {
     setCamera: setCameraRef,
     clientElements,
     setClientElements
-  }), [elementsList, camera, selectedItemId, visibleElements, action, tool]);
+  }), [elementsList, cameraRef, selectedItemId, visibleElements, action, tool]);
 
   return (
     <CanvasContextProvider value={value}>{children}</CanvasContextProvider>
