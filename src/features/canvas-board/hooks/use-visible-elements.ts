@@ -5,12 +5,15 @@ import { Element } from "@/types/element";
 export const useVisibleElements = (elementsList: Element[]) => {
   
   const [visibleElements, setVisibleElements] = useState<Element[]>(elementsList);
+
+  const isDifferent = visibleElements.length !== elementsList.length
   
-  useEffect(() => {
-    setVisibleElements(elementsList);
+  useEffect(() => { 
+    if(!isDifferent) return
+    setVisibleElements(elementsList)
   }, [elementsList]);
 
 
 
-  return { visibleElements, setVisibleElements };
+  return { visibleElements:visibleElements, setVisibleElements };
 };

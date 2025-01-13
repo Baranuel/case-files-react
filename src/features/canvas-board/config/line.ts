@@ -9,6 +9,5 @@ type LineDefinition = ShapeDefinition & {
 export const line: LineDefinition = {
     minWidth: 150,
     minHeight: 250,
-    color: 'red',
-    length: 100
+    length:100
 }

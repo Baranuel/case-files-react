@@ -28,7 +28,7 @@ const ReplicacheProvider = ({ children, boardId }: ReplicacheProviderProps) => {
   const memoizedValue = useMemo(() => rep, [rep]);
 
   if (!memoizedValue) {
-    return 'loading'
+    return <div>Loading...</div>
   }
 
   return (

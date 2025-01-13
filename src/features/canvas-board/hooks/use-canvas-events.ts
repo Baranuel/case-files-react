@@ -1,5 +1,5 @@
 import { useCanvas } from "@/app/providers/CanvasProvider";
-import { useCallback, useEffect, useRef, useState, useMemo } from "react";
+import { useCallback, useRef, useMemo } from "react";
 
 import { getElementAtPosition, getMouseCoordinates } from "../utils/positions";
 import { handleInferAction } from "../utils/handle-infer-action";
@@ -12,9 +12,9 @@ export const useCanvasEvents = () => {
     const {setSelectedItemId,tool, visibleElements, camera, action, setAction, canvasRef, setVisibleElements, setTool} = useCanvas();
     const {handleMoveElement, handleGhostElement, handleCreateElement} = useHandleElement();
     
-    // Use useRef instead of useState for values that don't need to trigger re-renders
     const lastPositionRef = useRef<{x1: number, y1: number}>({x1: 0, y1: 0});
     const foundElementRef = useRef<EnrichedElement | null>(null);
+    
 
     const handleSelectElementId = useCallback((element: EnrichedElement | null) => {
         if(element?.id.includes('ghost-element')) return;
@@ -27,12 +27,12 @@ export const useCanvasEvents = () => {
         const {x1, y1} = getMouseCoordinates(e, camera);
         lastPositionRef.current = {x1, y1};
 
-        if(tool !== 'select') {
-            handleCreateElement(x1, y1, tool);
-        }
+        if(tool !== 'select') handleCreateElement(x1, y1, tool)
         
         const element = getElementAtPosition(x1, y1, visibleElements);
+        console.log(x1,y1)
         if(!element) return;
+        console.log(element)
         foundElementRef.current = element;
 
         const action = handleInferAction(element.positionWithinElement, tool);
@@ -47,9 +47,10 @@ export const useCanvasEvents = () => {
         
         if(isSamePosition) handleSelectElementId(foundElementRef.current);
 
-        setAction(null);
         foundElementRef.current = null;
         lastPositionRef.current = {x1: 0, y1: 0};
+
+        setAction(null);
         setTool('select');
         setVisibleElements(prev => prev.filter(el => !el.id.includes('ghost-element')));
     }, [camera, setAction, handleSelectElementId, setTool, setVisibleElements]);
@@ -58,11 +59,11 @@ export const useCanvasEvents = () => {
         const canvas = canvasRef.current;
         if (!canvas) return;
         const {x1, y1} = getMouseCoordinates(e, camera);
+        if(tool !== 'select') requestAnimationFrame(() => handleGhostElement(x1, y1, tool));
 
         if(action === 'moving' && foundElementRef.current) {
             requestAnimationFrame(() => handleMoveElement(x1, y1, foundElementRef.current));
         }
-        handleGhostElement(x1, y1, tool);
     }, [camera, action, handleMoveElement, canvasRef, handleGhostElement, tool]);
 
     const handleMouseLeave = useCallback(() => {

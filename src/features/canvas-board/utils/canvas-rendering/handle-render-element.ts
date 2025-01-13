@@ -1,6 +1,7 @@
 import { Element } from "@/types/element";
 import { handleRenderGhostElement } from "./handle-render-ghost-element";
-import { handleRenderPerson } from "./render-shapes/person";
+import { handleRenderPerson } from "./render-shapes/render-person";
+import { handleRenderLocation } from "./render-shapes/render-location";
 
 export const handleRenderElement = (ctx: CanvasRenderingContext2D, element: Element) => {
 
@@ -9,6 +10,9 @@ export const handleRenderElement = (ctx: CanvasRenderingContext2D, element: Elem
     switch(element.type) {
         case 'person':
             handleRenderPerson(ctx, element);
+            break;
+        case 'location':
+            handleRenderLocation(ctx, element);
             break;
         default:
             break;

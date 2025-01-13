@@ -1,11 +1,16 @@
 import { Element } from "@/types";
-import { ShapeDefinition } from "../types";
+import { LocationDefinition, ShapeDefinition } from "../types";
+import { BASE_URL } from "@/constants";
 
 
-export const location: ShapeDefinition = {
-    minWidth: 150,
-    minHeight: 250,
-    color: 'red',
+export const location: LocationDefinition = {
+    minWidth: 175,
+    minHeight: 200,
+    color: '#2C2420',
+    polaroidBgColor: '#2C2420',
+    textColor: '#fcd34d',
+    padding: 15,
+    gap: 20
 }
 
 
@@ -20,9 +25,9 @@ export const createDefaultLocation = (mouseX: number, mouseY: number, mode: 'gho
     return {
         id: mode === 'ghost' ? `ghost-element-location` : crypto.randomUUID(),
         type: 'location',
-        title: '',
+        title: 'Location Area',
         content: '',
-        imageUrl: '',
+        imageUrl: `${BASE_URL}/location.svg`,
         layer: 0,
         position: {x1, y1, x2, y2},
     };

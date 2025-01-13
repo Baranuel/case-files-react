@@ -12,7 +12,7 @@ import { renderCanvas } from "../utils/canvas-rendering/handle-render-canvas";
 import { useImageCache } from "../hooks/use-image-cache";
 
 export const Canvas = () => {
-  const { visibleElements, canvasRef, camera } = useCanvas();
+  const { visibleElements, elementsList,  canvasRef, camera, } = useCanvas();
   const { cacheLoaded } = useImageCache(visibleElements);
   const { handleMouseDown, handleMouseUp, handleMouseMove, handleMouseLeave } = useCanvasEvents();
   const { handleWheel } = useUpdateCamera();
@@ -43,7 +43,7 @@ export const Canvas = () => {
 
   const canvasProps = useMemo(
     () => ({
-      className: "bg-neutral-900 w-full h-full rounded-lg shadow-lg",
+      className: "bg-[#2C2420] w-full h-full rounded-lg shadow-lg",
       onMouseDown: handleMouseDown,
       onMouseUp: handleMouseUp,
       onMouseMove: handleMouseMove,

@@ -14,13 +14,11 @@ export const getImageCache = (imageUrl: string): ImageBitmap | undefined => {
 export const loadAndCacheImage = async (imageUrl: string): Promise<ImageBitmap | null> => {
     const cached = getImageCache(imageUrl);
     if (cached) return cached;
-
     const response = await fetch(imageUrl);
     const blob = await response.blob();
 
     if(imageUrl.includes('.svg')) {
-        console.log('svg to png', imageUrl);
-        const pngUrl = await svgToPng(imageUrl, 100, 100);
+        const pngUrl = await svgToPng(imageUrl, 300, 300);
         const response = await fetch(pngUrl);
         const blob = await response.blob();
         const imageBitmap = await createImageBitmap(blob);

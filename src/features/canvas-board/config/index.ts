@@ -4,7 +4,7 @@ import { person } from "./person";
 import { line } from "./line";
 import { location } from "./location";
 
-export const config: Record<ElementType, ShapeDefinition > = {
+export const config : Record<ElementType, ShapeDefinition> = {
     person,
     location,
     line

@@ -2,6 +2,7 @@
 import { ReadTransaction } from "replicache";
 import { ELEMENTS_KEY } from "./constants";
 import { Element } from "@/types";
+import { BASE_URL } from "@/constants";
 
 
 export const getAllElements = async (tx: ReadTransaction) => {
@@ -12,11 +13,11 @@ export const getAllElements = async (tx: ReadTransaction) => {
         position: {
             x1: 0,
             y1: 0,
-            x2: 100,
-            y2: 100
+            x2: 200,
+            y2: 225
         },
         content: "This is a person",
-        imageUrl: 'https://fastly.picsum.photos/id/457/200/300.jpg?hmac=RK07I110orPDAIl8q1vdjOgPnPvEX278Jy74cgjosyo' ,
+        imageUrl: `${BASE_URL}/avatar-w.svg`,
         layer: 1,
         title: "John Doe"
     },{
@@ -25,11 +26,11 @@ export const getAllElements = async (tx: ReadTransaction) => {
         position: {
             x1: 100,
             y1: 100,
-            x2: 200,
-            y2: 200
+            x2: 300,
+            y2: 325
         },
         content: "This is a person",
-        imageUrl:'/vite.svg',
+        imageUrl:`${BASE_URL}/avatar-m.svg`,
         layer: 1,
         title: "John Doe"
     }] as Element[]

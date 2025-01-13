@@ -16,5 +16,5 @@ export const mutators: MutatorDefs = {
 
     delete_element: async (tx, element: Element) => {
         return element;
-    }
+    },
 }
