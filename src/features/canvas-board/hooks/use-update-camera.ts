@@ -7,7 +7,6 @@ export const useUpdateCamera = () => {
 
     const {setCamera, canvasRef, cameraRef} = useCanvas();
     const canvas = canvasRef.current;
-    const camera = cameraRef.current;
 
     const handleWheel = useCallback((event: WheelEvent) => {
         if(!canvas) return;
@@ -21,7 +20,7 @@ export const useUpdateCamera = () => {
         } else {
             setCamera(prev => panCamera(event.deltaX, event.deltaY, prev));
         }
-    }, [canvas,camera, setCamera]);
+    }, [canvas, cameraRef, setCamera]);
 
 
 

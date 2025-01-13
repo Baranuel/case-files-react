@@ -42,7 +42,6 @@ const CanvasProvider = ({ children }: CanvasProviderProps) => {
   const [tool, setTool] = useState<Tool>('select');
   const {visibleElements, setVisibleElements} = useVisibleElements(elementsList);
 
-  console.log('render')
 
   // setup ref so we don't rerender the entire react tree when the camera changes
   const cameraRef = useRef<Camera>({x1: 0, y1: 0, zoom: 1});
@@ -73,6 +72,7 @@ const CanvasProvider = ({ children }: CanvasProviderProps) => {
 
   
 useEffect(() => {
+    console.log(elementsList[0]?.position)
     setClientElementsRef(elementsList);
 }, [elementsList])
   

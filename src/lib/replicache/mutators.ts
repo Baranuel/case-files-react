@@ -11,7 +11,9 @@ export const mutators: MutatorDefs = {
     },
 
     update_element: async (tx, element: Partial<Element>) => {
-        return element;
+        const {id} = element;
+        const key = `${ELEMENTS_KEY}${id}`;
+        await tx.set(key, element);
     },
 
     delete_element: async (tx, element: Element) => {
