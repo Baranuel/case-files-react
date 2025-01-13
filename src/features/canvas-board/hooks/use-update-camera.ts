@@ -1,5 +1,4 @@
-import { useCallback, useEffect, useLayoutEffect, useState } from "react";
-import { Camera } from "../types";
+import { useCallback } from "react";
 import { panCamera, zoomAtPoint } from "../utils/convert-position";
 import { useCanvas } from "@/app/providers/CanvasProvider";
 

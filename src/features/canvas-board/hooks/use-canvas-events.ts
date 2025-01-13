@@ -9,11 +9,12 @@ import { EnrichedElement } from "@/types";
 
 export const useCanvasEvents = () => {
     
-    const {setSelectedItemId,tool, visibleElements, action, setAction, canvasRef, setVisibleElements, setTool, cameraRef} = useCanvas();
+    const {setSelectedItemId,tool, action, setAction, canvasRef, setVisibleElements, setTool, cameraRef, clientElementsRef, visibleElements} = useCanvas();
     const {handleMoveElement, handleGhostElement, handleCreateElement} = useHandleElement();
     
     const lastPositionRef = useRef<{x1: number, y1: number}>({x1: 0, y1: 0});
     const foundElementRef = useRef<EnrichedElement | null>(null);
+
     const camera = cameraRef.current;
     const canvas = canvasRef.current;
 
@@ -32,9 +33,7 @@ export const useCanvasEvents = () => {
         if(tool !== 'select') handleCreateElement(x1, y1, tool)
         
         const element = getElementAtPosition(x1, y1, visibleElements);
-        console.log(x1,y1)
         if(!element) return;
-        console.log(element)
         foundElementRef.current = element;
 
         const action = handleInferAction(element.positionWithinElement, tool);

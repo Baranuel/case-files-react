@@ -10,14 +10,16 @@ import { Camera } from "@/features/canvas-board/types";
 interface CanvasContextType {
   elementsList: Element[];
   canvasRef: React.RefObject<HTMLCanvasElement>;
-  visibleElements: Element[];
   tool: Tool;
   selectedItemId: Element['id'] | null;
   cameraRef: React.RefObject<Camera>;
+  clientElementsRef: React.RefObject<Element[]>;
   action: ActionType | null;
+  visibleElements: Element[];
   setVisibleElements: React.Dispatch<React.SetStateAction<Element[]>>;
   setSelectedItemId: React.Dispatch<React.SetStateAction<Element['id'] | null>>;
   setCamera: (camera: Camera | ((prev: Camera) => Camera)) => void;
+  setClientElementsRef: (elements: Element[] | ((prev: Element[]) => Element[])) => void;
   setAction: React.Dispatch<React.SetStateAction<ActionType | null>>;
   setTool: React.Dispatch<React.SetStateAction<Tool>>;
 }
@@ -52,33 +54,37 @@ const CanvasProvider = ({ children }: CanvasProviderProps) => {
   }
 
 
-  const clientElements = useRef<Element[]>([]);
-  const setClientElements = (elements: Element[] | ((prev: Element[]) => Element[])) => {
+  const clientElementsRef = useRef<Element[]>([]);
+  const setClientElementsRef = (elements: Element[] | ((prev: Element[]) => Element[])) => {
     if (typeof elements === 'function') {
-      clientElements.current = elements(clientElements.current);
+      clientElementsRef.current = elements(clientElementsRef.current);
     } else {
-      clientElements.current = elements;
+      clientElementsRef.current = elements;
     }
   }
 
 
   
+useEffect(() => {
+    setClientElementsRef(elementsList);
+}, [elementsList])
+  
   const value = useMemo(() => ({
     elementsList,
     cameraRef,
     canvasRef,
+    clientElementsRef,
     selectedItemId,
     setSelectedItemId,
-    visibleElements,
-    setVisibleElements,
     action,
     setAction,
     tool,
     setTool,
     setCamera: setCameraRef,
-    clientElements,
-    setClientElements
-  }), [elementsList, cameraRef, selectedItemId, visibleElements, action, tool]);
+    setClientElementsRef,
+    visibleElements,
+    setVisibleElements
+  }), [elementsList, cameraRef, selectedItemId, action, tool, visibleElements]);
 
   return (
     <CanvasContextProvider value={value}>{children}</CanvasContextProvider>

@@ -5,7 +5,9 @@ import { getDefaultShape } from "../utils/default-shape-definition";
 
 export const useHandleElement = () => {
 
-    const {visibleElements, setVisibleElements, selectedItemId} = useCanvas();
+    const {visibleElements, setVisibleElements, selectedItemId, clientElementsRef, setClientElementsRef} = useCanvas();
+
+    const clientElements = clientElementsRef.current;
 
     const handleMoveElement = useCallback((x1: number, y1: number, element: EnrichedElement | null) => {
         if(!element) return;
@@ -55,11 +57,11 @@ export const useHandleElement = () => {
         const defaultShape = getDefaultShape(tool, x1, y1,'create');
         if(!defaultShape) return 
 
-        const newElements = [...visibleElements];
+        const newElements = [...clientElements ?? []]
         const findElementIndex = newElements.findIndex(el => el.id === defaultShape.id);
         if(findElementIndex === -1) newElements.push(defaultShape);
         else newElements.splice(findElementIndex, 1, defaultShape);
-        setVisibleElements(newElements);
+        setClientElementsRef(newElements);
 
     }, [visibleElements, setVisibleElements]);
 
