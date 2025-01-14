@@ -4,9 +4,8 @@ export const setCursor = (canvas: HTMLCanvasElement, tool: Tool, action: ActionT
 
     if(tool === 'select') {
         if(!element) return canvas.style.cursor = 'default';
-        if(action === null) return canvas.style.cursor = 'pointer';
-        if(action === 'moving') return canvas.style.cursor = 'grabbing';
-
+        if(element.positionWithinElement === 'start' || element.positionWithinElement === 'end') return canvas.style.cursor = 'crosshair';
+        if(element.positionWithinElement === 'inside') return canvas.style.cursor = 'pointer';
         return canvas.style.cursor = 'default';
     }
 }
