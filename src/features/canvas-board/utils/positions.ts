@@ -150,18 +150,8 @@ export const getMouseCoordinates = (event: React.MouseEvent<HTMLCanvasElement>, 
 export const adjustElementCoordinates = (element: Element) => {
     const { type, position } = element;
     const { x1, y1, x2, y2 } = position;
-    if (type === "person" || type === "location") {
-        // For rectangles, always ensure x1,y1 is top-left and x2,y2 is bottom-right
-        return {
-            x1: Math.min(x1, x2),
-            y1: Math.min(y1, y2),
-            x2: Math.max(x1, x2),
-            y2: Math.max(y1, y2)
-        };
-    } else {
-        // For lines, keep original coordinates to maintain arrow direction
-        return { x1, y1, x2, y2 };
-    }
+   
+    return { x1, y1, x2, y2 };
 };
 
 

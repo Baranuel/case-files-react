@@ -97,20 +97,12 @@ export const useHandleElement = () => {
         const coordinates = resizedCoordinates(mouseX, mouseY, positionWithinElement, position);
         if(!coordinates) return;
 
-        const { x1, y1, x2, y2 } = coordinates;
-        const adjusted = adjustElementCoordinates({ ...element, position: { x1, y1, x2, y2 } });
-
         const newElements = [...elements ?? []]
         const findElementIndex = newElements.findIndex(el => el.id === element.id);
 
         const newElement = {
             ...element,
-            position: {
-                x1: adjusted.x1,
-                y1: adjusted.y1,
-                x2: adjusted.x2,
-                y2: adjusted.y2
-            }
+            position: coordinates
         };
         if(findElementIndex === -1) newElements.push(newElement);
         else newElements.splice(findElementIndex, 1, newElement);

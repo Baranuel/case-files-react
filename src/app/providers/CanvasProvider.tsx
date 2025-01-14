@@ -45,7 +45,8 @@ const CanvasProvider = ({ children }: CanvasProviderProps) => {
   const [tool, setTool] = useState<Tool>('select');
 
 
-  // setup ref so we don't rerender the entire react tree when the camera changes
+  // setup ref so we don't rerender the entire react tree when the client view changes
+  // we can do this thanks to rendering canvas on every device frame so updating refs will always have visual change
   const clientViewRef = useRef<ClientView>({
     elements: [],
     camera: {x1: 0, y1: 0, zoom: 1}, 
