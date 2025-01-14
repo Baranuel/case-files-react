@@ -20,7 +20,7 @@ export const useUpdateCamera = () => {
         } else {
             setClientViewRef(prev => ({...prev, camera: panCamera(event.deltaX, event.deltaY, prev.camera)}));
         }
-    }, [canvas, clientViewRef, setClientViewRef]);
+    }, [canvas, setClientViewRef]);
 
 
 
