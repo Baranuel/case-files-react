@@ -24,7 +24,8 @@ export const useCanvasEvents = () => {
         handleMoveElement,
         handleGhostElement,
         handleCreateElement,
-        handleDrawElement
+        handleDrawElement,
+        handleResizeElement
     } = useHandleElement();
 
 
@@ -76,14 +77,14 @@ export const useCanvasEvents = () => {
             handleSelectElementId(element);
         }
 
-        if(action === 'moving' || action === 'drawing') {
+        if(action === 'moving' || action === 'drawing' || action === 'resizing') {
             const interactionElement = elements?.find(el => el.id === lastInteractionElement?.id);
             await rep.mutate.update_element(interactionElement) 
         }
 
         setAction(null);
         setTool('select');
-        setClientViewRef(prev => ({...prev, lastClickedPosition: {x1: 0, y1: 0}, lastInteractionElement: null}));
+        setClientViewRef(prev => ({...prev, lastClickedPosition: {x1: 0, y1: 0}, lastInteractionElement: null, ghostElement: null}));
         setCursor(canvas, tool, action,element);
     }, [clientViewRef, setAction, handleSelectElementId, setTool, setClientViewRef, rep]);
 
@@ -108,6 +109,13 @@ export const useCanvasEvents = () => {
 
         if(action === 'drawing' && lastInteractionElement) {
             requestAnimationFrame(() => handleDrawElement(x1, y1, lastInteractionElement));
+        }
+
+        if(action === 'resizing' && lastInteractionElement) {
+            const {type} = lastInteractionElement;
+            if(type !== 'line') return;
+            
+            requestAnimationFrame(() => handleResizeElement(x1, y1, lastInteractionElement));
         }
 
     }, [clientViewRef, action, handleMoveElement, canvasRef, handleGhostElement, tool]);

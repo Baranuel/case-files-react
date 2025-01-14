@@ -1,12 +1,10 @@
-import { PositionWithinElement, Tool } from "@/types";
+import { ActionType, PositionWithinElement, Tool } from "@/types";
 
 
-export const handleInferAction = (position: PositionWithinElement, tool: Tool) => {
+export const handleInferAction = (position: PositionWithinElement, tool: Tool): ActionType | null => {
 
     if(tool === 'select') {
-        if(position === 'inside') {
-            return 'moving';
-        }
+        return position === 'inside' ? 'moving' : 'resizing';
     }
 
     if(tool === 'line') {

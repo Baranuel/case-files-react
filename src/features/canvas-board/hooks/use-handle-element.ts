@@ -3,6 +3,7 @@ import { EnrichedElement, Tool } from "@/types";
 import {  useCallback } from "react";
 import { getDefaultShape } from "../utils/default-shape-definition";
 import { useReplicache } from "@/app/providers/ReplicacheProvider";
+import { adjustElementCoordinates, resizedCoordinates } from "../utils/positions";
 
 export const useHandleElement = () => {
 
@@ -85,11 +86,46 @@ export const useHandleElement = () => {
         setClientViewRef(prev => ({...prev, elements: newElements}));
     }, [clientViewRef, setClientViewRef]);
 
+
+
+    const handleResizeElement = useCallback((mouseX: number, mouseY: number, element: EnrichedElement) => {
+        const clientView = clientViewRef.current;
+        if(!clientView) return;
+        const {positionWithinElement, position} = element;
+        const {elements} = clientView;
+
+        const coordinates = resizedCoordinates(mouseX, mouseY, positionWithinElement, position);
+        if(!coordinates) return;
+
+        const { x1, y1, x2, y2 } = coordinates;
+        const adjusted = adjustElementCoordinates({ ...element, position: { x1, y1, x2, y2 } });
+
+        const newElements = [...elements ?? []]
+        const findElementIndex = newElements.findIndex(el => el.id === element.id);
+
+        const newElement = {
+            ...element,
+            position: {
+                x1: adjusted.x1,
+                y1: adjusted.y1,
+                x2: adjusted.x2,
+                y2: adjusted.y2
+            }
+        };
+        if(findElementIndex === -1) newElements.push(newElement);
+        else newElements.splice(findElementIndex, 1, newElement);
+        setClientViewRef(prev => ({...prev, elements: newElements}));
+
+
+
+    }, [clientViewRef, setClientViewRef]);
+
     return {
         handleMoveElement,
         handleGhostElement,
         handleCreateElement,
-        handleDrawElement
+        handleDrawElement,
+        handleResizeElement
     }
 
 }
