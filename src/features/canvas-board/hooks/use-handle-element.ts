@@ -6,14 +6,16 @@ import { useReplicache } from "@/app/providers/ReplicacheProvider";
 
 export const useHandleElement = () => {
 
-    const {clientElementsRef, setClientElementsRef, setGhostElementsRef} = useCanvas();
+    const {clientViewRef, setClientViewRef} = useCanvas();
     const rep = useReplicache();
-    const clientElements = clientElementsRef.current;
-
+    
     const handleMoveElement = useCallback((x1: number, y1: number, element: EnrichedElement | null) => {
-        if(!element) return;
+        const clientView = clientViewRef.current;
+        if(!clientView || !element) return;
 
-        const newElements = [...clientElements ?? []]
+        const {elements} = clientView;
+
+        const newElements = [...elements ?? []]
         
         // Calculate new position based on original offset
         const newX1 = x1 - element.offsetX
@@ -35,33 +37,59 @@ export const useHandleElement = () => {
         const findElementIndex = newElements.findIndex(el => el.id === element.id);
         if(findElementIndex === -1) newElements.push(newElement);
         else newElements.splice(findElementIndex, 1, newElement);
-        setClientElementsRef(newElements);
-    }, [clientElements, setClientElementsRef]);
+        setClientViewRef(prev => ({...prev, elements: newElements}));
+    }, [clientViewRef, setClientViewRef]);
 
 
 
     const handleGhostElement = useCallback((x1: number, y1: number, tool: Tool) => {
         const ghostElement = getDefaultShape(tool, x1, y1, 'ghost');
-        if(ghostElement) setGhostElementsRef(ghostElement);
-    }, [setGhostElementsRef]);
+        if(ghostElement) setClientViewRef(prev => ({...prev, ghostElement}));
+    }, [setClientViewRef]);
 
 
 
-    const handleCreateElement = useCallback(async (x1: number, y1: number, tool: Tool) => {
+    const handleCreateElement = useCallback((x1: number, y1: number, tool: Tool) => {
+        const clientView = clientViewRef.current;
+        if(!clientView) return;
+        const {elements, camera} = clientView;
         const defaultShape = getDefaultShape(tool, x1, y1,'create');
         if(!defaultShape) return 
 
-        const newElements = [...clientElements ?? []]
+        const newElements = [...elements ?? []]
         newElements.push(defaultShape);
-        setClientElementsRef(newElements);
-        await rep.mutate.create_element(defaultShape);
-    }, [clientElements, setClientElementsRef, rep]);
+        setClientViewRef(prev => ({...prev, elements: newElements}));
 
+        return defaultShape;
+    }, [clientViewRef, setClientViewRef]);
+
+
+    const handleDrawElement = useCallback((x1: number, y1: number, drawnElement: EnrichedElement) => {
+        const clientView = clientViewRef.current;
+        if(!clientView) return;
+        const {elements} = clientView;
+        const newElements = [...elements ?? []]
+
+        const updatedElement = {
+            ...drawnElement,
+            position: {
+                x1: drawnElement.position.x1,
+                y1: drawnElement.position.y1,
+                x2: x1,
+                y2: y1
+            }
+        }
+        const findElementIndex = newElements.findIndex(el => el.id === drawnElement.id);
+        if(findElementIndex === -1) newElements.push(updatedElement);
+        else newElements.splice(findElementIndex, 1, updatedElement);
+        setClientViewRef(prev => ({...prev, elements: newElements}));
+    }, [clientViewRef, setClientViewRef]);
 
     return {
         handleMoveElement,
         handleGhostElement,
-        handleCreateElement
+        handleCreateElement,
+        handleDrawElement
     }
 
 }

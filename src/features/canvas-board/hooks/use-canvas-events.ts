@@ -1,5 +1,5 @@
 import { useCanvas } from "@/app/providers/CanvasProvider";
-import { useCallback, useRef, useMemo } from "react";
+import { useCallback, useMemo, useState } from "react";
 import { getElementAtPosition, getMouseCoordinates } from "../utils/positions";
 import { handleInferAction } from "../utils/handle-infer-action";
 import { useHandleElement } from "./use-handle-element";
@@ -10,97 +10,91 @@ import { setCursor } from "../utils/cursor-state";
 export const useCanvasEvents = () => {
     const rep = useReplicache();
     const {
-        setSelectedItemId,
+        clientViewRef,
         tool,
         action,
         setAction,
         canvasRef,
         setTool,
-        cameraRef,
-        setGhostElementsRef,
-        clientElementsRef
+        setClientViewRef,
+        setPreviewElementId
     } = useCanvas();
     
     const {
         handleMoveElement,
         handleGhostElement,
-        handleCreateElement
+        handleCreateElement,
+        handleDrawElement
     } = useHandleElement();
 
-    // Refs
-    const lastPositionRef = useRef<{x1: number, y1: number}>({x1: 0, y1: 0});
-    const foundElementRef = useRef<EnrichedElement | null>(null);
 
-
-    // Helper functions
     const handleSelectElementId = useCallback((element: EnrichedElement | null) => {
         if(element?.id.includes('ghost-element')) return;
         document.startViewTransition(() => {
-            setSelectedItemId(element?.id ?? null);
+            setPreviewElementId(element?.id ?? null);
         });
-    }, [setSelectedItemId]);
+    }, [setPreviewElementId]);
 
     const handleMouseDown = useCallback(async (e: React.MouseEvent<HTMLCanvasElement>) => {
-        const camera = cameraRef.current;
-        const clientElements = clientElementsRef.current;
+        const clientView = clientViewRef.current;
         const canvas = canvasRef.current;
-        if(!camera || !clientElements || !canvas) return;
+        if(!clientView || !canvas) return;
+        const {camera, elements} = clientView;
         const {x1, y1} = getMouseCoordinates(e, camera);
-        lastPositionRef.current = {x1, y1};
+        setClientViewRef(prev => ({...prev, lastClickedPosition: {x1, y1}}));
+        
+        const element = getElementAtPosition(x1, y1, elements);
+        setClientViewRef(prev => ({...prev, lastInteractionElement: element}));
         
         if(tool !== 'select') {
-            await handleCreateElement(x1, y1, tool);
-            return;
+            const element = handleCreateElement(x1, y1, tool);
+            if(element) {
+                setClientViewRef(prev => ({...prev, lastInteractionElement: element as EnrichedElement}));
+                await rep.mutate.create_element(element);
+            }
         }
         
-        const element = getElementAtPosition(x1, y1, clientElements);
-        
-        foundElementRef.current = element;
+
         const action = handleInferAction(element?.positionWithinElement ?? null, tool);
         setAction(action);
         setCursor(canvas, tool, action, element);
-    }, [cameraRef, clientElementsRef, tool, setAction, handleCreateElement]);
+    }, [clientViewRef, tool, setAction, handleCreateElement]);
 
     const handleMouseUp = useCallback(async (e: React.MouseEvent<HTMLCanvasElement>) => {
-        const camera = cameraRef.current;
-        const clientElements = clientElementsRef.current;
+        const clientView = clientViewRef.current;
         const canvas = canvasRef.current;
-        if(!camera || !clientElements || !canvas) return;
+        if(!clientView || !canvas) return;
+        const {camera, elements, lastClickedPosition, lastInteractionElement} = clientView;
         
         const {x1, y1} = getMouseCoordinates(e, camera);
-        const element = getElementAtPosition(x1, y1, clientElements);
+        const element = getElementAtPosition(x1, y1, elements);
 
-        const lastPos = lastPositionRef.current;
+        const lastPos = lastClickedPosition;
         const isSamePosition = Math.abs(x1 - lastPos.x1) < 5 && Math.abs(y1 - lastPos.y1) < 5;
         
-        if(isSamePosition) {
-            handleSelectElementId(foundElementRef.current);
+        if(tool === 'select' && isSamePosition) {
+            handleSelectElementId(element);
         }
 
-        if(action === 'moving') {
-            const foundElement = foundElementRef.current;
-            const lastInteractionElement = clientElements?.find(el => el.id === foundElement?.id);
-            await rep.mutate.update_element(lastInteractionElement) // element that we moved 
+        if(action === 'moving' || action === 'drawing') {
+            const interactionElement = elements?.find(el => el.id === lastInteractionElement?.id);
+            await rep.mutate.update_element(interactionElement) 
         }
 
-
-
-        lastPositionRef.current = {x1: 0, y1: 0};
-        foundElementRef.current = null;
         setAction(null);
         setTool('select');
-        setGhostElementsRef(null);
+        setClientViewRef(prev => ({...prev, lastClickedPosition: {x1: 0, y1: 0}, lastInteractionElement: null}));
         setCursor(canvas, tool, action,element);
-    }, [cameraRef, setAction, handleSelectElementId, setTool, setGhostElementsRef, rep, clientElementsRef]);
+    }, [clientViewRef, setAction, handleSelectElementId, setTool, setClientViewRef, rep]);
 
     const handleMouseMove = useCallback((e: React.MouseEvent<HTMLCanvasElement>) => {
-        const camera = cameraRef.current;
-        const clientElements = clientElementsRef.current;
+        const clientView = clientViewRef.current;
         const canvas = canvasRef.current;
-        if (!canvas || !camera || !clientElements) return;
+        if (!canvas || !clientView) return;
+        const {camera, elements, lastInteractionElement} = clientView;
 
         const {x1, y1} = getMouseCoordinates(e, camera);
-        const element = getElementAtPosition(x1, y1, clientElements);
+        const element = getElementAtPosition(x1, y1, elements);
 
         setCursor(canvas, tool, action, element);
 
@@ -108,15 +102,19 @@ export const useCanvasEvents = () => {
             requestAnimationFrame(() => handleGhostElement(x1, y1, tool));
         }
 
-        if(action === 'moving' && foundElementRef.current) {
-            requestAnimationFrame(() => handleMoveElement(x1, y1, foundElementRef.current));
+        if(action === 'moving' && lastInteractionElement) {
+            requestAnimationFrame(() => handleMoveElement(x1, y1, lastInteractionElement));
         }
 
-    }, [cameraRef, action, handleMoveElement, canvasRef, handleGhostElement, tool, clientElementsRef]);
+        if(action === 'drawing' && lastInteractionElement) {
+            requestAnimationFrame(() => handleDrawElement(x1, y1, lastInteractionElement));
+        }
+
+    }, [clientViewRef, action, handleMoveElement, canvasRef, handleGhostElement, tool]);
 
     const handleMouseLeave = useCallback(() => {
-        setGhostElementsRef(null);
-    }, [setGhostElementsRef]);
+        setClientViewRef(prev => ({...prev, ghostElement: null}));
+    }, [setClientViewRef]);
 
     // Return memoized event handlers
     return useMemo(() => ({

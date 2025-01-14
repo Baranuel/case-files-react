@@ -5,8 +5,12 @@ import { ElementType } from "@/types";
 
 
 export function SelectedItem() {
-  const { selectedItemId, visibleElements } = useCanvas();
-  const element = visibleElements.find(el => el.id === selectedItemId);
+  const { clientViewRef, previewElementId } = useCanvas();
+  const clientView = clientViewRef.current;
+  if(!clientView) return null;
+  
+  const {elements} = clientView;
+  const element = elements.find(el => el.id === previewElementId);
 
   const getTitle = (type: ElementType | undefined) => {
     if(!type) return 'Selected Item'
@@ -64,10 +68,10 @@ export function SelectedItem() {
   );
 
   return (
-    <div style={{viewTransitionName: 'selected-item-wrapper'}} className={ `flex w-full h-full relative ${!selectedItemId ? '-rotate-[12deg]' : 'rotate-0'}` }>
-      <Folder isOpen={!!selectedItemId} />
+    <div style={{viewTransitionName: 'selected-item-wrapper'}} className={ `flex w-full h-full relative ${!previewElementId ? '-rotate-[12deg]' : 'rotate-0'}` }>
+      <Folder isOpen={!!previewElementId} />
       <PaperLayers
-        isOpen={!!selectedItemId}
+        isOpen={!!previewElementId}
       >
         {mainContent}
       </PaperLayers>

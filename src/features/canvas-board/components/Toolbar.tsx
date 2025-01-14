@@ -36,7 +36,7 @@ export const Toolbar = () => {
     <div className="absolute right-4 top-1/2 -translate-y-1/2 bg-[#2C2420] p-2 rounded-lg border border-amber-700/50 shadow-lg">
       <div className="flex flex-col gap-2 relative">
         <div
-          className="absolute w-10 h-10 bg-amber-700/80 rounded-lg transition-transform duration-200"
+          className="absolute w-10 h-10 bg-amber-700 rounded-lg transition-transform duration-200"
           style={{
             transform: `translateY(${tools.findIndex(t => t.id === selectedTool) * (40 + 8)}px)`,
           }}

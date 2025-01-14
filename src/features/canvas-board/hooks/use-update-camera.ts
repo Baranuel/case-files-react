@@ -5,7 +5,7 @@ import { useCanvas } from "@/app/providers/CanvasProvider";
 
 export const useUpdateCamera = () => {
 
-    const {setCamera, canvasRef, cameraRef} = useCanvas();
+    const {setClientViewRef, canvasRef, clientViewRef} = useCanvas();
     const canvas = canvasRef.current;
 
     const handleWheel = useCallback((event: WheelEvent) => {
@@ -16,11 +16,11 @@ export const useUpdateCamera = () => {
             const zoomFactor = Math.pow(0.99, event.deltaY);
             const zoomPointX = event.clientX - canvas.getBoundingClientRect().left 
             const zoomPointY = event.clientY - canvas.getBoundingClientRect().top
-            setCamera(prev => zoomAtPoint(zoomPointX, zoomPointY, prev, zoomFactor));
+            setClientViewRef(prev => ({...prev, camera: zoomAtPoint(zoomPointX, zoomPointY, prev.camera, zoomFactor)}));
         } else {
-            setCamera(prev => panCamera(event.deltaX, event.deltaY, prev));
+            setClientViewRef(prev => ({...prev, camera: panCamera(event.deltaX, event.deltaY, prev.camera)}));
         }
-    }, [canvas, cameraRef, setCamera]);
+    }, [canvas, clientViewRef, setClientViewRef]);
 
 
 

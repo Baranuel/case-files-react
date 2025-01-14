@@ -1,33 +1,36 @@
 import { ReactNode, useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { createGenericContext } from "./genericContext";
-import { ActionType, Element, Tool } from "@/types";
+import { ActionType, Element, EnrichedElement, Tool } from "@/types";
 import { useSubscribe } from "replicache-react";
 import { getAllElements } from "@/lib/replicache/queries";
 import { useReplicache } from "./ReplicacheProvider";
-import { useVisibleElements } from "@/features/canvas-board/hooks/use-visible-elements";
 import { Camera } from "@/features/canvas-board/types";
 
 interface CanvasContextType {
   elementsList: Element[];
   canvasRef: React.RefObject<HTMLCanvasElement>;
   tool: Tool;
-  selectedItemId: Element['id'] | null;
-  cameraRef: React.RefObject<Camera>;
-  clientElementsRef: React.RefObject<Element[]>;
   action: ActionType | null;
-  visibleElements: Element[];
-  ghostElementsRef: React.RefObject<Element | null>;
-  setVisibleElements: React.Dispatch<React.SetStateAction<Element[]>>;
-  setSelectedItemId: React.Dispatch<React.SetStateAction<Element['id'] | null>>;
-  setCamera: (camera: Camera | ((prev: Camera) => Camera)) => void;
-  setClientElementsRef: (elements: Element[] | ((prev: Element[]) => Element[])) => void;
+  previewElementId: Element['id'] | null;
+  clientViewRef: React.RefObject<ClientView>;
+  setPreviewElementId: React.Dispatch<React.SetStateAction<Element['id'] | null>>;
   setAction: React.Dispatch<React.SetStateAction<ActionType | null>>;
   setTool: React.Dispatch<React.SetStateAction<Tool>>;
-  setGhostElementsRef: (element: Element | null) => void;
+  setClientViewRef: (clientView: ClientView | ((prev: ClientView) => ClientView)) => void;
 }
 
 interface CanvasProviderProps {
   children: ReactNode;
+}
+
+
+interface ClientView {
+  elements: Element[];
+  camera: Camera;
+  ghostElement: Element | null;
+  lastClickedPosition: {x1: number, y1: number},
+  selectedItemId: Element['id'] | null,
+  lastInteractionElement: EnrichedElement | null
 }
 
 const [useCanvas, CanvasContextProvider] =
@@ -37,63 +40,49 @@ const CanvasProvider = ({ children }: CanvasProviderProps) => {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const rep = useReplicache();
   const elementsList = useSubscribe(rep, getAllElements, {default: []});
-  const [selectedItemId, setSelectedItemId] = useState<Element['id'] | null>(null);
+  const [previewElementId, setPreviewElementId] = useState<Element['id'] | null>(null);
   const [action, setAction] = useState<ActionType | null>(null);
   const [tool, setTool] = useState<Tool>('select');
-  const {visibleElements, setVisibleElements} = useVisibleElements(elementsList);
 
 
   // setup ref so we don't rerender the entire react tree when the camera changes
-  const cameraRef = useRef<Camera>({x1: 0, y1: 0, zoom: 1});
+  const clientViewRef = useRef<ClientView>({
+    elements: [],
+    camera: {x1: 0, y1: 0, zoom: 1}, 
+    ghostElement: null,
+    lastClickedPosition: {x1: 0, y1: 0},
+    selectedItemId: null,
+    lastInteractionElement: null
+  });
 
-  const setCameraRef = (camera: Camera | ((prev: Camera) => Camera)) => {
-    if (typeof camera === 'function') {
-      cameraRef.current = camera(cameraRef.current);
+  const setClientViewRef = (clientView: ClientView | ((prev: ClientView) => ClientView)) => {
+    if (typeof clientView === 'function') {
+      clientViewRef.current = clientView(clientViewRef.current);
     } else {
-      cameraRef.current = camera;
+      clientViewRef.current = clientView;
     }
-  }
-
-
-  const clientElementsRef = useRef<Element[]>([]);
-  const setClientElementsRef = (elements: Element[] | ((prev: Element[]) => Element[])) => {
-    if (typeof elements === 'function') {
-      clientElementsRef.current = elements(clientElementsRef.current);
-    } else {
-      clientElementsRef.current = elements;
-    }
-  }
-
-  const ghostElementsRef = useRef<Element | null>(null);
-  const setGhostElementsRef = (element: Element | null) => {
-    ghostElementsRef.current = element;
   }
 
 
   
 useEffect(() => {
-    console.log(elementsList[0]?.position)
-    setClientElementsRef(elementsList);
+    setClientViewRef(prev => ({...prev, elements: elementsList}));
 }, [elementsList])
-  
+
+console.log('elementsList', elementsList)
+
   const value = useMemo(() => ({
     elementsList,
-    cameraRef,
     canvasRef,
-    clientElementsRef,
-    selectedItemId,
-    setSelectedItemId,
+    previewElementId,
     action,
-    setAction,
     tool,
+    clientViewRef,
+    setPreviewElementId,
+    setAction,
     setTool,
-    setCamera: setCameraRef,
-    setClientElementsRef,
-    visibleElements,
-    setVisibleElements,
-    ghostElementsRef,
-    setGhostElementsRef
-  }), [elementsList, cameraRef, selectedItemId, action, tool, visibleElements]);
+    setClientViewRef
+  }), [elementsList, previewElementId, action, tool]);
 
   return (
     <CanvasContextProvider value={value}>{children}</CanvasContextProvider>

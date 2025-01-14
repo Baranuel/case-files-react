@@ -5,6 +5,7 @@ import { PersonDefinition } from "@/features/canvas-board/types";
 
 
 const drawImage = (ctx: CanvasRenderingContext2D, imageUrl: string | null, x1: number, y1: number, height:number, width:number, padding:number, bgColor:string = '#ECD5B8') => {
+    ctx.save()
 
         const imageX = x1 + padding
         const imageY = y1 + padding
@@ -18,19 +19,18 @@ const drawImage = (ctx: CanvasRenderingContext2D, imageUrl: string | null, x1: n
             imageWidth
         }
     
-        ctx.save()
         ctx.strokeStyle = 'black'
         ctx.strokeRect(imageX, imageY, imageWidth, imageHeight)
         ctx.fillStyle = bgColor
         ctx.fillRect(imageX, imageY, imageWidth, imageHeight)
-        ctx.restore()
-
+        
         if(!imageUrl) return dimensions
-
+        
         const image = getImageCache(imageUrl)
         if(!image) return dimensions
-
+        
         ctx.drawImage(image, imageX+padding/2 , imageY+padding ,imageWidth-padding , imageHeight - padding )
+        ctx.restore()
         return dimensions
 }
 
@@ -43,7 +43,7 @@ export const handleRenderPerson = (ctx: CanvasRenderingContext2D, element: Eleme
     const width = Math.max(x2 - x1, minWidth);
     const height = Math.max(y2 - y1, minHeight);
 
-    
+    ctx.save()
     ctx.fillStyle = color ?? 'red';
     ctx.fillRect(x1, y1, width, height);
     
@@ -71,7 +71,7 @@ export const handleRenderPerson = (ctx: CanvasRenderingContext2D, element: Eleme
     ctx.textAlign = 'center'
     
     ctx.fillText(element.title, textX + textWidth / 2, textY + textHeight / 2, textWidth)
-
+    ctx.restore()
 }
 
 export const handleRenderPersonGhost = (ctx: CanvasRenderingContext2D, element: Element) => {

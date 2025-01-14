@@ -59,7 +59,7 @@ export const handleRenderLocation = (ctx: CanvasRenderingContext2D, element: Ele
      const textHeight = textAreaHeight
  
      ctx.fillStyle = textColor
-     ctx.font = 'medium 20px Arial'
+     ctx.font = 'bold 20px Arial'
      ctx.textBaseline = 'middle'
      ctx.textAlign = 'center'
      
@@ -72,12 +72,12 @@ export const handleRenderLocationGhost = (ctx: CanvasRenderingContext2D, element
     const {x1, y1, x2, y2} = element.position;
     const {minWidth, minHeight, color, padding, gap, textColor} = config[type] as LocationDefinition
 
+    ctx.save()
     const width = Math.max(x2 - x1, minWidth);
     const height = Math.max(y2 - y1, minHeight);
     ctx.globalAlpha = 0.2
     ctx.strokeStyle = color;
     ctx.lineWidth = 2;
-    ctx.save()
     ctx.strokeRect(x1, y1, width, height);
     ctx.restore()
 }
