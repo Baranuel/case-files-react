@@ -1,3 +1,4 @@
+import { useQuery, useZero } from '@rocicorp/zero/react'
 import { createFileRoute, Link } from '@tanstack/react-router'
 
 export const Route = createFileRoute('/lobby/')({
@@ -5,6 +6,10 @@ export const Route = createFileRoute('/lobby/')({
 })
 
 function RouteComponent() {
+
+  const z = useZero()
+  const [el] = useQuery(z.query.element)
+  console.log(el)
   return <div>Hello "/lobby/"!
 
     <Link  params={{userId:'1'}} to="/lobby/$userId">
