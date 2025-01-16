@@ -19,8 +19,6 @@ const zero = new Zero({
 function RootComponent() {
   return (
     <ZeroProvider zero={zero}>
-    <CanvasProvider>
-
     <div className="flex flex-col h-screen">
       <div style={{viewTransitionName: 'root-header'}} className="z-50 p-4 border-b bg-[#2c2420] text-[#ECD5B8]">
         <Link
@@ -38,7 +36,6 @@ function RootComponent() {
       </div>
       <TanStackRouterDevtools position="bottom-right" />
     </div>
-        </CanvasProvider>
       </ZeroProvider>
   );
 }

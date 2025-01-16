@@ -1,5 +1,5 @@
 import { Element } from "@/types";
-import { LocationDefinition, ShapeDefinition } from "../types";
+import { LocationDefinition} from "../types";
 import { BASE_URL } from "@/constants";
 
 

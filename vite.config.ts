@@ -11,4 +11,13 @@ export default defineConfig({
       '@components': path.resolve(__dirname, './src/components')
     },
   },
+  build: {
+    rollupOptions:{
+      output:{
+        manualChunks:{
+          vendor: ['@rocicorp/zero', '@rocicorp/zero/react', '@tanstack/react-router', '@tanstack/router-devtools']
+        }
+      }
+    }
+  }
 })
