@@ -2,7 +2,6 @@ import { ElementPosition, ElementType } from './types/element';
 
 import { createSchema, createTableSchema, definePermissions, Schema, column, Row} from '@rocicorp/zero';
 
-import { createSchema, createTableSchema, definePermissions, NOBODY_CAN, Schema } from '@rocicorp/zero';
 const contentTableSchema = createTableSchema({
     tableName: 'content',
     columns: {
