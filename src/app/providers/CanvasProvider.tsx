@@ -1,10 +1,10 @@
 import { ReactNode, useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { createGenericContext } from "./genericContext";
 import { ActionType, Element, EnrichedElement, Tool } from "@/types";
-import { useSubscribe } from "replicache-react";
-import { getAllElements } from "@/lib/replicache/queries";
-import { useReplicache } from "./ReplicacheProvider";
+import { Element as ZeroElement } from "@/schema";
 import { Camera } from "@/features/canvas-board/types";
+import { useQuery, useZero } from "@rocicorp/zero/react";
+import { ZeroSchema } from "@/schema";
 
 interface CanvasContextType {
   elementsList: Element[];
@@ -17,7 +17,7 @@ interface CanvasContextType {
   setAction: React.Dispatch<React.SetStateAction<ActionType | null>>;
   setTool: React.Dispatch<React.SetStateAction<Tool>>;
   setClientViewRef: (clientView: ClientView | ((prev: ClientView) => ClientView)) => void;
-}
+} 
 
 interface CanvasProviderProps {
   children: ReactNode;
@@ -25,7 +25,7 @@ interface CanvasProviderProps {
 
 
 interface ClientView {
-  elements: Element[];
+  elements:Element[];
   camera: Camera;
   ghostElement: Element | null;
   lastClickedPosition: {x1: number, y1: number},
@@ -33,13 +33,15 @@ interface ClientView {
   lastInteractionElement: EnrichedElement | null
 }
 
+
 const [useCanvas, CanvasContextProvider] =
-  createGenericContext<CanvasContextType>();
+  createGenericContext<CanvasContextType | null>();
+
 
 const CanvasProvider = ({ children }: CanvasProviderProps) => {
   const canvasRef = useRef<HTMLCanvasElement>(null);
-  const rep = useReplicache();
-  const elementsList = useSubscribe(rep, getAllElements, {default: []});
+  const zero = useZero<ZeroSchema>();
+  const [elementsListZ] = useQuery(zero.query.element.related('content'));
   const [previewElementId, setPreviewElementId] = useState<Element['id'] | null>(null);
   const [action, setAction] = useState<ActionType | null>(null);
   const [tool, setTool] = useState<Tool>('select');
@@ -67,13 +69,12 @@ const CanvasProvider = ({ children }: CanvasProviderProps) => {
 
   
 useEffect(() => {
-    setClientViewRef(prev => ({...prev, elements: elementsList}));
-}, [elementsList])
+    setClientViewRef(prev => ({...prev, elements: [...elementsListZ]}));
+}, [elementsListZ])
 
-console.log('elementsList', elementsList)
 
   const value = useMemo(() => ({
-    elementsList,
+    elementsList: [...elementsListZ],
     canvasRef,
     previewElementId,
     action,
@@ -83,7 +84,10 @@ console.log('elementsList', elementsList)
     setAction,
     setTool,
     setClientViewRef
-  }), [elementsList, previewElementId, action, tool]);
+  }), [elementsListZ, previewElementId, action, tool]);
+
+
+  if(!value) return null;
 
   return (
     <CanvasContextProvider value={value}>{children}</CanvasContextProvider>

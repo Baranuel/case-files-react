@@ -4,11 +4,13 @@ import { getElementAtPosition, getMouseCoordinates } from "../utils/positions";
 import { handleInferAction } from "../utils/handle-infer-action";
 import { useHandleElement } from "./use-handle-element";
 import { EnrichedElement } from "@/types";
-import { useReplicache } from "@/app/providers/ReplicacheProvider";
 import { setCursor } from "../utils/cursor-state";
+import { ZeroSchema } from "@/schema";
+import { useZero } from "@rocicorp/zero/react";
 
 export const useCanvasEvents = () => {
-    const rep = useReplicache();
+    const z = useZero<ZeroSchema>();
+
     const {
         clientViewRef,
         tool,
@@ -51,7 +53,17 @@ export const useCanvasEvents = () => {
             const element = handleCreateElement(x1, y1, tool);
             if(element) {
                 setClientViewRef(prev => ({...prev, lastInteractionElement: element as EnrichedElement}));
-                await rep.mutate.create_element(element);
+                z.mutateBatch(async tx => {
+                    const randomId = crypto.randomUUID();
+
+                    await tx.element.insert(element)
+                    await tx.content.insert({
+                        id: randomId,
+                        title: 'New Content',
+                        content: 'New Content',
+                    })
+                    await tx.element.update({id:element.id, contentId: randomId})
+                });
             }
         }
         
@@ -79,14 +91,15 @@ export const useCanvasEvents = () => {
 
         if(action === 'moving' || action === 'drawing' || action === 'resizing') {
             const interactionElement = elements?.find(el => el.id === lastInteractionElement?.id);
-            await rep.mutate.update_element(interactionElement) 
+            if(!interactionElement) return;
+            z.mutate.element.update({id: interactionElement.id, position: interactionElement.position});
         }
 
         setAction(null);
         setTool('select');
         setClientViewRef(prev => ({...prev, lastClickedPosition: {x1: 0, y1: 0}, lastInteractionElement: null, ghostElement: null}));
         setCursor(canvas, tool, action,element);
-    }, [clientViewRef, setAction, handleSelectElementId, setTool, setClientViewRef, rep]);
+    }, [clientViewRef, setAction, handleSelectElementId, setTool, setClientViewRef]);
 
     const handleMouseMove = useCallback((e: React.MouseEvent<HTMLCanvasElement>) => {
         const clientView = clientViewRef.current;

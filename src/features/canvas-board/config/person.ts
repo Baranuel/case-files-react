@@ -33,7 +33,7 @@ export const createDefaultPerson = (mouseX: number, mouseY: number, mode: 'ghost
         id: mode === 'ghost' ? `ghost-element-person` : crypto.randomUUID(),
         type: 'person',
         title: 'Created Person',
-        content: 'SS',
+        contentId: null,
         imageUrl: `${BASE_URL}/${randomAvatar}`,
         layer: 0,
         position: {x1, y1, x2, y2},

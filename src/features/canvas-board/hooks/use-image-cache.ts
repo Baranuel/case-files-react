@@ -1,8 +1,8 @@
-import { Element } from "@/types"
+import { Element } from "@/schema"
 import { loadAndCacheImage } from "@/utils/image-cache"
 import { useEffect, useState } from "react"
 
-export const useImageCache = (visibleElements: Element[]) => {
+export const useImageCache = (visibleElements:readonly Element[]) => {
     const [imagesLoaded, setImagesLoaded] = useState(false);
     const loadImages = async () => {
         if(visibleElements.length === 0) return;

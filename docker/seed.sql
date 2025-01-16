@@ -4,11 +4,19 @@ CREATE DATABASE zstart_cdb;
 
 \c zstart;
 
-CREATE TABLE "element" (
+CREATE TABLE "content" (
   "id" VARCHAR PRIMARY KEY,
-  "name" VARCHAR NOT NULL
+  "title" VARCHAR NOT NULL,
+  "content" VARCHAR NOT NULL
 );
 
-
-
-INSERT INTO "user" (id, name) VALUES ('ycD76wW4R2', 'Aaron')
+CREATE TABLE "element" (
+  "id" VARCHAR PRIMARY KEY,
+  "type" VARCHAR NOT NULL CHECK ("type" IN ('person', 'location', 'line')),
+  "title" VARCHAR NOT NULL,
+  "position" JSONB NOT NULL,
+  "imageUrl" VARCHAR,
+  "layer" INTEGER NOT NULL,
+  "contentId" VARCHAR,
+  FOREIGN KEY ("contentId") REFERENCES "content"("id")
+);

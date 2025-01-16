@@ -2,13 +2,11 @@ import { useCanvas } from "@/app/providers/CanvasProvider";
 import { EnrichedElement, Tool } from "@/types";
 import {  useCallback } from "react";
 import { getDefaultShape } from "../utils/default-shape-definition";
-import { useReplicache } from "@/app/providers/ReplicacheProvider";
-import { adjustElementCoordinates, resizedCoordinates } from "../utils/positions";
+import { resizedCoordinates } from "../utils/positions";
 
 export const useHandleElement = () => {
 
     const {clientViewRef, setClientViewRef} = useCanvas();
-    const rep = useReplicache();
     
     const handleMoveElement = useCallback((x1: number, y1: number, element: EnrichedElement | null) => {
         const clientView = clientViewRef.current;

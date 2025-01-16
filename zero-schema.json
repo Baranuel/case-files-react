@@ -3,22 +3,73 @@
   "schema": {
     "version": 1,
     "tables": {
+      "content": {
+        "tableName": "content",
+        "primaryKey": [
+          "id"
+        ],
+        "columns": {
+          "content": {
+            "type": "string",
+            "optional": false
+          },
+          "id": {
+            "type": "string",
+            "optional": false
+          },
+          "title": {
+            "type": "string",
+            "optional": false
+          }
+        },
+        "relationships": {}
+      },
       "element": {
         "tableName": "element",
         "primaryKey": [
           "id"
         ],
         "columns": {
+          "contentId": {
+            "type": "string",
+            "optional": true
+          },
           "id": {
             "type": "string",
             "optional": false
           },
-          "name": {
+          "imageUrl": {
+            "type": "string",
+            "optional": true
+          },
+          "layer": {
+            "type": "number",
+            "optional": false
+          },
+          "position": {
+            "type": "json",
+            "optional": false
+          },
+          "title": {
+            "type": "string",
+            "optional": false
+          },
+          "type": {
             "type": "string",
             "optional": false
           }
         },
-        "relationships": {}
+        "relationships": {
+          "content": {
+            "sourceField": [
+              "contentId"
+            ],
+            "destField": [
+              "id"
+            ],
+            "destSchema": "content"
+          }
+        }
       }
     }
   }
