@@ -50,10 +50,6 @@
             "type": "json",
             "optional": false
           },
-          "title": {
-            "type": "string",
-            "optional": false
-          },
           "type": {
             "type": "string",
             "optional": false

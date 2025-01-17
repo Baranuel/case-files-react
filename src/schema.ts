@@ -17,7 +17,6 @@ const elementTableSchema = createTableSchema({
     columns: {
         id: 'string',
         type:column.enumeration<ElementType>(),
-        title: 'string',
         position: column.json<ElementPosition>(),
         imageUrl: {type: 'string', optional: true},
         layer: 'number',
@@ -33,11 +32,9 @@ const elementTableSchema = createTableSchema({
     }
 });
 
-type Mutable<T> = {
-    -readonly [P in keyof T]: T[P]
-  }
 export type ZeroSchema = typeof schema
 export type Element = Row<typeof elementTableSchema>
+export type Content = Row<typeof contentTableSchema>
 
 export const schema = createSchema({
     version: 1,

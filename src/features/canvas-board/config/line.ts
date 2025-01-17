@@ -25,7 +25,6 @@ export const createDefaultLine = (x1:number, y1:number, mode: 'ghost' | 'create'
     return {
         id: mode === 'ghost' ? `ghost-element-line` : crypto.randomUUID(),
         type: 'line',
-        title: 'Line',
         contentId: null,
         imageUrl:null,
         layer: 0,

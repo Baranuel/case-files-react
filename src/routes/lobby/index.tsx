@@ -1,5 +1,3 @@
-import { schema, ZeroSchema } from '@/schema'
-import { useQuery, useZero } from '@rocicorp/zero/react'
 import { createFileRoute, Link } from '@tanstack/react-router'
 
 export const Route = createFileRoute('/lobby/')({

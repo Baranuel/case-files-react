@@ -4,11 +4,13 @@ import { useEffect, useState } from "react"
 
 export const useImageCache = (visibleElements:Element[]) => {
     const [imagesLoaded, setImagesLoaded] = useState(false);
+
     const loadImages = async () => {
         if(visibleElements.length === 0) return;
         const promises = visibleElements.map(element => {
             if (element.imageUrl) {
-                return loadAndCacheImage(element.imageUrl);
+                console.log(element.imageUrl)
+                return loadAndCacheImage( element.imageUrl);
             }
             return Promise.resolve();
         });

@@ -62,8 +62,10 @@ export const handleRenderLocation = (ctx: CanvasRenderingContext2D, element: Ele
      ctx.font = 'bold 20px Arial'
      ctx.textBaseline = 'middle'
      ctx.textAlign = 'center'
+
+     const text = element.content?.[0].title ?? element.type
      
-     ctx.fillText(element.title, textX + textWidth / 2, textY + textHeight / 2, textWidth)
+     ctx.fillText(text, textX + textWidth / 2, textY + textHeight / 2, textWidth)
      ctx.restore()
 }
 

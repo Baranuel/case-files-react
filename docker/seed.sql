@@ -13,7 +13,6 @@ CREATE TABLE "content" (
 CREATE TABLE "element" (
   "id" VARCHAR PRIMARY KEY,
   "type" VARCHAR NOT NULL CHECK ("type" IN ('person', 'location', 'line')),
-  "title" VARCHAR NOT NULL,
   "position" JSONB NOT NULL,
   "imageUrl" VARCHAR,
   "layer" INTEGER NOT NULL,

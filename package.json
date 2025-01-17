@@ -7,7 +7,7 @@
     "typecheck": "tsc --noEmit",
     "dev": "vite --port=3001",
     "dev:zero-cache": "zero-cache-dev -p ./src/schema.ts",
-    "dev:db-up": "docker compose --env-file .env -f ./docker/docker-compose.yml up",
+    "dev:db-up": "docker compose --env-file .env -f ./docker/docker-compose.yml up -d",
     "dev:db-down": "docker compose --env-file .env -f ./docker/docker-compose.yml down",
     "dev:clean": "source .env && docker volume rm -f docker_zstart_pgdata && rm -rf \"${ZERO_REPLICA_FILE}\"*",
     "build": "vite build",

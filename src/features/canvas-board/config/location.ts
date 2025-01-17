@@ -25,9 +25,8 @@ export const createDefaultLocation = (mouseX: number, mouseY: number, mode: 'gho
     return {
         id: mode === 'ghost' ? `ghost-element-location` : crypto.randomUUID(),
         type: 'location',
-        title: 'Location Area',
         contentId: null,
-        imageUrl: `${BASE_URL}/location.svg`,
+        imageUrl: `location.svg`,
         layer: 0,
         position: {x1, y1, x2, y2},
     };

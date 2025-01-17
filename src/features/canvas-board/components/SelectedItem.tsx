@@ -2,6 +2,7 @@ import { useCanvas } from "@/app/providers/CanvasProvider";
 import { Folder } from './Folder/Folder';
 import { PaperLayers } from "./Folder/PaperLayers";
 import { ElementType } from "@/types";
+import { BASE_URL } from "@/constants";
 
 
 export function SelectedItem() {
@@ -24,10 +25,10 @@ export function SelectedItem() {
       <h1 className="text-2xl font-bold text-[#8B4513] mb-6">{getTitle(element?.type)} #{element?.id.slice(-5, -1)}</h1>
 
       <div className="flex gap-4 my-2 p-2 bg-[#ECD5B8] rounded-lg">
-        <img className="w-[150px] pt-2 border border-black bg-[#E4C18D] rounded-md" src={element?.imageUrl ?? ''} alt=""></img> 
+        <img className="w-[150px] pt-2 border border-black bg-[#E4C18D] rounded-md" src={`${BASE_URL}/${element?.imageUrl}`} alt=""></img> 
         <div className="flex flex-col ">
           <h3 className="text-sm font-bold text-[#8B4513]">Name</h3>
-          <p className="text-base text-[#8B4513]">{element?.title}</p>
+          <p className="text-base text-[#8B4513]">{element?.content?.[0].title}</p>
         </div>
       </div>
 

@@ -41,7 +41,7 @@ const [useCanvas, CanvasContextProvider] =
 const CanvasProvider = ({ children }: CanvasProviderProps) => {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const zero = useZero<ZeroSchema>();
-  const [elementsListZ] = useQuery(zero.query.element.related('content'));
+  const [ elementsListZ ] = useQuery(zero.query.element.related('content'));
   const [previewElementId, setPreviewElementId] = useState<Element['id'] | null>(null);
   const [action, setAction] = useState<ActionType | null>(null);
   const [tool, setTool] = useState<Tool>('select');
@@ -72,6 +72,7 @@ useEffect(() => {
     setClientViewRef(prev => ({...prev, elements: [...elementsListZ]}));
 }, [elementsListZ])
 
+console.log(elementsListZ)
 
   const value = useMemo(() => ({
     elementsList: [...elementsListZ],

@@ -1,10 +1,7 @@
 
-import {Element as ZeroElement} from '@/schema'
+import {Content, Element as ZeroElement} from '@/schema'
 
 export type ElementType = 'person' | 'location' | 'line'  
-type Mutable<T> = {
-    -readonly [P in keyof T]: T[P]
-  }
 
 export type ElementPosition = {
     x1: number;
@@ -13,7 +10,9 @@ export type ElementPosition = {
     y2: number;
 }
 
-export type Element = ZeroElement
+export type Element = ZeroElement & {
+    content?:readonly Content[];
+}
 
 export type PositionWithinElement = 'start' | 'end' | 'line_middle' | 'tl' | 'tr' | 'tm' | 'bl' | 'br' | 'bm' | 'ml' | 'mr' | 'inside' | null ;
 
