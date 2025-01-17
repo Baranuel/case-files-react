@@ -11,7 +11,7 @@ export const Board = ({boardId}: {boardId: string}) => {
   const isProd = import.meta.env.PROD
 
   const zero = new Zero({
-    userID: boardId,
+    userID: boardId + Math.random(),
     schema,
     server: isProd ? import.meta.env.VITE_ZERO_SERVER_URL_PROD : import.meta.env.VITE_ZERO_SERVER_URL_DEV,
     kvStore: 'mem'

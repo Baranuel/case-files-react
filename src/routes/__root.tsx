@@ -1,4 +1,4 @@
-import { Link, Outlet, createRootRoute } from "@tanstack/react-router";
+import { Link, Outlet, createRootRoute, useParams } from "@tanstack/react-router";
 import { TanStackRouterDevtools } from "@tanstack/router-devtools";
 
 export const Route = createRootRoute({
@@ -7,6 +7,8 @@ export const Route = createRootRoute({
 
 
 function RootComponent() {
+  const {boardId} = useParams({strict:false})
+  console.log(boardId)
   return (
     <div className="flex flex-col h-screen">
       <div style={{viewTransitionName: 'root-header'}} className="z-50 p-4 border-b bg-[#2c2420] text-[#ECD5B8]">

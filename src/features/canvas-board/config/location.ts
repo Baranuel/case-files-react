@@ -14,7 +14,7 @@ export const location: LocationDefinition = {
 }
 
 
-export const createDefaultLocation = (mouseX: number, mouseY: number, mode: 'ghost' | 'create' = 'create'):Element => {
+export const createDefaultLocation = (mouseX: number, mouseY: number, mode: 'ghost' | 'create' = 'create', boardId?:string):Element => {
     const {minWidth, minHeight} = location;
 
     const x1 = mouseX - minWidth / 2;
@@ -26,6 +26,7 @@ export const createDefaultLocation = (mouseX: number, mouseY: number, mode: 'gho
         id: mode === 'ghost' ? `ghost-element-location` : crypto.randomUUID(),
         type: 'location',
         contentId: null,
+        boardId: boardId ?? null,
         imageUrl: `location.svg`,
         layer: 0,
         position: {x1, y1, x2, y2},

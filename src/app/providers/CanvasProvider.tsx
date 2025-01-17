@@ -5,6 +5,7 @@ import { Element as ZeroElement } from "@/schema";
 import { Camera } from "@/features/canvas-board/types";
 import { useQuery, useZero } from "@rocicorp/zero/react";
 import { ZeroSchema } from "@/schema";
+import { useParams } from "@tanstack/react-router";
 
 interface CanvasContextType {
   elementsList: Element[];
@@ -39,9 +40,12 @@ const [useCanvas, CanvasContextProvider] =
 
 
 const CanvasProvider = ({ children }: CanvasProviderProps) => {
+  const {boardId} = useParams({strict:false});
+
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const zero = useZero<ZeroSchema>();
-  const [ elementsListZ ] = useQuery(zero.query.element.related('content'));
+  const [ elementsListZ ] = useQuery(zero.query.element.related('content').where('boardId', "=", boardId!));
+  
   const [previewElementId, setPreviewElementId] = useState<Element['id'] | null>(null);
   const [action, setAction] = useState<ActionType | null>(null);
   const [tool, setTool] = useState<Tool>('select');

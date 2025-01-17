@@ -1,7 +1,7 @@
 {
   "permissions": {},
   "schema": {
-    "version": 1,
+    "version": 2,
     "tables": {
       "content": {
         "tableName": "content",
@@ -30,6 +30,10 @@
           "id"
         ],
         "columns": {
+          "boardId": {
+            "type": "string",
+            "optional": true
+          },
           "contentId": {
             "type": "string",
             "optional": true

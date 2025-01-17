@@ -20,6 +20,7 @@ const elementTableSchema = createTableSchema({
         position: column.json<ElementPosition>(),
         imageUrl: {type: 'string', optional: true},
         layer: 'number',
+        boardId:{type:'string', optional: true},
         contentId: {type: 'string', optional: true},
     },
     primaryKey: 'id',
@@ -37,7 +38,7 @@ export type Element = Row<typeof elementTableSchema>
 export type Content = Row<typeof contentTableSchema>
 
 export const schema = createSchema({
-    version: 1,
+    version: 2,
     tables: {
         element: elementTableSchema,
         content: contentTableSchema,

@@ -2,6 +2,8 @@ CREATE DATABASE zstart;
 CREATE DATABASE zstart_cvr;
 CREATE DATABASE zstart_cdb;
 
+CREATE ROLE postgres WITH LOGIN SUPERUSER PASSWORD 'password';
+
 \c zstart;
 
 CREATE TABLE "content" (
@@ -16,6 +18,7 @@ CREATE TABLE "element" (
   "position" JSONB NOT NULL,
   "imageUrl" VARCHAR,
   "layer" INTEGER NOT NULL,
+  "boardId" VARCHAR,
   "contentId" VARCHAR,
   FOREIGN KEY ("contentId") REFERENCES "content"("id")
 );

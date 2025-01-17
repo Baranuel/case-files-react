@@ -3,10 +3,12 @@ import { EnrichedElement, Tool } from "@/types";
 import {  useCallback } from "react";
 import { getDefaultShape } from "../utils/default-shape-definition";
 import { resizedCoordinates } from "../utils/positions";
+import { useParams } from "@tanstack/react-router";
 
 export const useHandleElement = () => {
 
     const {clientViewRef, setClientViewRef} = useCanvas();
+    const {boardId} = useParams({strict:false})
     
     const handleMoveElement = useCallback((x1: number, y1: number, element: EnrichedElement | null) => {
         const clientView = clientViewRef.current;
@@ -42,7 +44,7 @@ export const useHandleElement = () => {
 
 
     const handleGhostElement = useCallback((x1: number, y1: number, tool: Tool) => {
-        const ghostElement = getDefaultShape(tool, x1, y1, 'ghost');
+        const ghostElement = getDefaultShape(tool, x1, y1, 'ghost', boardId);
         if(ghostElement) setClientViewRef(prev => ({...prev, ghostElement}));
     }, [setClientViewRef]);
 
@@ -51,7 +53,7 @@ export const useHandleElement = () => {
     const handleCreateElement = useCallback((x1: number, y1: number, tool: Tool) => {
         const clientView = clientViewRef.current;
         if(!clientView) return;
-        const {elements, camera} = clientView;
+        const {elements} = clientView;
         const defaultShape = getDefaultShape(tool, x1, y1,'create');
         if(!defaultShape) return 
 
