@@ -4,12 +4,14 @@ import {  useCallback } from "react";
 import { getDefaultShape } from "../utils/default-shape-definition";
 import { resizedCoordinates } from "../utils/positions";
 import { useParams } from "@tanstack/react-router";
+import { useAuth } from "@clerk/clerk-react";
 
 export const useHandleElement = () => {
 
     const {clientViewRef, setClientViewRef} = useCanvas();
     const {boardId} = useParams({strict:false})
-    
+    const {userId} = useAuth() 
+
     const handleMoveElement = useCallback((x1: number, y1: number, element: EnrichedElement | null) => {
         const clientView = clientViewRef.current;
         if(!clientView || !element) return;
@@ -44,7 +46,7 @@ export const useHandleElement = () => {
 
 
     const handleGhostElement = useCallback((x1: number, y1: number, tool: Tool) => {
-        const ghostElement = getDefaultShape(tool, x1, y1, 'ghost', boardId);
+        const ghostElement = getDefaultShape(tool, x1, y1, 'ghost', userId!, boardId );
         if(ghostElement) setClientViewRef(prev => ({...prev, ghostElement}));
     }, [setClientViewRef]);
 
@@ -54,7 +56,7 @@ export const useHandleElement = () => {
         const clientView = clientViewRef.current;
         if(!clientView) return;
         const {elements} = clientView;
-        const defaultShape = getDefaultShape(tool, x1, y1,'create');
+        const defaultShape = getDefaultShape(tool, x1, y1,'create',userId!, boardId);
         if(!defaultShape) return 
 
         const newElements = [...elements ?? []]

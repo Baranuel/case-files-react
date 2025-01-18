@@ -14,7 +14,6 @@ export const getImageCache = (imageUrl: string): ImageBitmap | undefined => {
 
 export const loadAndCacheImage = async (imageUrl: string): Promise<ImageBitmap | null> => {
     const cached = getImageCache(imageUrl);
-    console.log('cached', imageUrl);
     if (cached) return cached;
     const response = await fetch(`${BASE_URL}/${imageUrl}`);
     const blob = await response.blob();

@@ -1,5 +1,30 @@
 {
-  "permissions": {},
+  "permissions": {
+    "element": {
+      "row": {
+        "update": {
+          "postMutation": [
+            [
+              "allow",
+              {
+                "type": "simple",
+                "left": {
+                  "type": "column",
+                  "name": "creatorId"
+                },
+                "right": {
+                  "type": "static",
+                  "anchor": "authData",
+                  "field": "sub"
+                },
+                "op": "="
+              }
+            ]
+          ]
+        }
+      }
+    }
+  },
   "schema": {
     "version": 2,
     "tables": {
@@ -37,6 +62,10 @@
           "contentId": {
             "type": "string",
             "optional": true
+          },
+          "creatorId": {
+            "type": "string",
+            "optional": false
           },
           "id": {
             "type": "string",

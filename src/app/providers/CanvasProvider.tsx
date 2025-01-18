@@ -76,7 +76,9 @@ useEffect(() => {
     setClientViewRef(prev => ({...prev, elements: [...elementsListZ]}));
 }, [elementsListZ])
 
-console.log(elementsListZ)
+
+
+console.log('elementsListZ', elementsListZ);
 
   const value = useMemo(() => ({
     elementsList: [...elementsListZ],

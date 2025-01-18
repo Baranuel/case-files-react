@@ -12,7 +12,7 @@ export const person: PersonDefinition = {
 }
 
 
-export const createDefaultPerson = (mouseX: number, mouseY: number, mode: 'ghost' | 'create' = 'create', boardId?:string): Element => {
+export const createDefaultPerson = (mouseX: number, mouseY: number, mode: 'ghost' | 'create' = 'create',  creatorId:string, boardId?:string): Element => {
     const {minWidth, minHeight} = person;
     const randomAvatar = (Math.random() * 1) + 0.5 > 1 ? 'avatar-m.svg' : 'avatar-w.svg'
 
@@ -37,5 +37,6 @@ export const createDefaultPerson = (mouseX: number, mouseY: number, mode: 'ghost
         imageUrl: `${randomAvatar}`,
         layer: 0,
         position: {x1, y1, x2, y2},
+        creatorId
     };
 }

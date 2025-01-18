@@ -20,5 +20,6 @@ CREATE TABLE "element" (
   "layer" INTEGER NOT NULL,
   "boardId" VARCHAR,
   "contentId" VARCHAR,
+  "creatorId" VARCHAR,
   FOREIGN KEY ("contentId") REFERENCES "content"("id")
 );

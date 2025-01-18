@@ -1,6 +1,6 @@
 import { ElementPosition, ElementType } from './types/element';
 
-import { createSchema, createTableSchema, definePermissions, Schema, column, Row} from '@rocicorp/zero';
+import { createSchema, createTableSchema, definePermissions, Schema, column, Row, ExpressionBuilder, ANYONE_CAN} from '@rocicorp/zero';
 
 const contentTableSchema = createTableSchema({
     tableName: 'content',
@@ -22,6 +22,7 @@ const elementTableSchema = createTableSchema({
         layer: 'number',
         boardId:{type:'string', optional: true},
         contentId: {type: 'string', optional: true},
+        creatorId: 'string',
     },
     primaryKey: 'id',
     relationships: {
@@ -37,6 +38,8 @@ export type ZeroSchema = typeof schema
 export type Element = Row<typeof elementTableSchema>
 export type Content = Row<typeof contentTableSchema>
 
+export type ElementSchema = typeof elementTableSchema
+
 export const schema = createSchema({
     version: 2,
     tables: {
@@ -46,5 +49,35 @@ export const schema = createSchema({
 });
 
 
+ type JWTPayload  = {
+    azp: string; // Authorized party
+    exp: number; // Expiration time (in seconds since the epoch)
+    iat: number; // Issued at time (in seconds since the epoch)
+    iss: string; // Issuer
+    jti: string; // JWT ID
+    nbf: number; // Not before time (in seconds since the epoch)
+    sub: string; // Subject (user ID)
+  }
 
-export const permissions = definePermissions<any, Schema>(schema, () => ({}));
+export const permissions = definePermissions<JWTPayload, Schema>(schema, () => {
+
+
+    const allowIfCreator = (
+        authData: JWTPayload,
+        {cmp}: ExpressionBuilder<ElementSchema>,
+      ) => cmp('creatorId', '=', authData.sub);
+
+
+      return {
+        element: {
+            row: {
+                insert: ANYONE_CAN,
+                select: ANYONE_CAN,
+                update: {
+                    postMutation: [allowIfCreator]
+                }
+            }
+        }
+    }
+       
+});

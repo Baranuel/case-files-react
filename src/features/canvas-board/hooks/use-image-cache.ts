@@ -9,7 +9,6 @@ export const useImageCache = (visibleElements:Element[]) => {
         if(visibleElements.length === 0) return;
         const promises = visibleElements.map(element => {
             if (element.imageUrl) {
-                console.log(element.imageUrl)
                 return loadAndCacheImage( element.imageUrl);
             }
             return Promise.resolve();

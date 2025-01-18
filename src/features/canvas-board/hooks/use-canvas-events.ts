@@ -51,11 +51,11 @@ export const useCanvasEvents = () => {
         
         if(tool !== 'select') {
             const element = handleCreateElement(x1, y1, tool);
+            console.log('element', element);
             if(element) {
                 setClientViewRef(prev => ({...prev, lastInteractionElement: element as EnrichedElement}));
                 z.mutateBatch(async tx => {
                     const randomId = crypto.randomUUID();
-
                     await tx.element.insert(element)
                     await tx.content.insert({
                         id: randomId,

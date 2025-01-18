@@ -20,7 +20,7 @@ export const line: LineDefinition = {
 }
 
 
-export const createDefaultLine = (x1:number, y1:number, mode: 'ghost' | 'create' = 'create', boardId?:string):Element => {
+export const createDefaultLine = (x1:number, y1:number, mode: 'ghost' | 'create' = 'create',creatorId:string, boardId?:string):Element => {
 
     return {
         id: mode === 'ghost' ? `ghost-element-line` : crypto.randomUUID(),
@@ -30,5 +30,6 @@ export const createDefaultLine = (x1:number, y1:number, mode: 'ghost' | 'create'
         layer: 0,
         boardId: boardId ?? null,
         position: {x1, y1, x2:x1, y2:y1},
+        creatorId
     };
 }
