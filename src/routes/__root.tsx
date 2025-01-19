@@ -15,6 +15,7 @@ import { schema } from "@/schema";
 import { ZeroProvider } from "@rocicorp/zero/react";
 import Navigation from "@/app/components/Navigation";
 import { RouterContext } from "@/types/router-context";
+import { Layout } from "@/app/components/Layout";
 
 
 export const Route = createRootRouteWithContext<RouterContext>()({
@@ -51,10 +52,10 @@ function RootComponent() {
 
   return (
     <ZeroProvider zero={zero}>
-      <div className="flex-1 bg-[#FFF6EB] flex flex-col h-screen">
-        <Navigation />
-        <Outlet />
-      </div>
+      <Navigation />
+        <Layout>
+           <Outlet />
+        </Layout>
       <TanStackRouterDevtools position="bottom-right" />
     </ZeroProvider>
   );

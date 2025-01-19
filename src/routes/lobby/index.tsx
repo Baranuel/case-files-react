@@ -19,7 +19,7 @@ export const Route = createFileRoute("/lobby/")({
 });
 
 function RouteComponent() {
-  const { userId, isLoaded } = useAuth();
+  const { userId} = useAuth();
   const z = useZero<ZeroSchema>();
   
   const [boards] = useQuery(
@@ -38,7 +38,6 @@ function RouteComponent() {
     });
   }, [z.mutate.board, userId]);
 
-  if (!isLoaded) return <Loading />;
 
   return (
     <div className="container mx-auto p-6">

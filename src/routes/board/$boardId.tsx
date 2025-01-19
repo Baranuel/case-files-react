@@ -16,9 +16,8 @@ export const Route = createFileRoute("/board/$boardId")({
 });
 
 function RouteComponent() {
-  const { boardId } = Route.useParams();
 
   return (
-      <Board boardId={boardId} />
+      <Board />
   );
 }
