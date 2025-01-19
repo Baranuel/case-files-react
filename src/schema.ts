@@ -34,17 +34,34 @@ const elementTableSchema = createTableSchema({
     }
 });
 
+const boardTableSchema= createTableSchema({
+    tableName: 'board',
+    columns: {
+        id: 'string',
+        title: 'string',
+        creatorId: 'string',
+    },
+    primaryKey: 'id',
+});
+
+
+
 export type ZeroSchema = typeof schema
+
 export type Element = Row<typeof elementTableSchema>
 export type Content = Row<typeof contentTableSchema>
+export type Board = Row<typeof boardTableSchema>
 
 export type ElementSchema = typeof elementTableSchema
+export type ContentSchema = typeof contentTableSchema
+export type BoardSchema = typeof boardTableSchema
 
 export const schema = createSchema({
-    version: 2,
+    version: 1,
     tables: {
         element: elementTableSchema,
         content: contentTableSchema,
+        board: boardTableSchema
     }
 });
 

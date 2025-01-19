@@ -26,8 +26,29 @@
     }
   },
   "schema": {
-    "version": 2,
+    "version": 1,
     "tables": {
+      "board": {
+        "tableName": "board",
+        "primaryKey": [
+          "id"
+        ],
+        "columns": {
+          "creatorId": {
+            "type": "string",
+            "optional": false
+          },
+          "id": {
+            "type": "string",
+            "optional": false
+          },
+          "title": {
+            "type": "string",
+            "optional": false
+          }
+        },
+        "relationships": {}
+      },
       "content": {
         "tableName": "content",
         "primaryKey": [

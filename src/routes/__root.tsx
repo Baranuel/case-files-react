@@ -2,43 +2,36 @@ import {
   Link,
   Outlet,
   createRootRoute,
+  createRootRouteWithContext,
   useParams,
 } from "@tanstack/react-router";
 import { TanStackRouterDevtools } from "@tanstack/router-devtools";
 import {
-  ClerkProvider,
-  SignIn,
-  SignInButton,
   useAuth,
-  useClerk,
-  UserButton,
 } from "@clerk/clerk-react";
 import { Zero } from "@rocicorp/zero";
 import { useEffect, useState } from "react";
 import { schema } from "@/schema";
 import { ZeroProvider } from "@rocicorp/zero/react";
 import Navigation from "@/app/components/Navigation";
-export const Route = createRootRoute({
+import { RouterContext } from "@/types/router-context";
+
+
+export const Route = createRootRouteWithContext<RouterContext>()({
   component: RootComponent,
+  loader: async ({context}) => {
+    if(context.auth){
+      return await context.auth.getToken({ template: "casefiles" });
+    }
+  },
 });
 
 function RootComponent() {
+  const token = Route.useLoaderData()
   const isProd = import.meta.env.PROD;
-  const { getToken, userId} = useAuth();
-  const [token, setToken] = useState<string | null>(null);
+  const {userId, getToken} = useAuth();
 
 
-  const getAuthToken = async () => {
-    const token = await getToken({ template: "casefiles" });
-    return token
-  };
-
-
-  useEffect(() => {
-    getAuthToken().then( t => setToken(t));
-  }, []);
-
-  
     const zero = new Zero({
       userID: userId ?? 'anon',
       schema,
@@ -47,7 +40,7 @@ function RootComponent() {
         : import.meta.env.VITE_ZERO_SERVER_URL_DEV,
       kvStore: "mem",
       auth: async (err) => {
-        if(err === 'invalid-token') return await getAuthToken() ?? token!
+        if(err === 'invalid-token') return await getToken({template:'casefiles'}) ?? token!
         return token!
       },
     });
@@ -58,7 +51,7 @@ function RootComponent() {
 
   return (
     <ZeroProvider zero={zero}>
-      <div className="flex-1 bg-[#ECD5B8] flex flex-col h-screen">
+      <div className="flex-1 bg-[#FFF6EB] flex flex-col h-screen">
         <Navigation />
         <Outlet />
       </div>

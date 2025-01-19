@@ -12,6 +12,12 @@ CREATE TABLE "content" (
   "content" VARCHAR NOT NULL
 );
 
+CREATE TABLE "board" (
+  "id" VARCHAR PRIMARY KEY,
+  "title" VARCHAR NOT NULL,
+  "creatorId" VARCHAR
+);
+
 CREATE TABLE "element" (
   "id" VARCHAR PRIMARY KEY,
   "type" VARCHAR NOT NULL CHECK ("type" IN ('person', 'location', 'line')),
@@ -21,5 +27,6 @@ CREATE TABLE "element" (
   "boardId" VARCHAR,
   "contentId" VARCHAR,
   "creatorId" VARCHAR,
-  FOREIGN KEY ("contentId") REFERENCES "content"("id")
+  FOREIGN KEY ("contentId") REFERENCES "content"("id"),
+  FOREIGN KEY ("boardId") REFERENCES "board"("id")
 );
