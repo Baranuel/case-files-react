@@ -7,7 +7,7 @@ export const Board = () => {
 
   return (
     <CanvasProvider>
-        <div className="flex justify-center items-center  gap-4  overflow-y-hidden h-full pr-4 ">
+        <div className="flex justify-center items-center  gap-4  overflow-y-hidden h-[calc(100vh-4rem)] pr-4 ">
           <div className="flex w-2/5 h-full">
             <SelectedItem />
           </div>
