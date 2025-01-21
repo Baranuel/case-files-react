@@ -10,12 +10,8 @@ export const Folder = ({ isOpen = false }: FolderProps) => {
         viewTransitionName: "selected-item-folder",
         transitionDuration: "0.3s",
       }}
-      className={` w-full min-w-[400px] h-full bg-[#E4C18D] rounded-sm py-4 pr-4 shadow-lg ${isOpen ? "-translate-x-[calc(102%)]" : "-translate-x-[35%]"} relative`}
+      className={` w-full h-full bg-[#E4C18D] rounded-sm py-4 pr-4 shadow-lg ${isOpen ? "-translate-x-[calc(50%)]" : "translate-x-0"} relative`}
     >
-      {/* Tab */}
-      <div className="absolute -right-8 top-8 w-8 h-24 bg-[#E4C18D] rounded-r-lg border-r border-t border-b border-[#C4A475] flex items-center justify-center">
-        <div className="w-1 h-16 bg-[#C4A475] rounded-full" />
-      </div>
 
       {/* Folder content */}
       <div className="w-full h-full border-2 border-[#C4A475] rounded-r-lg pr-4 bg-[#F5DEB3] p-6 relative">
@@ -54,7 +50,7 @@ export const Folder = ({ isOpen = false }: FolderProps) => {
         </div>
 
         {/* Confidential Stamp - moved to bottom */}
-        <div className="absolute -rotate-12 bottom-12 right-8 border-4 border-red-600 rounded px-4 py-2 text-red-600 font-bold text-xl opacity-80">
+        <div className="absolute -rotate-[50deg] bottom-[30%] right-0 border-4 border-red-600 rounded px-4 py-2 text-red-600 font-bold text-xl opacity-80">
           CONFIDENTIAL
         </div>
       </div>

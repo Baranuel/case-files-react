@@ -9,7 +9,7 @@ export const Layout = ({ children }: { children: React.ReactNode }) => {
       <main className="flex-1">
         {children}
         </main>
-      {showFooter && <footer className="min-h-[150px] bg-[#2C2421]"></footer>}
+      {showFooter && <footer className="min-h-[100px] bg-[#2C2421]"></footer>}
     </div>
   );
 };

@@ -49,7 +49,7 @@ export const Canvas = () => {
 
   const canvasProps = useMemo(
     () => ({
-      className: "bg-[#2C2420] w-full h-full rounded-lg shadow-lg",
+      className: "bg-[#2C2420] w-full h-full",
       onMouseDown: handleMouseDown,
       onMouseUp: handleMouseUp,
       onMouseMove: handleMouseMove,
