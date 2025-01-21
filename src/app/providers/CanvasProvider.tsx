@@ -44,11 +44,10 @@ const CanvasProvider = ({ children }: CanvasProviderProps) => {
 
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const zero = useZero<ZeroSchema>();
-  const [ elementsListZ ] = useQuery(zero.query.element.related('content').where('boardId', "=", boardId!));
+  const [ elementsListZ, elementsListStatus] = useQuery(zero.query.element.related('content').where('boardId', "=", boardId!), true);
   const [previewElementId, setPreviewElementId] = useState<Element['id'] | null>(null);
   const [action, setAction] = useState<ActionType | null>(null);
   const [tool, setTool] = useState<Tool>('select');
-
 
   // setup ref so we don't rerender the entire react tree when the client view changes
   // we can do this thanks to rendering canvas on every device frame so updating refs will always have visual change
@@ -72,28 +71,27 @@ const CanvasProvider = ({ children }: CanvasProviderProps) => {
 
   
 useEffect(() => {
-    setClientViewRef(prev => ({...prev, elements: [...elementsListZ]}));
-}, [elementsListZ])
+    setClientViewRef(prev => ({...prev, elements: [...elementsListZ],}));
+}, [elementsListZ, elementsListStatus])
 
 
 
-console.log('elementsListZ', elementsListZ);
-
-  const value = useMemo(() => ({
-    elementsList: [...elementsListZ],
-    canvasRef,
-    previewElementId,
-    action,
-    tool,
-    clientViewRef,
-    setPreviewElementId,
-    setAction,
-    setTool,
-    setClientViewRef
-  }), [elementsListZ, previewElementId, action, tool]);
 
 
-  if(!value) return null;
+const value = useMemo(() => ({
+  elementsList: [...elementsListZ],
+  canvasRef,
+  previewElementId,
+  action,
+  tool,
+  clientViewRef,
+  setPreviewElementId,
+  setAction,
+  setTool,
+  setClientViewRef
+}), [elementsListZ, previewElementId, action, tool, elementsListStatus]);
+
+
 
   return (
     <CanvasContextProvider value={value}>{children}</CanvasContextProvider>

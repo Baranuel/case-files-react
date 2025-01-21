@@ -6,12 +6,11 @@ import { BASE_URL } from "@/constants";
 
 
 export function SelectedItem() {
-  const { clientViewRef, previewElementId } = useCanvas();
+  const { clientViewRef, previewElementId, elementsList} = useCanvas();
   const clientView = clientViewRef.current;
   if(!clientView) return null;
-  
-  const {elements} = clientView;
-  const element = elements.find(el => el.id === previewElementId);
+
+  const element = elementsList.find(el => el.id === previewElementId);
 
   const getTitle = (type: ElementType | undefined) => {
     if(!type) return 'Selected Item'

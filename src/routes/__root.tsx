@@ -12,6 +12,7 @@ import { ZeroProvider } from "@rocicorp/zero/react";
 import Navigation from "@/app/components/ui/Navigation";
 import { RouterContext } from "@/types/router-context";
 import { Layout } from "@/app/components/ui/Layout";
+import { useMemo } from "react";
 
 
 export const Route = createRootRouteWithContext<RouterContext>()({
@@ -28,19 +29,19 @@ function RootComponent() {
   const isProd = import.meta.env.PROD;
   const {userId, getToken} = useAuth();
 
-
-    const zero = new Zero({
-      userID: userId ?? 'anon',
-      schema,
-      server: isProd
-        ? import.meta.env.VITE_ZERO_SERVER_URL_PROD
-        : import.meta.env.VITE_ZERO_SERVER_URL_DEV,
-      kvStore: "mem",
-      auth: async (err) => {
-        if(err === 'invalid-token') return await getToken({template:'casefiles'}) ?? token!
-        return token!
-      },
-    });
+  // Memoize the Zero instance to prevent recreation on re-renders
+  const zero = useMemo(() => new Zero({
+    userID: userId ?? 'anon',
+    schema,
+    server: isProd
+      ? import.meta.env.VITE_ZERO_SERVER_URL_PROD
+      : import.meta.env.VITE_ZERO_SERVER_URL_DEV,
+    kvStore: "mem",
+    auth: async (err) => {
+      if(err === 'invalid-token') return await getToken({template:'casefiles'}) ?? token!
+      return token!
+    },
+  }), [userId, token, isProd, getToken]);
 
 
 
