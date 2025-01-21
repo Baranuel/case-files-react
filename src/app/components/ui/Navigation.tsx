@@ -5,7 +5,10 @@ const Navigation = () => {
 
   const {isSignedIn} = useAuth();
   return (
-    <nav className="flex items-center w-full h-16 p-2 text-white bg-[#2C2421]">
+    <nav style={{
+      viewTransitionName:'navigation'
+    }}
+     className="flex items-center w-full h-16 p-2 text-white bg-[#2C2421] z-50 sticky">
       <ul className='flex gap-4'>
         <li>
           <Link to="/">Home</Link>

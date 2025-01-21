@@ -10,7 +10,6 @@ import { useCanvasEvents } from "../hooks/use-canvas-events";
 import { useUpdateCamera } from "../hooks/use-update-camera";
 import { renderCanvas } from "../utils/canvas-rendering/handle-render-canvas";
 import { useImageCache } from "../hooks/use-image-cache";
-import { useParams } from "@tanstack/react-router";
 
 export const Canvas = () => {
 
@@ -18,10 +17,12 @@ export const Canvas = () => {
   const { cacheLoaded } = useImageCache(elementsList);
   const { handleMouseDown, handleMouseUp, handleMouseMove, handleMouseLeave } = useCanvasEvents();
   const { handleWheel } = useUpdateCamera();
+  
 
   const handleRenderCanvas = useCallback(() => {
     const canvas = canvasRef.current;
     const clientView = clientViewRef.current;
+    
     if (!canvas || !clientView) return;
     const {camera, elements, ghostElement} = clientView;
 

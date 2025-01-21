@@ -1,21 +1,17 @@
 import {
-  Link,
   Outlet,
-  createRootRoute,
   createRootRouteWithContext,
-  useParams,
 } from "@tanstack/react-router";
 import { TanStackRouterDevtools } from "@tanstack/router-devtools";
 import {
   useAuth,
 } from "@clerk/clerk-react";
 import { Zero } from "@rocicorp/zero";
-import { useEffect, useState } from "react";
 import { schema } from "@/schema";
 import { ZeroProvider } from "@rocicorp/zero/react";
-import Navigation from "@/app/components/Navigation";
+import Navigation from "@/app/components/ui/Navigation";
 import { RouterContext } from "@/types/router-context";
-import { Layout } from "@/app/components/Layout";
+import { Layout } from "@/app/components/ui/Layout";
 
 
 export const Route = createRootRouteWithContext<RouterContext>()({

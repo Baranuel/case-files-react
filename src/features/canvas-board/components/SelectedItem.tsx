@@ -69,7 +69,7 @@ export function SelectedItem() {
   );
 
   return (
-    <div style={{viewTransitionName: 'selected-item-wrapper'}} className={ `flex w-full h-full relative ${!previewElementId ? '-rotate-[12deg]' : 'rotate-0'}` }>
+    <div style={{viewTransitionName: 'selected-item-wrapper'}} className={ ` z-20 flex w-full h-full relative ${!previewElementId ? '-rotate-[12deg]' : 'rotate-0'}` }>
       <Folder isOpen={!!previewElementId} />
       <PaperLayers
         isOpen={!!previewElementId}

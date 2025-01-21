@@ -45,7 +45,6 @@ const CanvasProvider = ({ children }: CanvasProviderProps) => {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const zero = useZero<ZeroSchema>();
   const [ elementsListZ ] = useQuery(zero.query.element.related('content').where('boardId', "=", boardId!));
-  
   const [previewElementId, setPreviewElementId] = useState<Element['id'] | null>(null);
   const [action, setAction] = useState<ActionType | null>(null);
   const [tool, setTool] = useState<Tool>('select');
