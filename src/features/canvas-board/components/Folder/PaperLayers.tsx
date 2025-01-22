@@ -37,9 +37,13 @@ export const PaperLayers = ({ isOpen, children }: PaperLayersProps) => {
         {/* Tab */}
         <div
           onClick={() => {
-            document.startViewTransition(() => {
+            if('startViewTransition' in document) {
+              document.startViewTransition(() => {
+                setPreviewElementId(null)
+              })
+            } else {
               setPreviewElementId(null)
-            })
+            }
           }}
           className={cn(
             "absolute hover:cursor-pointer -right-8 top-8 w-8 h-24 bg-[#E4C18D] rounded-r-lg border-r border-t border-b border-[#C4A475] flex items-center justify-center"

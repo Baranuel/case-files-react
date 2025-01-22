@@ -48,7 +48,7 @@ const CardElement = ({title, description}: CardElementProps) => {
 export const LandingPage = () => {
   return (
     <div className="w-full h-full max-w-[1440px] mx-auto p-4 md:pt-8">
-    <section className=" h-[75vh] max-h-[700px] flex flex-row md:flex-col md:items-start gap-6 md:gap-2 items-center justify-start">
+    <section className=" min-h-[75vh] max-h-fit-content flex flex-row md:flex-col md:items-start gap-6 md:gap-2 items-center justify-start">
       <div className="flex flex-col gap-6  w-2/3 md:w-full">
       <h1 className="">
         <motion.span
@@ -81,9 +81,15 @@ export const LandingPage = () => {
         every case into a collaborative adventure!
       </motion.p>
 
+      <motion.div
+      initial={{opacity:0, x:-20}}
+      animate={{opacity:1, x:0}}
+      transition={{delay:0.7, duration:0.5}}
+      className="flex">
       <Button variant='primary' className="max-w-[150px]  text-base shadow-md" title="Create Board Button">
         Create Board
       </Button>
+      </motion.div>
       </div>
       
       <motion.img
@@ -93,16 +99,21 @@ export const LandingPage = () => {
       src="casefile.png" alt="Sherlock Holmes" className="w-auto  max-h-[400px] xl:max-h-[350px] lg:max-h-[275px] mt-4 shadow-xl " />
     </section>
 
-    <section className=" md:mt-[50px] h-full lg:h-3/4 md:h-1/2 w-full mx-auto flex flex-col gap-6 items-center justify-center ">
+    <motion.section 
+    initial={{opacity:0, y:20}}
+    animate={{opacity:1, y:0}}
+    transition={{delay:0.7, duration:0.5}}
+    className=" md:mt-[50px] h-full lg:h-3/4 md:h-1/2 w-full flex flex-col gap-12 md:gap-6 items-center justify-center ">
+    <h3 className="text-5xl md:text-4xl font-black leading-tighter bg-gradient-to-r  from-[#B4540A] to-[#eb8415]  bg-clip-text text-transparent">Introduction</h3>
     <div className=" h-[600px] xl:h-[600px] lg:h-[500px] md:h-[275px] w-[70%] md:w-full  bg-[#FFF0DF] border-4 shadow-2xl border-[#B4540A] rounded-md"/>
-    </section>
+    </motion.section>
 
-    <section className=" mt-[150px] lg:mt-[100px] md:mt-[50px] h-full max-h-[500px] md:max-h-full w-full mx-auto flex flex-col gap-6 items-center justify-start">
+    <section className=" mt-[150px] lg:mt-[100px] md:mt-[50px] h-full max-h-fit-content md:max-h-full w-full mx-auto flex flex-col gap-12 md:gap-6 items-center justify-start">
     <h3 className="text-5xl md:text-4xl font-black leading-tighter bg-gradient-to-r  from-[#B4540A] to-[#eb8415]  bg-clip-text text-transparent">Overview</h3>
       <div className=" w-full md:w-full grid grid-cols-3 xl:grid-cols-2 md:grid-cols-1 gap-2 ">{cards.map(( card, index ) => <CardElement key={index} title={card.title} description={card.description}/>)}</div>
     </section>
 
-    <section className=" my-[150px] lg:mt-[100px] md:mt-[50px] h-full max-h-[500px] md:max-h-full w-full mx-auto flex flex-col gap-6 items-center justify-start">
+    <section className=" my-[150px] lg:mt-[100px] md:mt-[50px] h-full max-h-[500px] md:max-h-full w-full mx-auto flex flex-col gap-12 md:gap-6 items-center justify-start">
     <h3 className="text-5xl md:text-4xl font-black leading-tighter bg-gradient-to-r  from-[#B4540A] to-[#eb8415]  bg-clip-text text-transparent">Free Access</h3>
     <p className="text-xl text-center  text-[#333333]/90 leading-relaxed font-medium">You can start using Casefiles for free, create up to 3 boards without any payment required.</p>
     <Button variant='primary' className="max-w-[150px]  text-base shadow-md" title="Create Board Button">

@@ -9,7 +9,9 @@
 }
 
 body {
+    width: 100vw;
     background-color: #FFF6EB;
+    overflow-x: hidden;
 }
 
 

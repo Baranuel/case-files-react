@@ -34,9 +34,13 @@ export const useCanvasEvents = () => {
 
     const handleSelectElementId = useCallback((element: EnrichedElement | null) => {
         if(element?.id.includes('ghost-element')) return;
-        document.startViewTransition(() => {
+        if('startViewTransition' in document) {
+            document.startViewTransition(() => {
+                setPreviewElementId(element?.id ?? null);
+            });
+        } else {
             setPreviewElementId(element?.id ?? null);
-        });
+        }
     }, [setPreviewElementId]);
 
     const handleMouseDown = useCallback(async (e: React.MouseEvent<HTMLCanvasElement>) => {
