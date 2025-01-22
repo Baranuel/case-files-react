@@ -22,7 +22,8 @@ const drawImage = (ctx: CanvasRenderingContext2D, imageUrl: string | null, x1: n
 
     const image = getImageCache(imageUrl)
     if(!image) return dimensions
-
+    ctx.fillStyle = bgColor 
+    ctx.fillRect(imageX, imageY, imageWidth, imageHeight)
     ctx.drawImage(image, imageX , imageY ,imageWidth , imageHeight )
     return dimensions
 }
@@ -41,7 +42,7 @@ export const handleRenderLocation = (ctx: CanvasRenderingContext2D, element: Ele
     ctx.fillRect(x1, y1, width, height);
 
     // image
-    const { imageHeight, imageWidth} = drawImage(ctx, element.imageUrl, x1, y1, height, width, padding, color)
+    const { imageHeight, imageWidth} = drawImage(ctx, element.imageUrl, x1, y1, height, width, padding, polaroidBgColor)
 
      // text area
      const textAreaX = x1 + padding!
@@ -59,7 +60,7 @@ export const handleRenderLocation = (ctx: CanvasRenderingContext2D, element: Ele
      const textHeight = textAreaHeight
  
      ctx.fillStyle = textColor
-     ctx.font = 'bold 20px Arial'
+     ctx.font = 'bold 28px Arial'
      ctx.textBaseline = 'middle'
      ctx.textAlign = 'center'
 

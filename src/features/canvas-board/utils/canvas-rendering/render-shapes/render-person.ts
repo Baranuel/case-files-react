@@ -66,7 +66,7 @@ export const handleRenderPerson = (ctx: CanvasRenderingContext2D, element: Eleme
     const textHeight = textAreaHeight
 
     ctx.fillStyle = '#333'
-    ctx.font = 'bold 24px Arial'
+    ctx.font = 'bold 30px Arial'
     ctx.textBaseline = 'middle'
     ctx.textAlign = 'center'
 

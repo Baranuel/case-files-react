@@ -14,9 +14,9 @@ export const line: LineDefinition = {
     minWidth: 150,
     minHeight: 250,
     length:100,
-    color: '#fcd34d',
-    lineWidth: 5,
-    dash: [10, 5]
+    color: '#FBBF24',
+    lineWidth: 10,
+    dash: [0, 0]
 }
 
 

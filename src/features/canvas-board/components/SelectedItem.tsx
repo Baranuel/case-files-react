@@ -6,6 +6,8 @@ import { ElementType } from "@/types";
 import { BASE_URL } from "@/constants";
 import { useEffect } from "react";
 import { useState } from "react";
+import { useZero } from "@rocicorp/zero/react";
+import { ZeroSchema } from "@/schema";
 
 export function SelectedItem() {
   const { clientViewRef, previewElementId, elementsList } = useCanvas();
@@ -14,6 +16,10 @@ export function SelectedItem() {
 
   const element = elementsList.find((el) => el.id === previewElementId);
   const [previewElement, setPreviewElement] = useState<Element | null>(element || null);
+
+  const z = useZero<ZeroSchema>();
+
+
 
   useEffect(() => {
     if (element) {
@@ -25,6 +31,16 @@ export function SelectedItem() {
     if (!type) return "Selected Item";
     if (type === "person") return "Suspect";
     if (type === "location") return "Location";
+  };
+
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+    if(!element?.contentId) return;
+
+    const { name, value } = e.target;
+    z.mutate.content.update({
+      id: element?.contentId,
+      title: value
+    });
   };
 
   const mainContent = (
@@ -56,6 +72,8 @@ export function SelectedItem() {
             type="text"
             className="w-full bg-[#F5E6D3] text-[#8B4513] p-2 rounded focus:outline-none focus:ring-2 focus:ring-[#D4B492] border border-[#D4B492]"
             placeholder="Enter case title..."
+            value={element?.content?.[0].title}
+            onChange={handleInputChange}
           />
         </div>
 

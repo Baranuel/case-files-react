@@ -4,10 +4,10 @@ import { BASE_URL } from "@/constants";
 
 
 export const person: PersonDefinition = {
-    minWidth: 250,
-    minHeight: 325,
-    color: '#F7EBE8',
-    padding:15,
+    minWidth: 325,
+    minHeight: 425,
+    color: '#FFF0DF',
+    padding:10,
     gap:10
 }
 
