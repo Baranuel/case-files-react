@@ -58,7 +58,16 @@ export const positionWithinElement = (x: number, y: number, element: Element): P
 export const getElementAtPosition = (x: number, y: number, elements: Element[]): EnrichedElement | null => {
 
     return elements
-        .map(element => ({ ...element, positionWithinElement: positionWithinElement(x, y, element), offsetX: x - element.position.x1, offsetY: y - element.position.y1 }))
+        .map(element => {
+            
+            // Where in the element we grabbed it with the mouse
+            const offset = {
+                x: x - element.position.x1,
+                y: y - element.position.y1
+            }
+            
+            return { ...element, positionWithinElement: positionWithinElement(x, y, element), offsetX: offset.x, offsetY: offset.y }
+        })
         .find(element => element.positionWithinElement !== null) || null;
 };
 

@@ -22,8 +22,8 @@ export const drawBackground = (ctx: CanvasRenderingContext2D, canvas: HTMLCanvas
 }
 
 export const renderCanvas = (canvas: HTMLCanvasElement, camera: Camera, elements: Element[], ghostElement: Element | null) => {
-    const width = canvas.getBoundingClientRect().width;
-    const height = canvas.getBoundingClientRect().height;
+    const width = window.innerWidth;
+    const height = window.innerHeight;
     
     canvas.width = width * dpr;
     canvas.height = height * dpr;

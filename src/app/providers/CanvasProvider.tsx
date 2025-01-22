@@ -31,7 +31,8 @@ interface ClientView {
   ghostElement: Element | null;
   lastClickedPosition: {x1: number, y1: number},
   selectedItemId: Element['id'] | null,
-  lastInteractionElement: EnrichedElement | null
+  lastInteractionElement: EnrichedElement | null,
+  panning: boolean
 }
 
 
@@ -53,11 +54,12 @@ const CanvasProvider = ({ children }: CanvasProviderProps) => {
   // we can do this thanks to rendering canvas on every device frame so updating refs will always have visual change
   const clientViewRef = useRef<ClientView>({
     elements: [],
-    camera: {x1: 0, y1: 0, zoom: 1}, 
+    camera: {x1: 0, y1: 0, zoom: 0.5}, 
     ghostElement: null,
     lastClickedPosition: {x1: 0, y1: 0},
     selectedItemId: null,
-    lastInteractionElement: null
+    lastInteractionElement: null,
+    panning: false
   });
 
   const setClientViewRef = (clientView: ClientView | ((prev: ClientView) => ClientView)) => {

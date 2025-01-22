@@ -7,6 +7,7 @@ import { EnrichedElement } from "@/types";
 import { setCursor } from "../utils/cursor-state";
 import { ZeroSchema } from "@/schema";
 import { useZero } from "@rocicorp/zero/react";
+import { panCamera } from "../utils/convert-position";
 
 export const useCanvasEvents = () => {
     const z = useZero<ZeroSchema>();
@@ -51,7 +52,6 @@ export const useCanvasEvents = () => {
         
         if(tool !== 'select') {
             const element = handleCreateElement(x1, y1, tool);
-            console.log('element', element);
             if(element) {
                 setClientViewRef(prev => ({...prev, lastInteractionElement: element as EnrichedElement}));
                 z.mutateBatch(async tx => {
@@ -66,6 +66,8 @@ export const useCanvasEvents = () => {
                 });
             }
         }
+
+
         
 
         const action = handleInferAction(element?.positionWithinElement ?? null, tool);
@@ -77,6 +79,7 @@ export const useCanvasEvents = () => {
         const clientView = clientViewRef.current;
         const canvas = canvasRef.current;
         if(!clientView || !canvas) return;
+
         const {camera, elements, lastClickedPosition, lastInteractionElement} = clientView;
         
         const {x1, y1} = getMouseCoordinates(e, camera);
@@ -95,9 +98,9 @@ export const useCanvasEvents = () => {
             z.mutate.element.update({id: interactionElement.id, position: interactionElement.position});
         }
 
+        setClientViewRef(prev => ({...prev, lastClickedPosition: {x1: 0, y1: 0}, lastInteractionElement: null, ghostElement: null, panning: false}));
         setAction(null);
         setTool('select');
-        setClientViewRef(prev => ({...prev, lastClickedPosition: {x1: 0, y1: 0}, lastInteractionElement: null, ghostElement: null}));
         setCursor(canvas, tool, action,element);
     }, [clientViewRef, setAction, handleSelectElementId, setTool, setClientViewRef]);
 
@@ -109,8 +112,14 @@ export const useCanvasEvents = () => {
 
         const {x1, y1} = getMouseCoordinates(e, camera);
         const element = getElementAtPosition(x1, y1, elements);
+        console.log(element);
 
         setCursor(canvas, tool, action, element);
+        
+        if(clientViewRef.current.panning) {
+            setCursor(canvas, tool, action, element, true);
+            setClientViewRef(prev => ({...prev, camera: panCamera(e.movementX, e.movementY, prev.camera, true)}));
+        }
 
         if(tool !== 'select') {
             requestAnimationFrame(() => handleGhostElement(x1, y1, tool));
@@ -131,10 +140,24 @@ export const useCanvasEvents = () => {
             requestAnimationFrame(() => handleResizeElement(x1, y1, lastInteractionElement));
         }
 
-    }, [clientViewRef, action, handleMoveElement, canvasRef, handleGhostElement, tool]);
+    }, [clientViewRef, action, handleMoveElement, canvasRef, handleGhostElement, tool, setClientViewRef]);
 
     const handleMouseLeave = useCallback(() => {
-        setClientViewRef(prev => ({...prev, ghostElement: null}));
+        setClientViewRef(prev => ({...prev, ghostElement: null, panning: false}));
+    }, [setClientViewRef]);
+
+    const handleKeyDown = useCallback((e: KeyboardEvent, canvas: HTMLCanvasElement) => {
+        if(e.key === ' ') {
+            canvas.style.cursor = 'grabbing';
+            setClientViewRef(prev => ({...prev, panning: true}));
+        }
+    }, [setClientViewRef]);
+
+    const handleKeyUp = useCallback((e: KeyboardEvent, canvas: HTMLCanvasElement) => {
+        if(e.key === ' ') {
+            canvas.style.cursor = 'default';
+            setClientViewRef(prev => ({...prev, panning: false}));
+        }
     }, [setClientViewRef]);
 
     // Return memoized event handlers
@@ -142,6 +165,8 @@ export const useCanvasEvents = () => {
         handleMouseDown,
         handleMouseUp,
         handleMouseMove,
-        handleMouseLeave
-    }), [handleMouseDown, handleMouseUp, handleMouseMove, handleMouseLeave]);
+        handleMouseLeave,
+        handleKeyDown,
+        handleKeyUp
+    }), [handleMouseDown, handleMouseUp, handleMouseMove, handleMouseLeave, handleKeyDown, handleKeyUp]);
 }

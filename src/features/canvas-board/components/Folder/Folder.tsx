@@ -10,11 +10,11 @@ export const Folder = ({ isOpen = false }: FolderProps) => {
         viewTransitionName: "selected-item-folder",
         transitionDuration: "0.3s",
       }}
-      className={` w-full h-full bg-[#E4C18D] rounded-sm py-4 pr-4 shadow-lg ${isOpen ? "-translate-x-[calc(50%)]" : "translate-x-0"} relative`}
+      className={` w-full h-full bg-[#E4C18D] rounded-md p-5 shadow-lg ${isOpen ? "-translate-x-[10%]" : "translate-x-0"} relative`}
     >
 
       {/* Folder content */}
-      <div className="w-full h-full border-2 border-[#C4A475] rounded-r-lg pr-4 bg-[#F5DEB3] p-6 relative">
+      <div className="w-full h-full border-2 border-[#C4A475] rounded-r-lg pr-4 bg-[#F5DEB3] p-12 relative">
         {/* Coffee Stains */}
         <div className="absolute top-24 left-32 w-20 h-20 rounded-full bg-[#8B4513] opacity-10 blur-sm" />
         <div className="absolute bottom-16 right-24 w-16 h-16 rounded-full bg-[#8B4513] opacity-15 blur-sm" />
@@ -37,7 +37,7 @@ export const Folder = ({ isOpen = false }: FolderProps) => {
           <p>Assigned to: Agent Smith</p>
         </div>
 
-        <div className="space-y-4">
+        <div className="space-y-4 pr-6">
           <div className="h-3 bg-[#C4A475] rounded-full w-full opacity-30" />
           <div className="h-3 bg-[#C4A475] rounded-full w-5/6 opacity-30" />
           <div className="h-3 bg-[#C4A475] rounded-full w-4/6 opacity-30" />

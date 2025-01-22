@@ -8,12 +8,17 @@ export const useUpdateCamera = () => {
     const {setClientViewRef, canvasRef, clientViewRef} = useCanvas();
     const canvas = canvasRef.current;
 
+
+
     const handleWheel = useCallback((event: WheelEvent) => {
         if(!canvas) return;
         event.preventDefault();
 
         if(event.ctrlKey) {
-            const zoomFactor = Math.pow(0.99, event.deltaY);
+            const ZOOM_SENSITIVITY = 20;
+            const clampedDelta = Math.max(-ZOOM_SENSITIVITY, Math.min(ZOOM_SENSITIVITY, event.deltaY));
+
+            const zoomFactor = Math.pow(0.99, clampedDelta);
             const zoomPointX = event.clientX - canvas.getBoundingClientRect().left 
             const zoomPointY = event.clientY - canvas.getBoundingClientRect().top
             setClientViewRef(prev => ({...prev, camera: zoomAtPoint(zoomPointX, zoomPointY, prev.camera, zoomFactor)}));
@@ -21,6 +26,9 @@ export const useUpdateCamera = () => {
             setClientViewRef(prev => ({...prev, camera: panCamera(event.deltaX, event.deltaY, prev.camera)}));
         }
     }, [canvas, setClientViewRef]);
+    
+
+    
 
 
 

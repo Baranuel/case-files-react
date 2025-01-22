@@ -17,8 +17,8 @@ export const PaperLayers = ({ isOpen, children }: PaperLayersProps) => {
           zIndex: 0,
         }}
         className={cn(
-          `bg-[#F5E6D3] absolute w-full p-8 h-[97%] top-[1.5%] z-0 shadow-lg border border-[#D4B492] overflow-auto `,
-          !isOpen ? `translate-x-[2%]` : "translate-x-[62%]"
+          `bg-[#F5E6D3] absolute w-full p-8 h-[92%] top-[4%] z-0 border border-[#D4B492]  overflow-auto `,
+          !isOpen ? `translate-x-[2%]` : "translate-x-[95%]"
         )}
       >
         {children}
@@ -31,7 +31,7 @@ export const PaperLayers = ({ isOpen, children }: PaperLayersProps) => {
         }}
         className={cn(
           `bg-[#E4C18D] absolute w-[110%] h-[98%] top-[1%] rounded-lg -z-10 shadow-lg border border-[#D4B492] `,
-          !isOpen ? `-translate-x-[5%]` : "translate-x-[50%]"
+          !isOpen ? `-translate-x-[5%]` : "translate-x-[82%]"
         )}
       >
         {/* Tab */}

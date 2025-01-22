@@ -92,8 +92,8 @@ export function SelectedItem() {
   return (
     <div
       style={{ viewTransitionName: "selected-item-wrapper" }}
-      className={` absolute top-[5%] -left-64 min-w-[400px] w-fit-content h-[90%]   ${
-        !previewElementId ? "rotate-[12deg]" : "rotate-0 translate-x-0"
+      className={` absolute top-[2%] -translate-x-[90%] min-w-[400px] w-fit-content h-[90%]   ${
+        !previewElementId ? "rotate-[4deg]" : "rotate-0"
       }`}
     >
       <div className={` z-20 flex min-w-[400px] w-[10vw] h-full relative`}>

@@ -15,7 +15,7 @@ export const Canvas = () => {
 
   const { clientViewRef,  canvasRef, elementsList, } = useCanvas();
   const { cacheLoaded } = useImageCache(elementsList);
-  const { handleMouseDown, handleMouseUp, handleMouseMove, handleMouseLeave } = useCanvasEvents();
+  const { handleMouseDown, handleMouseUp, handleMouseMove, handleMouseLeave, handleKeyDown, handleKeyUp } = useCanvasEvents();
   const { handleWheel } = useUpdateCamera();
   
 
@@ -38,14 +38,18 @@ export const Canvas = () => {
   useEffect(() => {
     const canvas = canvasRef.current;
     if (!canvas) return;
+
     canvas.addEventListener("wheel", handleWheel);
     window.addEventListener("resize", handleRenderCanvas);
-
+    window.addEventListener("keydown", (e) => handleKeyDown(e, canvas));
+    window.addEventListener("keyup", (e) => handleKeyUp(e, canvas));
     return () => {
       canvas.removeEventListener("wheel", handleWheel);
       window.removeEventListener("resize", handleRenderCanvas);
+      window.removeEventListener("keydown", e => handleKeyDown(e, canvas));
+      window.removeEventListener("keyup", (e) => handleKeyUp(e, canvas));
     };
-  }, [canvasRef, handleWheel, handleRenderCanvas]);
+  }, [canvasRef, handleWheel, handleRenderCanvas, handleKeyDown, handleKeyUp]);
 
   const canvasProps = useMemo(
     () => ({
