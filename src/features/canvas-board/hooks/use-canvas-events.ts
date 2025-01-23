@@ -116,7 +116,6 @@ export const useCanvasEvents = () => {
 
         const {x1, y1} = getMouseCoordinates(e, camera);
         const element = getElementAtPosition(x1, y1, elements);
-        console.log(element);
 
         setCursor(canvas, tool, action, element);
         

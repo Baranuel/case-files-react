@@ -15,7 +15,12 @@ export const getImageCache = (imageUrl: string): ImageBitmap | undefined => {
 export const loadAndCacheImage = async (imageUrl: string): Promise<ImageBitmap | null> => {
     const cached = getImageCache(imageUrl);
     if (cached) return cached;
-    const response = await fetch(`${BASE_URL}/${imageUrl}`);
+
+    
+    const isRemoteImage = imageUrl.startsWith('http');
+    const imageUrlToLoad = isRemoteImage ? imageUrl : `${BASE_URL}/${imageUrl}`;
+
+    const response = await fetch(imageUrlToLoad);
     const blob = await response.blob();
 
     if(imageUrl.includes('.svg')) {

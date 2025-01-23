@@ -7,7 +7,7 @@ export const Board = () => {
 
   return (
     <CanvasProvider>
-        <div className="relative overflow-hidden h-[calc(100vh-4rem)] w-full ">
+        <div className="relative overflow-hidden h-full w-full ">
             <SelectedItem />
             <Canvas />
             <Toolbar />

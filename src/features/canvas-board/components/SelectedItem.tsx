@@ -12,10 +12,17 @@ import { ZeroSchema } from "@/schema";
 export function SelectedItem() {
   const { clientViewRef, previewElementId, elementsList } = useCanvas();
   const clientView = clientViewRef.current;
+
+
+
   if (!clientView) return null;
 
   const element = elementsList.find((el) => el.id === previewElementId);
   const [previewElement, setPreviewElement] = useState<Element | null>(element || null);
+  const [images, setImages] = useState<string[]>([]);
+  const isRemoteImage = element?.imageUrl?.startsWith('http');
+
+  const imageUrl = isRemoteImage ? element?.imageUrl : `${BASE_URL}/${element?.imageUrl}`;
 
   const z = useZero<ZeroSchema>();
 
@@ -26,6 +33,7 @@ export function SelectedItem() {
       setPreviewElement(element);
     }
   }, [element]);
+
 
   const getTitle = (type: ElementType | undefined) => {
     if (!type) return "Selected Item";
@@ -51,8 +59,8 @@ export function SelectedItem() {
 
       <div className="flex gap-4 my-2 p-2 bg-[#ECD5B8] rounded-lg">
         <img
-          className="w-[150px] pt-2 border border-black bg-[#E4C18D] rounded-md"
-          src={`${BASE_URL}/${element?.imageUrl}`}
+          className="w-[150px]  border border-black bg-[#E4C18D] rounded-md"
+          src={imageUrl ?? ''}
           alt=""
         ></img>
         <div className="flex flex-col ">
@@ -110,7 +118,7 @@ export function SelectedItem() {
   return (
     <div
       style={{ viewTransitionName: "selected-item-wrapper" }}
-      className={` absolute top-[2%] -translate-x-[90%] min-w-[400px] w-fit-content h-[90%]   ${
+      className={` absolute top-[7%] -translate-x-[90%] min-w-[400px] w-fit-content h-[90%]   ${
         !previewElementId ? "rotate-[4deg]" : "rotate-0"
       }`}
     >

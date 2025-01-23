@@ -34,7 +34,7 @@ export const createDefaultPerson = (mouseX: number, mouseY: number, mode: 'ghost
         type: 'person',
         boardId: boardId ?? null,
         contentId: null,
-        imageUrl: `${randomAvatar}`,
+        imageUrl: `https://casefiles.ams3.cdn.digitaloceanspaces.com/images/${randomAvatar}`,
         layer: 0,
         position: {x1, y1, x2, y2},
         creatorId

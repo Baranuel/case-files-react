@@ -53,7 +53,7 @@ function RootComponent() {
         <Layout>
            <Outlet />
         </Layout>
-      <TanStackRouterDevtools position="bottom-right" />
+      {!isProd && <TanStackRouterDevtools position="bottom-right" />}
     </ZeroProvider>
   );
 }

@@ -13,7 +13,7 @@ import { useImageCache } from "../hooks/use-image-cache";
 
 export const Canvas = () => {
 
-  const { clientViewRef,  canvasRef, elementsList, } = useCanvas();
+  const { clientViewRef,  canvasRef, elementsList} = useCanvas();
   const { cacheLoaded } = useImageCache(elementsList);
   const { handleMouseDown, handleMouseUp, handleMouseMove, handleMouseLeave, handleKeyDown, handleKeyUp } = useCanvasEvents();
   const { handleWheel } = useUpdateCamera();

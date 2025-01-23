@@ -45,7 +45,7 @@ export function Lobby() {
   if(boardsStatus.type !== 'complete') return     <div className="min-h-[calc(80vh-4rem)] mx-auto px-4 py-8"/>
   
   return (
-    <div className="min-h-[calc(80vh-4rem)] mx-auto px-4 py-8">
+    <div className="h-full w-full mx-auto px-4 py-8">
       <div className="max-w-7xl mx-auto">
         <h1 className="text-3xl font-bold text-[#2c2420] mb-8">Your Boards</h1>
         <div className="grid grid-cols-4 gap-6">

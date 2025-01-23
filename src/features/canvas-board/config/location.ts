@@ -1,16 +1,15 @@
 import { Element } from "@/types";
 import { LocationDefinition} from "../types";
-import { BASE_URL } from "@/constants";
 
 
 export const location: LocationDefinition = {
     minWidth: 250,
     minHeight: 300,
-    color: '#FFF0DF',
-    polaroidBgColor: '#ECD5B8',
-    textColor: '#333',
-    padding: 15,
-    gap: 20
+    color: '#F8B988',
+    polaroidBgColor: '#F8B988',
+    textColor: '#0E0B09',
+    padding: 10,
+    gap:-10
 }
 
 
@@ -27,7 +26,7 @@ export const createDefaultLocation = (mouseX: number, mouseY: number, mode: 'gho
         type: 'location',
         contentId: null,
         boardId: boardId ?? null,
-        imageUrl: `location.svg`,
+        imageUrl: `https://casefiles.ams3.cdn.digitaloceanspaces.com/images/location.svg`,
         layer: 0,
         position: {x1, y1, x2, y2},
         creatorId

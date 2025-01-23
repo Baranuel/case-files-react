@@ -2,6 +2,7 @@ import { Element } from "@/types/element";
 import { config } from "../../../config";
 import { getImageCache, loadAndCacheImage } from "@/utils/image-cache";
 import { PersonDefinition } from "@/features/canvas-board/types";
+import { handleRenderText } from "../handle-render-text";
 
 
 const drawImage = (ctx: CanvasRenderingContext2D, imageUrl: string | null, x1: number, y1: number, height:number, width:number, padding:number, bgColor:string = '#ECD5B8') => {
@@ -19,8 +20,6 @@ const drawImage = (ctx: CanvasRenderingContext2D, imageUrl: string | null, x1: n
             imageWidth
         }
     
-        ctx.strokeStyle = 'black'
-        ctx.strokeRect(imageX, imageY, imageWidth, imageHeight)
         ctx.fillStyle = bgColor
         ctx.fillRect(imageX, imageY, imageWidth, imageHeight)
         
@@ -29,7 +28,7 @@ const drawImage = (ctx: CanvasRenderingContext2D, imageUrl: string | null, x1: n
         const image = getImageCache(imageUrl)
         if(!image) return dimensions
         
-        ctx.drawImage(image, imageX+padding/2 , imageY+padding ,imageWidth-padding , imageHeight - padding )
+        ctx.drawImage(image, imageX, imageY,imageWidth, imageHeight)
         ctx.restore()
         return dimensions
 }
@@ -66,13 +65,23 @@ export const handleRenderPerson = (ctx: CanvasRenderingContext2D, element: Eleme
     const textHeight = textAreaHeight
 
     ctx.fillStyle = '#333'
-    ctx.font = 'bold 30px Arial'
+    ctx.font = 'bold 38px Arial'
     ctx.textBaseline = 'middle'
     ctx.textAlign = 'center'
 
     const text = element.content?.[0].title ?? element.type
+
+    const textOptions = {
+        x: textX + textWidth / 2,
+        y: textY + textHeight / 2,
+        width: textWidth,
+        height: textHeight,
+        text,
+        font: 'bold 36px Arial',
+        color: '#333'
+    }
     
-    ctx.fillText(text, textX + textWidth / 2, textY + textHeight / 2, textWidth)
+    handleRenderText(ctx, textOptions)
     ctx.restore()
 }
 

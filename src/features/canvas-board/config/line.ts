@@ -16,7 +16,7 @@ export const line: LineDefinition = {
     length:100,
     color: '#FBBF24',
     lineWidth: 10,
-    dash: [0, 0]
+    dash: [20, 20]
 }
 
 

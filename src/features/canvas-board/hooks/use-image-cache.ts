@@ -1,28 +1,32 @@
 import { Element } from "@/schema"
 import { loadAndCacheImage } from "@/utils/image-cache"
-import { useEffect, useState } from "react"
+import { useCallback, useEffect, useMemo, useState } from "react"
 
 export const useImageCache = (visibleElements:Element[]) => {
-    const [imagesLoaded, setImagesLoaded] = useState(false);
+    const [imagesLoaded] = useState(false);
 
-    const loadImages = async () => {
+    const variousImageUrls = useMemo(() => new Set(visibleElements.map(element => element.imageUrl)), [visibleElements]);
+
+    const loadImages = useCallback(async () => {
         if(visibleElements.length === 0) return;
+        
         const promises = visibleElements.map(element => {
             if (element.imageUrl) {
-                return loadAndCacheImage( element.imageUrl);
+                return loadAndCacheImage(element.imageUrl);
             }
             return Promise.resolve();
         });
         try {
             await Promise.all(promises);
-            setImagesLoaded(true);
         } catch (error) {
             console.error('Error loading images:', error);
         }
-    };
+    }, [variousImageUrls]);
+
     useEffect(() => {
         loadImages();
-    }, [visibleElements]);
+        // loadBucketImages();
+    }, [variousImageUrls]);
 
     return { cacheLoaded: imagesLoaded };
 }
