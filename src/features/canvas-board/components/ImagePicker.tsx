@@ -116,11 +116,11 @@ export const ImagePicker = ({
                 {/** Content */}
                 <div className="flex gap-4 w-full h-full">
                   {/** Image */}
-                  <div className="flex flex-col gap-2 rounded-lg min-w-[225px]   overflow-hidden">
+                  <div className="flex flex-col gap-2 rounded-lg min-w-[275px]   overflow-hidden">
                     <span className="text-base  text-[#8B4513]">Current:</span>
                     <img
                       src={imageUrl}
-                      className="aspect-square  w-2/3 mx-auto "
+                      className="aspect-[1/1.1]  mx-auto "
                       alt="Image"
                     />
                   </div>
