@@ -9,7 +9,7 @@ import { useParams } from "@tanstack/react-router";
 
 interface CanvasContextType {
   elementsList: Element[];
-  canvasRef: React.RefObject<HTMLCanvasElement>;
+  canvasRef: React.RefObject<HTMLCanvasElement | null>;
   tool: Tool;
   action: ActionType | null;
   previewElementId: Element['id'] | null;

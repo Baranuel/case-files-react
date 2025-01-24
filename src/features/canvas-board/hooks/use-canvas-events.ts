@@ -20,7 +20,8 @@ export const useCanvasEvents = () => {
         canvasRef,
         setTool,
         setClientViewRef,
-        setPreviewElementId
+        setPreviewElementId,
+        previewElementId
     } = useCanvas();
     
     const {
@@ -34,6 +35,9 @@ export const useCanvasEvents = () => {
 
     const handleSelectElementId = useCallback((element: EnrichedElement | null) => {
         if(element?.id.includes('ghost-element')) return;
+        if(!element && !previewElementId) return;
+
+        
         if('startViewTransition' in document) {
             document.startViewTransition(() => {
                 setPreviewElementId(element?.id ?? null);
@@ -41,7 +45,7 @@ export const useCanvasEvents = () => {
         } else {
             setPreviewElementId(element?.id ?? null);
         }
-    }, [setPreviewElementId]);
+    }, [setPreviewElementId, previewElementId]);
 
     const handleMouseDown = useCallback(async (e: React.MouseEvent<HTMLCanvasElement>) => {
         const clientView = clientViewRef.current;
