@@ -5,9 +5,9 @@ import {  PersonDefinition, ShapeDefinition } from "../types";
 export const person: PersonDefinition = {
     minWidth: 400,
     minHeight: 500,
-    color: '#FFF0DF',
+    color: '#FFEFDC',
     padding:10,
-    gap:10
+    gap:20
 }
 
 

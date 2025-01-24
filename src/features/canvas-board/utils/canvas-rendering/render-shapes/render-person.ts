@@ -64,11 +64,6 @@ export const handleRenderPerson = (ctx: CanvasRenderingContext2D, element: Eleme
     const textWidth = textAreaWidth 
     const textHeight = textAreaHeight
 
-    ctx.fillStyle = '#333'
-    ctx.font = 'bold 38px Arial'
-    ctx.textBaseline = 'middle'
-    ctx.textAlign = 'center'
-
     const text = element.content?.[0].title ?? element.type
 
     const textOptions = {
@@ -77,8 +72,8 @@ export const handleRenderPerson = (ctx: CanvasRenderingContext2D, element: Eleme
         width: textWidth,
         height: textHeight,
         text,
-        font: 'bold 36px Arial',
-        color: '#333'
+        font: 'bold 38px Arial',
+        color: '#000'
     }
     
     handleRenderText(ctx, textOptions)

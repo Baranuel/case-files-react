@@ -5,8 +5,8 @@ import { LocationDefinition} from "../types";
 export const location: LocationDefinition = {
     minWidth: 250,
     minHeight: 300,
-    color: '#F8B988',
-    polaroidBgColor: '#F8B988',
+    color: '#FFA284',
+    polaroidBgColor: '#FFA284',
     textColor: '#0E0B09',
     padding: 10,
     gap:-10
