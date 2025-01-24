@@ -10,7 +10,7 @@ const drawImage = (ctx: CanvasRenderingContext2D, imageUrl: string | null, x1: n
 
         const imageX = x1 + padding
         const imageY = y1 + padding
-        const imageHeight = (height / 1.35) - padding * 2
+        const imageHeight = (height / 1.2) - padding * 2
         const imageWidth = width - padding * 2
 
         const dimensions = {
@@ -53,7 +53,7 @@ export const handleRenderPerson = (ctx: CanvasRenderingContext2D, element: Eleme
     const textAreaX = x1 + padding!
     const textAreaY = y1 + padding! + imageHeight + gap
     const textAreaWidth = imageWidth
-    const textAreaHeight = height - padding! * 2 - imageHeight - gap
+    const textAreaHeight = height - (padding! * 2) - imageHeight - gap
 
     ctx.fillStyle = 'transparent'
     ctx.fillRect(textAreaX, textAreaY, textAreaWidth, textAreaHeight)
