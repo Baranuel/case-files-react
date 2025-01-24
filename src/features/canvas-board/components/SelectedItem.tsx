@@ -53,17 +53,15 @@ export function SelectedItem() {
       <h1 className="text-2xl font-bold text-[#8B4513] mb-6">
         {getTitle(element?.type)} #{element?.id.slice(-5, -1)}
       </h1>
-
-      <div className="flex gap-4 my-2 p-2 bg-[#ECD5B8] rounded-lg">
-        <ImagePicker  imageUrl={imageUrl ?? undefined} onSelect={handleImageSelect} />
-        <div className="flex flex-col grow ">
-          <h3 className="text-sm font-bold text-[#8B4513]">Name</h3>
-          <p className="text-base text-[#8B4513]">
-            {element?.content?.[0].title}
-          </p>
+        <div className="flex gap-4 my-2 p-2 bg-[#ECD5B8] rounded-lg">
+          <div className="flex flex-col grow">
+            <h3 className="text-sm font-bold text-[#8B4513]">Name</h3>
+            <p className="text-base text-[#8B4513]">
+              {element?.content?.[0].title}
+            </p>
+          </div>
         </div>
-      </div>
-        
+        <ImagePicker  imageUrl={imageUrl ?? undefined} onSelect={handleImageSelect} />
     </>
   );
 

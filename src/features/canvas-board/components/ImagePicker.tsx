@@ -91,7 +91,7 @@ export const ImagePicker = ({ imageUrl, onSelect }: ImagePickerProps) => {
       <img
         onClick={() => setIsOpen(!isOpen)}
         src={imageUrl}
-        className="h-[150px] aspect-square object-contain rounded-lg hover:cursor-pointer hover:opacity-80 hover:brightness-110 hover:bg-black/10 transition-all duration-300"
+        className="h-[220px] aspect-square object-contain rounded-lg hover:cursor-pointer hover:opacity-80 hover:brightness-110 hover:bg-black/10 transition-all duration-300"
         alt="Image"
       />
       {createPortal(
