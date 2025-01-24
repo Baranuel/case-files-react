@@ -5,8 +5,8 @@ import { LocationDefinition} from "../types";
 export const location: LocationDefinition = {
     minWidth: 250,
     minHeight: 300,
-    color: '#FFA284',
-    polaroidBgColor: '#FFA284',
+    color: '#EF9952',
+    polaroidBgColor: '#EF9952',
     textColor: '#0E0B09',
     padding: 10,
     gap:-10
@@ -27,7 +27,7 @@ export const createDefaultLocation = (mouseX: number, mouseY: number, mode: 'gho
         contentId: null,
         boardId: boardId ?? null,
         imageUrl: `${import.meta.env.VITE_DIGITAL_OCEAN_BUCKET_CDN_URL!}/${import.meta.env.VITE_DIGITAL_OCEAN_BUCKET_IMAGES_PATH!}/location.svg`,
-        layer: 0,
+        layer: 1,
         position: {x1, y1, x2, y2},
         creatorId
     };

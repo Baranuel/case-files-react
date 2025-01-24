@@ -1,5 +1,4 @@
 import { ListObjectsV2Command, S3 } from "@aws-sdk/client-s3";
-import { getSignedUrl } from "@aws-sdk/s3-request-presigner";
 
 const client = new S3({
     endpoint: import.meta.env.VITE_DIGITAL_OCEAN_BUCKET_ENDPOINT!,

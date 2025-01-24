@@ -12,10 +12,14 @@ export default defineConfig({
     },
   },
   build: {
-    rollupOptions:{
-      output:{
-        manualChunks:{
-          vendor: ['@rocicorp/zero', '@rocicorp/zero/react', '@tanstack/react-router', '@tanstack/router-devtools']
+    rollupOptions: {
+      output: {
+        manualChunks: {
+          vendor: ['@rocicorp/zero', '@rocicorp/zero/react'],
+          aws: ['@aws-sdk/client-s3'],
+          clerk: ['@clerk/clerk-react'],
+          react: ['react', 'react-dom'],
+          tanstack: ['@tanstack/react-router', '@tanstack/router-devtools']
         }
       }
     }

@@ -55,7 +55,7 @@ export function SelectedItem() {
       </h1>
 
       <div className="flex gap-4 my-2 p-2 bg-[#ECD5B8] rounded-lg">
-        <ImagePicker imageUrl={imageUrl ?? undefined} onSelect={handleImageSelect} />
+        <ImagePicker  imageUrl={imageUrl ?? undefined} onSelect={handleImageSelect} />
         <div className="flex flex-col grow ">
           <h3 className="text-sm font-bold text-[#8B4513]">Name</h3>
           <p className="text-base text-[#8B4513]">
@@ -76,7 +76,9 @@ export function SelectedItem() {
     >
       <div className={` z-20 flex min-w-[400px] w-[10vw] h-full relative`}>
         <Folder isOpen={!!previewElementId} />
-        <PaperLayers isOpen={!!previewElementId}>{mainContent}</PaperLayers>
+        <PaperLayers isOpen={!!previewElementId}>{
+        !!previewElementId && mainContent
+        }</PaperLayers>
       </div>
     </div>
   );

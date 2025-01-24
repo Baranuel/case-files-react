@@ -3,8 +3,6 @@ import { cn } from "@/utils/cn";
 import { AnimatePresence, motion } from "framer-motion";
 import { useCallback, useEffect, useState } from "react";
 import { createPortal } from "react-dom";
-import { BiCross, BiExit } from "react-icons/bi";
-import { FaCross } from "react-icons/fa";
 import { IoIosCloseCircleOutline } from "react-icons/io";
 
 type ImagePickerProps = {
@@ -27,10 +25,7 @@ const tabs = [
   },
 ];
 
-export const ImagePicker = ({
-  imageUrl,
-  onSelect,
-}: ImagePickerProps) => {
+export const ImagePicker = ({ imageUrl, onSelect }: ImagePickerProps) => {
   const [isOpen, setIsOpen] = useState(false);
   const [imageSelection, setImageSelection] = useState<string[] | null>(null);
   const targetPortal = document.getElementById("image-picker-root");
@@ -42,35 +37,54 @@ export const ImagePicker = ({
     import.meta.env.VITE_DIGITAL_OCEAN_BUCKET_IMAGES_PATH! +
     "/";
 
-    const handleSelectImage = (imageUrl: string) => {
-      onSelect(imageUrl);
-      setIsOpen(false);
-      setActiveTab("all");
-    }
+  const handleSelectImage = (imageUrl: string) => {
+    onSelect(imageUrl);
+    setIsOpen(false);
+    setActiveTab("all");
+  };
 
-    const handleGetAllImages = useCallback(async () => {
-      const images = await getAvailablePickerImages();
-      const imageWithCdn = images.map((image) => cdnUrl + image);
-      setImageSelection(imageWithCdn);
-    }, []);
+  const handleGetAllImages = useCallback(async () => {
+    const images = await getAvailablePickerImages();
+    const imageWithCdn = images.map((image) => cdnUrl + image);
 
-  useEffect(() => {
-    handleGetAllImages();
+    setImageSelection(imageWithCdn);
   }, []);
 
-
+  
   const handleClose = () => {
     setIsOpen(false);
     setActiveTab("all");
-  }
-
+  };
+  
   if (!imageUrl) {
     return <div>No image selected</div>;
   }
-
+  
   if (!targetPortal) {
     return <div>No image picker root</div>;
   }
+  
+  const renderImages = () => {
+    return imageSelection?.map((image) => (
+      <div
+      key={image}
+      onClick={() => handleSelectImage(image)}
+      className=" hover:cursor-pointer hover:scale-105 transition-all duration-200  w-full flex flex-col bg-[#F5E6D3] rounded-lg border border-[#D4B492] overflow-hidden shadow-md"
+      >
+        <img
+          src={image}
+          alt="Image"
+          loading="lazy"
+          className=" w-full h-full aspect-[1/1.1] object-cover hover:scale-105 transition-all duration-200 "
+          />
+      </div>
+    ));
+  };
+  
+  
+  useEffect(() => {
+    handleGetAllImages();
+  }, []);
 
   return (
     <>
@@ -81,7 +95,7 @@ export const ImagePicker = ({
         alt="Image"
       />
       {createPortal(
-        <AnimatePresence mode="wait">
+        <AnimatePresence propagate>
           {isOpen && (
             <motion.dialog
               key="modal"
@@ -96,7 +110,6 @@ export const ImagePicker = ({
               <div
                 onClick={handleClose}
                 className="absolute top-0 left-0 w-full h-full bg-black/50 "
-
               />
               {/** Modal */}
               <motion.div
@@ -104,6 +117,9 @@ export const ImagePicker = ({
                 animate={{ scale: 1 }}
                 exit={{ scale: 0.9 }}
                 transition={{ duration: 0.2, ease: "easeInOut" }}
+                onAnimationComplete={() => {
+                  console.log("animation complete");
+                }}
                 className="z-50 p-4 top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-4/5 h-4/5 bg-[#ECD5B8] rounded-lg flex flex-col "
               >
                 {/** Header */}
@@ -111,12 +127,15 @@ export const ImagePicker = ({
                   <h1 className=" font-semibold text-[#8B4513] ">
                     Image Picker
                   </h1>
-                  <IoIosCloseCircleOutline onClick={handleClose} className="hover:cursor-pointer hover:text-[#B4540A] transition-all duration-200 " />
+                  <IoIosCloseCircleOutline
+                    onClick={handleClose}
+                    className="hover:cursor-pointer hover:text-[#B4540A] transition-all duration-200 "
+                  />
                 </div>
                 {/** Content */}
-                <div className="flex gap-4 w-full h-full">
+                <div className="flex gap-4 w-full h-full overflow-hidden">
                   {/** Image */}
-                  <div className="flex flex-col gap-2 rounded-lg min-w-[275px]   overflow-hidden">
+                  <div className="flex flex-col gap-2 rounded-lg min-w-[275px]">
                     <span className="text-base  text-[#8B4513]">Current:</span>
                     <img
                       src={imageUrl}
@@ -125,9 +144,9 @@ export const ImagePicker = ({
                     />
                   </div>
                   {/** Selection */}
-                  <div className="flex flex-col gap-0 bg-[#FFF0DF] rounded-lg  grow  ">
+                  <div className="flex flex-col gap-0 bg-[#FFF0DF] rounded-lg ">
                     {/** Tabs */}
-                    <div className="bg-[#2C2421] rounded-t-lg flex gap-1 overflow-hidden ">
+                    <div className="bg-[#2C2421] rounded-t-lg flex gap-1 overflow-hidden h-20 ">
                       {tabs.map((tab) => (
                         <button
                           key={tab.value}
@@ -144,21 +163,9 @@ export const ImagePicker = ({
                     </div>
 
                     {/** Grid */}
-                    <div className="grow border border-[#D4B492] overflow-y-auto rounded-b-lg">
-                      <div className="grid grid-cols-6 lg:grid-cols-3  gap-2 p-4">
-                        {imageSelection?.map((image) => (
-                          <div
-                            key={image}
-                            onClick={() => handleSelectImage(image)}
-                            className=" hover:cursor-pointer hover:scale-105 transition-all duration-200 aspect-[1/1.1] flex flex-col bg-[#F5E6D3] rounded-lg border border-[#D4B492] overflow-hidden shadow-md"
-                          >
-                            <img
-                              src={image}
-                              alt="Image"
-                              className=" w-full h-full hover:scale-105 transition-all duration-200 "
-                            />
-                          </div>
-                        ))}
+                    <div className="grow border border-[#D4B492] overflow-y-auto rounded-b-lg ">
+                      <div className="grid grid-cols-5 xl:grid-cols-4 lg:grid-cols-3 gap-2 p-4 ">
+                        {renderImages()}
                       </div>
                     </div>
                   </div>
