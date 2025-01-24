@@ -58,6 +58,13 @@ export function SelectedItem() {
     });
   };
 
+  const handleImageSelect = (imageUrl: string) => {
+    z.mutate.element.update({
+      id: element?.id,
+      imageUrl: imageUrl
+    });
+  };
+
   const mainContent = (
     <>
       <h1 className="text-2xl font-bold text-[#8B4513] mb-6">
@@ -65,9 +72,7 @@ export function SelectedItem() {
       </h1>
 
       <div className="flex gap-4 my-2 p-2 bg-[#ECD5B8] rounded-lg">
-        <div className="w-full h-full max-w-[150px] max-h-[150px]">
-        <ImagePicker imageUrl={imageUrl ?? undefined} onSelect={() => {}} onClose={() => {}} />
-        </div>
+        <ImagePicker imageUrl={imageUrl ?? undefined} onSelect={handleImageSelect} onClose={() => {}} />
         <div className="flex flex-col ">
           <h3 className="text-sm font-bold text-[#8B4513]">Name</h3>
           <p className="text-base text-[#8B4513]">
