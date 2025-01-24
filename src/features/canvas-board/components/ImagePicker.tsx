@@ -1,34 +1,68 @@
 import { getAvailablePickerImages } from "@/utils/bucket";
+import { cn } from "@/utils/cn";
 import { AnimatePresence, motion } from "framer-motion";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { createPortal } from "react-dom";
+import { BiCross, BiExit } from "react-icons/bi";
+import { FaCross } from "react-icons/fa";
+import { IoIosCloseCircleOutline } from "react-icons/io";
 
 type ImagePickerProps = {
   imageUrl?: string;
   onSelect: (imageUrl: string) => void;
-  onClose: () => void;
 };
+
+const tabs = [
+  {
+    title: "All",
+    value: "all",
+  },
+  {
+    title: "Men",
+    value: "men",
+  },
+  {
+    title: "Women",
+    value: "women",
+  },
+];
+
 export const ImagePicker = ({
   imageUrl,
   onSelect,
-  onClose,
 }: ImagePickerProps) => {
+  const [isOpen, setIsOpen] = useState(false);
+  const [imageSelection, setImageSelection] = useState<string[] | null>(null);
+  const targetPortal = document.getElementById("image-picker-root");
+  const [activeTab, setActiveTab] = useState("all");
 
-    
-    const [isOpen, setIsOpen] = useState(false);
-    const [imageSelection, setImageSelection] = useState<string[] | null>(null);
-    const targetPortal = document.getElementById("image-picker-root");
+  const cdnUrl =
+    import.meta.env.VITE_DIGITAL_OCEAN_BUCKET_CDN_URL! +
+    "/" +
+    import.meta.env.VITE_DIGITAL_OCEAN_BUCKET_IMAGES_PATH! +
+    "/";
 
-    const cdnUrl = import.meta.env.VITE_DIGITAL_OCEAN_BUCKET_CDN_URL! + "/" + import.meta.env.VITE_DIGITAL_OCEAN_BUCKET_IMAGES_PATH! + "/";
+    const handleSelectImage = (imageUrl: string) => {
+      onSelect(imageUrl);
+      setIsOpen(false);
+      setActiveTab("all");
+    }
 
-    useEffect(() => {
-        getAvailablePickerImages().then((images) => {
-            const imageWithCdn = images.map((image) => cdnUrl + image);
-            setImageSelection(imageWithCdn);
-        });
-    }, [imageUrl]);
+    const handleGetAllImages = useCallback(async () => {
+      const images = await getAvailablePickerImages();
+      const imageWithCdn = images.map((image) => cdnUrl + image);
+      setImageSelection(imageWithCdn);
+    }, []);
+
+  useEffect(() => {
+    handleGetAllImages();
+  }, []);
 
 
+  const handleClose = () => {
+    setIsOpen(false);
+    setActiveTab("all");
+  }
 
   if (!imageUrl) {
     return <div>No image selected</div>;
@@ -39,7 +73,7 @@ export const ImagePicker = ({
   }
 
   return (
-    <div className="w-full h-full">
+    <>
       <img
         onClick={() => setIsOpen(!isOpen)}
         src={imageUrl}
@@ -55,47 +89,85 @@ export const ImagePicker = ({
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
               open={isOpen}
-              onClose={() => setIsOpen(false)}
+              onClose={handleClose}
               className="z-50 absolute top-0 left-0 w-screen h-screen flex justify-center items-center bg-transparent  backdrop-blur-sm"
             >
-            {/** Background */}
-              <div onClick={() => setIsOpen(false)} className="absolute top-0 left-0 w-full h-full bg-black/50 "></div>
+              {/** Background */}
+              <div
+                onClick={handleClose}
+                className="absolute top-0 left-0 w-full h-full bg-black/50 "
 
+              />
               {/** Modal */}
               <motion.div
-              initial={{ scale: 0.9 }}
-              animate={{ scale: 1 }}
-              exit={{ scale: 0.9 }}
-              transition={{ duration: 0.2, ease: "easeInOut" }}
-              className="z-50 p-4 top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-4/5 h-4/5 bg-[#ECD5B8] rounded-lg flex ">
-            {/** Content */}
-            <div className="flex gap-4 w-full ">
-
-            {/** Image */}
-            <div className="flex border border-[#D4B492] rounded-lg w-1/4 max-w-[250px] max-h-[250px]">
-                <img
-                  src={imageUrl}
-                  className="w-full h-full object-contain"
-                  alt="Image"
-                  />
-            </div>
-
-            {/** Selection */}
-            <div className="flex flex-col gap-4 bg-[#F5E6D3] p-4 rounded-lg border border-[#D4B492] grow">
-            {imageSelection?.map((image) => (
-                <div key={image} onClick={() => onSelect(image)} className="flex flex-col gap-4 bg-[#F5E6D3] p-4 rounded-lg border border-[#D4B492] grow">
-                    <img src={image} alt="Image" className="w-[100px] h-[100px] object-cover" />
+                initial={{ scale: 0.9 }}
+                animate={{ scale: 1 }}
+                exit={{ scale: 0.9 }}
+                transition={{ duration: 0.2, ease: "easeInOut" }}
+                className="z-50 p-4 top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-4/5 h-4/5 bg-[#ECD5B8] rounded-lg flex flex-col "
+              >
+                {/** Header */}
+                <div className="flex justify-between  items-center text-3xl pb-4">
+                  <h1 className=" font-semibold text-[#8B4513] ">
+                    Image Picker
+                  </h1>
+                  <IoIosCloseCircleOutline onClick={handleClose} className="hover:cursor-pointer hover:text-[#B4540A] transition-all duration-200 " />
                 </div>
-            ))}
-            </div>
+                {/** Content */}
+                <div className="flex gap-4 w-full h-full">
+                  {/** Image */}
+                  <div className="flex rounded-lg min-w-[225px] h-[225px]  overflow-hidden">
+                    <img
+                      src={imageUrl}
+                      className="w-full h-full "
+                      alt="Image"
+                    />
+                  </div>
+                  {/** Selection */}
+                  <div className="flex flex-col gap-0 bg-[#FFF0DF] rounded-lg  grow  ">
+                    {/** Tabs */}
+                    <div className="bg-[#2C2421] rounded-t-lg flex gap-1 overflow-hidden ">
+                      {tabs.map((tab) => (
+                        <button
+                          key={tab.value}
+                          onClick={() => setActiveTab(tab.value)}
+                          className={cn(
+                            "text-[#8b7a6e] text-base font-bold h-full p-4 ",
+                            activeTab === tab.value &&
+                              "bg-[#B4540A] text-amber-300"
+                          )}
+                        >
+                          {tab.title}
+                        </button>
+                      ))}
+                    </div>
 
-            </div>
+                    {/** Grid */}
+                    <div className="grow border border-[#D4B492] overflow-y-auto rounded-b-lg">
+                      <div className="grid grid-cols-4 lg:grid-cols-3  gap-4 p-4">
+                        {imageSelection?.map((image) => (
+                          <div
+                            key={image}
+                            onClick={() => handleSelectImage(image)}
+                            className=" hover:cursor-pointer hover:scale-105 transition-all duration-200 aspect-[1/1.1] flex flex-col bg-[#F5E6D3] rounded-lg border border-[#D4B492] overflow-hidden shadow-md"
+                          >
+                            <img
+                              src={image}
+                              alt="Image"
+                              className=" w-full h-full aspect-square hover:scale-105 transition-all duration-200 "
+                            />
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  </div>
+                </div>
               </motion.div>
             </motion.dialog>
           )}
         </AnimatePresence>,
-            targetPortal
+        targetPortal
       )}
-    </div>
+    </>
   );
 };

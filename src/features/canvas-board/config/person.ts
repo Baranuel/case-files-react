@@ -8,7 +8,7 @@ export const person: PersonDefinition = {
     minHeight: 425,
     color: '#FFF0DF',
     padding:10,
-    gap:10
+    gap:0
 }
 
 

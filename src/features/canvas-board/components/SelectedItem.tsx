@@ -8,7 +8,6 @@ import { useEffect } from "react";
 import { useState, use } from "react";
 import { useZero } from "@rocicorp/zero/react";
 import { ZeroSchema } from "@/schema";
-import { getAvailablePickerImages } from "@/utils/bucket";
 import { ImagePicker } from "./ImagePicker";
 
 export function SelectedItem() {
@@ -36,26 +35,12 @@ export function SelectedItem() {
   }, [element]);
 
   
-  
-  useEffect(() => {
-    const images = getAvailablePickerImages().then( images => console.log(images))
-    console.log(images);
-  }, [element]);
+
 
   const getTitle = (type: ElementType | undefined) => {
     if (!type) return "Selected Item";
     if (type === "person") return "Suspect";
     if (type === "location") return "Location";
-  };
-
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-    if(!element?.contentId) return;
-
-    const { name, value } = e.target;
-    z.mutate.content.update({
-      id: element?.contentId,
-      title: value
-    });
   };
 
   const handleImageSelect = (imageUrl: string) => {
@@ -72,56 +57,15 @@ export function SelectedItem() {
       </h1>
 
       <div className="flex gap-4 my-2 p-2 bg-[#ECD5B8] rounded-lg">
-        <ImagePicker imageUrl={imageUrl ?? undefined} onSelect={handleImageSelect} onClose={() => {}} />
-        <div className="flex flex-col ">
+        <ImagePicker imageUrl={imageUrl ?? undefined} onSelect={handleImageSelect} />
+        <div className="flex flex-col grow ">
           <h3 className="text-sm font-bold text-[#8B4513]">Name</h3>
           <p className="text-base text-[#8B4513]">
             {element?.content?.[0].title}
           </p>
         </div>
       </div>
-
-      <div className="space-y-4">
-        <div className="bg-[#ECD5B8] p-4 rounded-lg border border-[#D4B492]">
-          <label className="block text-[#8B4513] text-sm font-bold mb-2">
-            Case Title
-          </label>
-          <input
-            type="text"
-            className="w-full bg-[#F5E6D3] text-[#8B4513] p-2 rounded focus:outline-none focus:ring-2 focus:ring-[#D4B492] border border-[#D4B492]"
-            placeholder="Enter case title..."
-            value={element?.content?.[0].title}
-            onChange={handleInputChange}
-          />
-        </div>
-
-        <div className="bg-[#ECD5B8] p-4 rounded-lg border border-[#D4B492]">
-          <label className="block text-[#8B4513] text-sm font-bold mb-2">
-            Description
-          </label>
-          <textarea
-            className="w-full bg-[#F5E6D3] text-[#8B4513] p-2 rounded h-24 focus:outline-none focus:ring-2 focus:ring-[#D4B492] border border-[#D4B492]"
-            placeholder="Enter case description..."
-          />
-        </div>
-
-        <div className="bg-[#ECD5B8] p-4 rounded-lg border border-[#D4B492]">
-          <label className="block text-[#8B4513] text-sm font-bold mb-2">
-            Priority
-          </label>
-          <div className="flex gap-4">
-            <button className="bg-[#F5E6D3] px-4 py-2 rounded text-[#8B4513] hover:bg-[#E8D1B9] border border-[#D4B492]">
-              Low
-            </button>
-            <button className="bg-[#F5E6D3] px-4 py-2 rounded text-[#8B4513] hover:bg-[#E8D1B9] border border-[#D4B492]">
-              Medium
-            </button>
-            <button className="bg-[#F5E6D3] px-4 py-2 rounded text-[#8B4513] hover:bg-[#E8D1B9] border border-[#D4B492]">
-              High
-            </button>
-          </div>
-        </div>
-      </div>
+        
     </>
   );
 
