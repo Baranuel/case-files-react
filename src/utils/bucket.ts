@@ -13,7 +13,7 @@ const client = new S3({
 
 
 export const getAvailablePickerImages  = async (): Promise<string[]> => {
-    const imageLocationPrefix = `${import.meta.env.VITE_DIGITAL_OCEAN_BUCKET_IMAGES_PATH!}/`
+    const imageLocationPrefix = `${import.meta.env.VITE_DIGITAL_OCEAN_BUCKET_PORTRAITS_PATH!}/`
 
     const listObjectsCommand = new ListObjectsV2Command({
         Bucket: import.meta.env.VITE_DIGITAL_OCEAN_BUCKET_NAME!,

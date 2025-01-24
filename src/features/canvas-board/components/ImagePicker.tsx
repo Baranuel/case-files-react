@@ -34,7 +34,7 @@ export const ImagePicker = ({ imageUrl, onSelect }: ImagePickerProps) => {
   const cdnUrl =
     import.meta.env.VITE_DIGITAL_OCEAN_BUCKET_CDN_URL! +
     "/" +
-    import.meta.env.VITE_DIGITAL_OCEAN_BUCKET_IMAGES_PATH! +
+    import.meta.env.VITE_DIGITAL_OCEAN_BUCKET_PORTRAITS_PATH! +
     "/";
 
   const handleSelectImage = (imageUrl: string) => {
@@ -135,7 +135,7 @@ export const ImagePicker = ({ imageUrl, onSelect }: ImagePickerProps) => {
                 {/** Content */}
                 <div className="flex gap-4 w-full h-full overflow-hidden">
                   {/** Image */}
-                  <div className="flex flex-col gap-2 rounded-lg min-w-[275px]">
+                  <div className="flex flex-col gap-2 rounded-lg min-w-[155px] w-1/5">
                     <span className="text-base  text-[#8B4513]">Current:</span>
                     <img
                       src={imageUrl}
@@ -144,9 +144,9 @@ export const ImagePicker = ({ imageUrl, onSelect }: ImagePickerProps) => {
                     />
                   </div>
                   {/** Selection */}
-                  <div className="flex flex-col gap-0 bg-[#FFF0DF] rounded-lg ">
+                  <div className="flex flex-col gap-0 bg-[#FFF0DF] rounded-lg min-w-[300px] h-full w-3/4 flex-1">
                     {/** Tabs */}
-                    <div className="bg-[#2C2421] rounded-t-lg flex gap-1 overflow-hidden h-20 ">
+                    <div className="bg-[#2C2421] rounded-t-lg flex gap-1 overflow-x-hidden  ">
                       {tabs.map((tab) => (
                         <button
                           key={tab.value}
