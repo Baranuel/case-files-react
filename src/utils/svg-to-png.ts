@@ -1,7 +1,7 @@
 
 export const svgToPng = async (svg: string, targetWidth: number = 200, targetHeight: number = 500): Promise<string> => {
 
-    const svgResponse = await fetch(`${svg}`).then(res => res.text());
+    const svgResponse = await fetch(svg).then(res => res.text());
 
     const parser = new DOMParser();
     const svgDoc = parser.parseFromString(svgResponse, "image/svg+xml");

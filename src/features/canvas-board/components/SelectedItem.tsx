@@ -5,9 +5,11 @@ import { PaperLayers } from "./Folder/PaperLayers";
 import { ElementType } from "@/types";
 import { BASE_URL } from "@/constants";
 import { useEffect } from "react";
-import { useState } from "react";
+import { useState, use } from "react";
 import { useZero } from "@rocicorp/zero/react";
 import { ZeroSchema } from "@/schema";
+import { getAvailablePickerImages } from "@/utils/bucket";
+import { ImagePicker } from "./ImagePicker";
 
 export function SelectedItem() {
   const { clientViewRef, previewElementId, elementsList } = useCanvas();
@@ -19,9 +21,8 @@ export function SelectedItem() {
 
   const element = elementsList.find((el) => el.id === previewElementId);
   const [previewElement, setPreviewElement] = useState<Element | null>(element || null);
-  const [images, setImages] = useState<string[]>([]);
+  
   const isRemoteImage = element?.imageUrl?.startsWith('http');
-
   const imageUrl = isRemoteImage ? element?.imageUrl : `${BASE_URL}/${element?.imageUrl}`;
 
   const z = useZero<ZeroSchema>();
@@ -34,6 +35,12 @@ export function SelectedItem() {
     }
   }, [element]);
 
+  
+  
+  useEffect(() => {
+    const images = getAvailablePickerImages().then( images => console.log(images))
+    console.log(images);
+  }, [element]);
 
   const getTitle = (type: ElementType | undefined) => {
     if (!type) return "Selected Item";
@@ -58,11 +65,9 @@ export function SelectedItem() {
       </h1>
 
       <div className="flex gap-4 my-2 p-2 bg-[#ECD5B8] rounded-lg">
-        <img
-          className="w-[150px]  border border-black bg-[#E4C18D] rounded-md"
-          src={imageUrl ?? ''}
-          alt=""
-        ></img>
+        <div className="w-full h-full max-w-[150px] max-h-[150px]">
+        <ImagePicker imageUrl={imageUrl ?? undefined} onSelect={() => {}} onClose={() => {}} />
+        </div>
         <div className="flex flex-col ">
           <h3 className="text-sm font-bold text-[#8B4513]">Name</h3>
           <p className="text-base text-[#8B4513]">

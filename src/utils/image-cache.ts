@@ -12,7 +12,9 @@ export const getImageCache = (imageUrl: string): ImageBitmap | undefined => {
     return imageCache.get(imageUrl);
 }
 
-export const loadAndCacheImage = async (imageUrl: string): Promise<ImageBitmap | null> => {
+
+{/* This loads a cache for canvas images so they don't download on every frame */}
+export const loadAndCacheImageBitMap = async (imageUrl: string): Promise<ImageBitmap | null> => {
     const cached = getImageCache(imageUrl);
     if (cached) return cached;
 
@@ -25,7 +27,7 @@ export const loadAndCacheImage = async (imageUrl: string): Promise<ImageBitmap |
 
     if(imageUrl.includes('.svg')) {
         const pngUrl = await svgToPng(imageUrl, 300, 300);
-        const response = await fetch(`${pngUrl}`);
+        const response = await fetch(pngUrl);
         const blob = await response.blob();
         const imageBitmap = await createImageBitmap(blob);
         setImageCache(imageUrl, imageBitmap);

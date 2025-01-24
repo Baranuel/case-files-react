@@ -2,8 +2,8 @@ import { ListObjectsV2Command, S3 } from "@aws-sdk/client-s3";
 import { getSignedUrl } from "@aws-sdk/s3-request-presigner";
 
 const client = new S3({
-    endpoint: "https://ams3.digitaloceanspaces.com",
-    region: "ams3",
+    endpoint: import.meta.env.VITE_DIGITAL_OCEAN_BUCKET_ENDPOINT!,
+    region: import.meta.env.VITE_DIGITAL_OCEAN_BUCKET_REGION!,
     credentials: {
         accessKeyId: import.meta.env.VITE_DIGITAL_OCEAN_ACCESS_TOKEN!,
         secretAccessKey: import.meta.env.VITE_DIGITAL_OCEAN_SECRET_ACCESS_TOKEN!,
@@ -13,12 +13,11 @@ const client = new S3({
 
 
 
-export const loadRemoteImages = async (): Promise<string[]> => {
-
-    const imageLocationPrefix = "images/"
+export const getAvailablePickerImages  = async (): Promise<string[]> => {
+    const imageLocationPrefix = `${import.meta.env.VITE_DIGITAL_OCEAN_BUCKET_IMAGES_PATH!}/`
 
     const listObjectsCommand = new ListObjectsV2Command({
-        Bucket: "casefiles",
+        Bucket: import.meta.env.VITE_DIGITAL_OCEAN_BUCKET_NAME!,
         Prefix: imageLocationPrefix
     });
 
@@ -26,8 +25,10 @@ export const loadRemoteImages = async (): Promise<string[]> => {
         const response = await client.send(listObjectsCommand);
 
         const images = response.Contents?.reduce((acc, item) => {
-            if(item.Key && item.Key.split('.').length > 1) {
-                acc.push(item.Key);
+
+            const imageNameWithoutPrefix = item.Key?.split(imageLocationPrefix)[1];
+            if(imageNameWithoutPrefix && imageNameWithoutPrefix.split('.').length > 1) {
+                acc.push(imageNameWithoutPrefix);
             }
             return acc;
         }, [] as string[]) ?? [];

@@ -34,7 +34,7 @@ export const createDefaultPerson = (mouseX: number, mouseY: number, mode: 'ghost
         type: 'person',
         boardId: boardId ?? null,
         contentId: null,
-        imageUrl: `https://casefiles.ams3.cdn.digitaloceanspaces.com/images/${randomAvatar}`,
+        imageUrl: `${import.meta.env.VITE_DIGITAL_OCEAN_BUCKET_CDN_URL!}/${import.meta.env.VITE_DIGITAL_OCEAN_BUCKET_IMAGES_PATH!}/${randomAvatar}`,
         layer: 0,
         position: {x1, y1, x2, y2},
         creatorId

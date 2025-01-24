@@ -1,6 +1,6 @@
 import { Element } from "@/types/element";
 import { config } from "../../../config";
-import { getImageCache, loadAndCacheImage } from "@/utils/image-cache";
+import { getImageCache } from "@/utils/image-cache";
 import { PersonDefinition } from "@/features/canvas-board/types";
 import { handleRenderText } from "../handle-render-text";
 
