@@ -3,7 +3,6 @@ import { useCanvas } from "@/app/providers/CanvasProvider";
 import { Folder } from "./Folder/Folder";
 import { PaperLayers } from "./Folder/PaperLayers";
 import { ElementType } from "@/types";
-import { BASE_URL } from "@/constants";
 import { useEffect } from "react";
 import { useState, use } from "react";
 import { useZero } from "@rocicorp/zero/react";
@@ -21,8 +20,7 @@ export function SelectedItem() {
   const element = elementsList.find((el) => el.id === previewElementId);
   const [previewElement, setPreviewElement] = useState<Element | null>(element || null);
   
-  const isRemoteImage = element?.imageUrl?.startsWith('http');
-  const imageUrl = isRemoteImage ? element?.imageUrl : `${BASE_URL}/${element?.imageUrl}`;
+  const imageUrl = element?.imageUrl
 
   const z = useZero<ZeroSchema>();
 

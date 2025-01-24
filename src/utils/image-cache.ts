@@ -1,4 +1,3 @@
-import { BASE_URL } from "@/constants";
 import { svgToPng } from "./svg-to-png";
 
 const imageCache = new Map<string, ImageBitmap>();
@@ -18,9 +17,7 @@ export const loadAndCacheImageBitMap = async (imageUrl: string): Promise<ImageBi
     const cached = getImageCache(imageUrl);
     if (cached) return cached;
 
-    
-    const isRemoteImage = imageUrl.startsWith('http');
-    const imageUrlToLoad = isRemoteImage ? imageUrl : `${BASE_URL}/${imageUrl}`;
+    const imageUrlToLoad = imageUrl 
 
     const response = await fetch(imageUrlToLoad);
     const blob = await response.blob();

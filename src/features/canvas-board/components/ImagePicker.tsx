@@ -116,10 +116,11 @@ export const ImagePicker = ({
                 {/** Content */}
                 <div className="flex gap-4 w-full h-full">
                   {/** Image */}
-                  <div className="flex rounded-lg min-w-[225px] h-[225px]  overflow-hidden">
+                  <div className="flex flex-col gap-2 rounded-lg min-w-[225px]   overflow-hidden">
+                    <span className="text-base  text-[#8B4513]">Current:</span>
                     <img
                       src={imageUrl}
-                      className="w-full h-full "
+                      className="aspect-square  w-2/3 mx-auto "
                       alt="Image"
                     />
                   </div>
@@ -144,7 +145,7 @@ export const ImagePicker = ({
 
                     {/** Grid */}
                     <div className="grow border border-[#D4B492] overflow-y-auto rounded-b-lg">
-                      <div className="grid grid-cols-4 lg:grid-cols-3  gap-4 p-4">
+                      <div className="grid grid-cols-6 lg:grid-cols-3  gap-2 p-4">
                         {imageSelection?.map((image) => (
                           <div
                             key={image}
@@ -154,7 +155,7 @@ export const ImagePicker = ({
                             <img
                               src={image}
                               alt="Image"
-                              className=" w-full h-full aspect-square hover:scale-105 transition-all duration-200 "
+                              className=" w-full h-full hover:scale-105 transition-all duration-200 "
                             />
                           </div>
                         ))}

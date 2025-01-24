@@ -1,6 +1,5 @@
 import { Element } from "@/types";
 import {  PersonDefinition, ShapeDefinition } from "../types";
-import { BASE_URL } from "@/constants";
 
 
 export const person: PersonDefinition = {
