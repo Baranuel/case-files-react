@@ -32,9 +32,6 @@ export const ImagePicker = ({
         className="w-full h-full object-cover rounded-lg hover:cursor-pointer hover:opacity-80 hover:brightness-110 hover:bg-black/10 transition-all duration-300"
         alt="Image"
       />
-      <button onClick={() => onSelect(imageUrl)}>Select</button>
-      <button onClick={onClose}>Close</button>
-
       {createPortal(
         <AnimatePresence mode="wait">
           {isOpen && (
@@ -56,14 +53,25 @@ export const ImagePicker = ({
               initial={{ scale: 0.9 }}
               animate={{ scale: 1 }}
               exit={{ scale: 0.9 }}
-              className="z-50 p-4 top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-4/5 h-4/5 bg-[#ECD5B8] rounded-lg flex justify-center items-center">
-                <div>
+              transition={{ duration: 0.3, ease: "easeInOut" }}
+              className="z-50 p-4 top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-4/5 h-4/5 bg-[#ECD5B8] rounded-lg flex ">
+            {/** Content */}
+            <div className="flex gap-4 w-full ">
 
+            {/** Image */}
+            <div className="flex border border-[#D4B492] rounded-lg w-1/4 max-w-[250px] max-h-[250px]">
                 <img
                   src={imageUrl}
-                  className="w-[200px] h-[200px] object-cover"
+                  className="w-full h-full object-cover"
                   alt="Image"
                   />
+            </div>
+
+            {/** Selection */}
+            <div className="flex flex-col gap-4 bg-[#F5E6D3] p-4 rounded-lg border border-[#D4B492] grow">
+
+            </div>
+
             </div>
               </motion.div>
             </motion.dialog>
