@@ -168,12 +168,30 @@ export const ImagePicker = ({ imageUrl, onSelect, elementsList }: ImagePickerPro
 
   return (
     <>
-      <img
-        onClick={() => setIsOpen(!isOpen)}
-        src={imageUrl}
-        className="h-[220px] aspect-square object-contain rounded-lg hover:cursor-pointer hover:opacity-80 hover:brightness-110 hover:bg-black/10 transition-all duration-300"
-        alt="Image"
-      />
+      <div className="relative w-full">
+        {/* Paper background */}
+        <div className="relative bg-[#f4d3a7] p-3 rounded-lg shadow-md w-full [background-repeat:repeat]">
+          {/* Texture overlay */}
+          <div className="flex gap-3">
+            <img
+              onClick={() => setIsOpen(!isOpen)}
+              src={imageUrl}
+              className="h-[200px] -rotate-1 aspect-square object-contain rounded-lg hover:cursor-pointer hover:opacity-80 hover:brightness-110 hover:bg-black/10 transition-all duration-300"
+              alt="Image"
+            />
+            <div className="flex flex-col gap-2 w-full justify-between py-4">
+
+            <div className="flex flex-col justify-start">
+              <p className="text-[#8B4513] font-bold mb-2 blur-[1px]">||||| |||| |||||||</p>
+              <p className="text-[#8B4513] text-sm blur-[0.8px]">||||| ||||| || |||| |||| |||||||</p>
+            </div>
+            <div className="flex flex-col justify-end">
+              <p className="text-[#8B4513] font-bold mb-2 blur-[1px]">||||| |||| |||||||</p>
+            </div>
+            </div>
+          </div>
+        </div>
+      </div>
       {createPortal(
         <AnimatePresence mode="wait">
           {isOpen && (

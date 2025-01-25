@@ -6,34 +6,30 @@ import { ElementType } from "@/types";
 import { useEffect } from "react";
 import { useState, use } from "react";
 import { useZero } from "@rocicorp/zero/react";
-import { ZeroSchema } from "@/schema";
+import { Content, ZeroSchema } from "@/schema";
 import { ImagePicker } from "./ImagePicker";
 
 export function SelectedItem() {
   const { clientViewRef, previewElementId, elementsList } = useCanvas();
   const clientView = clientViewRef.current;
 
-
-
   if (!clientView) return null;
 
   const element = elementsList.find((el) => el.id === previewElementId);
-  const [previewElement, setPreviewElement] = useState<Element | null>(element || null);
-  
-  const imageUrl = element?.imageUrl
+
+  const [previewElement, setPreviewElement] = useState<Element | null>(
+    element || null
+  );
+
+  const imageUrl = element?.imageUrl;
 
   const z = useZero<ZeroSchema>();
-
-
 
   useEffect(() => {
     if (element) {
       setPreviewElement(element);
     }
   }, [element]);
-
-  
-
 
   const getTitle = (type: ElementType | undefined) => {
     if (!type) return "Selected Item";
@@ -44,24 +40,58 @@ export function SelectedItem() {
   const handleImageSelect = (imageUrl: string) => {
     z.mutate.element.update({
       id: element?.id,
-      imageUrl: imageUrl
+      imageUrl: imageUrl,
+    });
+  };
+
+  const handleUpdateElement = (updateProperty: Partial<Record<keyof Content, string>>) => {
+    if(!previewElement || !previewElement.contentId) return;
+
+    z.mutate.content.update({
+      id: previewElement?.contentId,
+      ...updateProperty
     });
   };
 
   const mainContent = (
     <>
-      <h1 className="text-2xl font-bold text-[#8B4513] mb-6">
+      <h1 className="text-2xl font-bold text-[#8B4513] mb-2">
         {getTitle(element?.type)} #{element?.id.slice(-5, -1)}
       </h1>
-        <div className="flex gap-4 my-2 p-2 bg-[#ECD5B8] rounded-lg">
-          <div className="flex flex-col grow">
-            <h3 className="text-sm font-bold text-[#8B4513]">Name</h3>
-            <p className="text-base text-[#8B4513]">
-              {element?.content?.[0].title}
-            </p>
-          </div>
+          <ImagePicker
+            imageUrl={imageUrl ?? undefined}
+            onSelect={handleImageSelect}
+            elementsList={elementsList}
+          />
+
+      <div className="flex gap-4 my-2 p-3 bg-[#ECD5B8] rounded-lg">
+        <div className="flex flex-col grow">
+          <label htmlFor="name" className="">
+            <span className="text-sm font-bold text-[#8B4513]">Name</span>
+          </label>
+          <input
+            value={element?.content?.[0].title}
+            onChange={(e) => handleUpdateElement({ title: e.target.value })}
+            type="text"
+            placeholder="Name"
+            className="w-full px-4 py-2 rounded-lg border border-[#D4B492] bg-[#FFF0DF] text-[#8B4513] focus:outline-none focus:ring-2 focus:ring-[#B4540A]"
+          />
         </div>
-        <ImagePicker  imageUrl={imageUrl ?? undefined} onSelect={handleImageSelect} elementsList={elementsList} />
+      </div>
+
+      <div className="flex gap-4 my-2 p-3 bg-[#ECD5B8] rounded-lg">
+        <div className="flex flex-col grow">
+          <label htmlFor="notes" className="">
+            <span className="text-sm font-bold text-[#8B4513]">Notes</span>
+          </label>
+          <textarea
+            value={element?.content?.[0].content}
+            onChange={(e) => handleUpdateElement({ content: e.target.value })}
+            placeholder="Notes"
+            className="w-full px-4 py-2 rounded-lg border border-[#D4B492] bg-[#FFF0DF] text-[#8B4513] focus:outline-none focus:ring-2 focus:ring-[#B4540A]"
+          />
+        </div>
+      </div>
     </>
   );
 
@@ -74,9 +104,9 @@ export function SelectedItem() {
     >
       <div className={` z-20 flex min-w-[400px] w-[10vw] h-full relative`}>
         <Folder isOpen={!!previewElementId} />
-        <PaperLayers isOpen={!!previewElementId}>{
-        !!previewElementId && mainContent
-        }</PaperLayers>
+        <PaperLayers isOpen={!!previewElementId}>
+          {!!previewElementId && mainContent}
+        </PaperLayers>
       </div>
     </div>
   );

@@ -17,7 +17,7 @@ export const PaperLayers = ({ isOpen, children }: PaperLayersProps) => {
           zIndex: 0,
         }}
         className={cn(
-          `bg-[#F5E6D3] absolute w-full p-8 h-[92%] top-[4%] z-0 border border-[#D4B492]  overflow-auto `,
+          `bg-[#F5E6D3] absolute w-full p-4 h-[92%] top-[4%] z-0 border border-[#D4B492]  overflow-auto `,
           !isOpen ? `translate-x-[2%]` : "translate-x-[95%]"
         )}
       >
