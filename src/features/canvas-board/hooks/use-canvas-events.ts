@@ -37,7 +37,7 @@ export const useCanvasEvents = () => {
         if(element?.id.includes('ghost-element')) return;
         if(!element && !previewElementId) return;
 
-        
+
         if('startViewTransition' in document) {
             document.startViewTransition(() => {
                 setPreviewElementId(element?.id ?? null);
@@ -67,8 +67,8 @@ export const useCanvasEvents = () => {
                     await tx.element.insert(element)
                     await tx.content.insert({
                         id: randomId,
-                        title: 'New Content',
-                        content: 'New Content',
+                        title: element.type,
+                        content: element.type,
                     })
                     await tx.element.update({id:element.id, contentId: randomId})
                 });

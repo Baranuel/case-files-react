@@ -61,7 +61,7 @@ export function SelectedItem() {
             </p>
           </div>
         </div>
-        <ImagePicker  imageUrl={imageUrl ?? undefined} onSelect={handleImageSelect} />
+        <ImagePicker  imageUrl={imageUrl ?? undefined} onSelect={handleImageSelect} elementsList={elementsList} />
     </>
   );
 
