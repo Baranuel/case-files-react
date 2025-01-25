@@ -19,7 +19,8 @@ export default defineConfig({
           aws: ['@aws-sdk/client-s3'],
           clerk: ['@clerk/clerk-react'],
           react: ['react', 'react-dom'],
-          tanstack: ['@tanstack/react-router', '@tanstack/router-devtools']
+          tanstack: ['@tanstack/react-router', '@tanstack/router-devtools'],
+          mdxEditor: ['@mdxeditor/editor'],
         }
       }
     }
