@@ -3,11 +3,12 @@ import { useCanvas } from "@/app/providers/CanvasProvider";
 import { Folder } from "./Folder/Folder";
 import { PaperLayers } from "./Folder/PaperLayers";
 import { ElementType } from "@/types";
-import { useEffect } from "react";
+import { memo, useEffect, useMemo, useRef } from "react";
 import { useState, use } from "react";
 import { useZero } from "@rocicorp/zero/react";
 import { Content, ZeroSchema } from "@/schema";
 import { ImagePicker } from "./ImagePicker";
+import {  MarkdownEditor } from "./MarkdownEditor/MarkdownEditor";
 
 export function SelectedItem() {
   const { clientViewRef, previewElementId, elementsList } = useCanvas();
@@ -20,6 +21,9 @@ export function SelectedItem() {
   const [previewElement, setPreviewElement] = useState<Element | null>(
     element || null
   );
+
+
+  const containerRef = useRef<HTMLDivElement | null>(null);
 
   const imageUrl = element?.imageUrl;
 
@@ -53,6 +57,20 @@ export function SelectedItem() {
     });
   };
 
+
+  const scrollToBottom = () => {
+    if(!containerRef.current) return;
+    const scrollHeight = containerRef.current.getBoundingClientRect().bottom;
+    
+    containerRef.current.scrollTo(0,scrollHeight);
+  }
+
+
+
+
+
+
+
   const mainContent = (
     <>
       <h1 className="text-2xl font-bold text-[#8B4513] mb-2">
@@ -66,12 +84,13 @@ export function SelectedItem() {
 
       <div className="flex gap-4 my-2 p-3 bg-[#ECD5B8] rounded-lg">
         <div className="flex flex-col grow">
-          <label htmlFor="name" className="">
+          <label htmlFor="name" className="mb-2">
             <span className="text-sm font-bold text-[#8B4513]">Name</span>
           </label>
           <input
             value={element?.content?.[0].title}
-            onChange={(e) => handleUpdateElement({ title: e.target.value })}
+            onChange={(e) => {
+              handleUpdateElement({ title: e.target.value })}}
             type="text"
             placeholder="Name"
             className="w-full px-4 py-2 rounded-lg border border-[#D4B492] bg-[#FFF0DF] text-[#8B4513] focus:outline-none focus:ring-2 focus:ring-[#B4540A]"
@@ -79,17 +98,15 @@ export function SelectedItem() {
         </div>
       </div>
 
-      <div className="flex gap-4 my-2 p-3 bg-[#ECD5B8] rounded-lg">
-        <div className="flex flex-col grow">
-          <label htmlFor="notes" className="">
+      <div className="flex gap-4 my-2 p-3 bg-[#ECD5B8] rounded-lg ">
+        <div className="flex flex-col grow h-full">
+          <label className="mb-2">
             <span className="text-sm font-bold text-[#8B4513]">Notes</span>
           </label>
-          <textarea
-            value={element?.content?.[0].content}
-            onChange={(e) => handleUpdateElement({ content: e.target.value })}
-            placeholder="Notes"
-            className="w-full px-4 py-2 rounded-lg border border-[#D4B492] bg-[#FFF0DF] text-[#8B4513] focus:outline-none focus:ring-2 focus:ring-[#B4540A]"
-          />
+          <MarkdownEditor  previewId={previewElementId} markdown={element?.content?.[0].content ?? ''} onChange={(content) => {
+            handleUpdateElement({ content })
+            scrollToBottom()
+            }} />
         </div>
       </div>
     </>
@@ -104,7 +121,8 @@ export function SelectedItem() {
     >
       <div className={` z-20 flex min-w-[400px] w-[10vw] h-full relative`}>
         <Folder isOpen={!!previewElementId} />
-        <PaperLayers isOpen={!!previewElementId}>
+        <PaperLayers ref={containerRef}  isOpen={!!previewElementId}>
+        <button onClick={scrollToBottom}>sdasd</button>
           {!!previewElementId && mainContent}
         </PaperLayers>
       </div>

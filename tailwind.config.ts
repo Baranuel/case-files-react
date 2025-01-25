@@ -1,6 +1,11 @@
+import { editorStyles } from "./src/features/canvas-board/components/MarkdownEditor/styles";
+
+
+
 /** @type {import('tailwindcss').Config} */
 export default {
   content: ["./index.html", "./src/**/*.{js,ts,jsx,tsx}"],
+
   theme: {
     screens: {
       "2xl": { max: "1535px" },
@@ -11,6 +16,9 @@ export default {
       xs: { max: "390px" }
     },
     extend: {
+      typography: {
+        ...editorStyles
+      },
       animation: {
         'fade-in': 'fadeIn 0.75s cubic-bezier(0.22, 1, 0.36, 1) forwards',
         'fade-up': 'fadeUp 0.75s cubic-bezier(0.22, 1, 0.36, 1) forwards',
@@ -33,5 +41,5 @@ export default {
       },
     },
   },
-  plugins: [],
+  plugins: [ require('@tailwindcss/typography')],
 }

@@ -28,4 +28,28 @@ body {
 
 
 
+.mdxeditor-root-contenteditable {
+    & > div:nth-child(1) {
+        overflow: hidden;
+        height: 100%;
+    }
+}
+
+.mdxeditor-popup-container {
+    display: none;
+}
+
+
+.no-scrollbar::-webkit-scrollbar {
+    display: none;
+}
+
+.no-scrollbar {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+}
+
+
+
+
 

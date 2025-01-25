@@ -9,7 +9,7 @@ CREATE ROLE postgres WITH LOGIN SUPERUSER PASSWORD 'password';
 CREATE TABLE "content" (
   "id" VARCHAR PRIMARY KEY,
   "title" VARCHAR NOT NULL,
-  "content" VARCHAR NOT NULL
+  "content" TEXT
 );
 
 CREATE TABLE "board" (
