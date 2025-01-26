@@ -40,6 +40,7 @@ const boardTableSchema= createTableSchema({
         id: 'string',
         title: 'string',
         creatorId: 'string',
+        createdAt: 'string',
     },
     primaryKey: 'id',
 });

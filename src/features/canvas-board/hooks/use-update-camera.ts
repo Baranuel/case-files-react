@@ -1,6 +1,7 @@
 import { useCallback } from "react";
-import { panCamera, zoomAtPoint } from "../utils/convert-position";
+import { moveCamera, panCamera, zoomAtPoint } from "../utils/convert-position";
 import { useCanvas } from "@/app/providers/CanvasProvider";
+import { Element } from "@/types";
 
 
 export const useUpdateCamera = () => {
@@ -25,14 +26,46 @@ export const useUpdateCamera = () => {
         } else {
             setClientViewRef(prev => ({...prev, camera: panCamera(event.deltaX, event.deltaY, prev.camera)}));
         }
+        console.log(clientViewRef.current.camera);
     }, [canvas, setClientViewRef]);
-    
+
+
+
+    const handleFindElement = useCallback((element:Element) => {
+        if(!canvas) return;
+        const elementPosition = element.position;
+        const elementX = elementPosition.x1;
+        const elementY = elementPosition.y1;
+        const elementWidth = elementPosition.x2 - elementPosition.x1;   
+        const elementHeight = elementPosition.y2 - elementPosition.y1;
+        const camera = clientViewRef.current.camera;
+
+        const canvasWidth = canvas.getBoundingClientRect().width;
+        const canvasHeight = canvas.getBoundingClientRect().height;
+
+        const zoomFactor = 0.6;
+
+        const middleX = elementX + elementWidth / 2;
+        const middleY = elementY + elementHeight / 2;
+
+        const bufferRight = 300;
+        const bufferBottom = middleY * 0.2;
+
+        const pointXToMove = (middleX - bufferRight ) - (canvasWidth / zoomFactor )/2
+        const pointYToMove = (middleY ) - (canvasHeight / zoomFactor )/2
+
+
+        setClientViewRef(prev => ({...prev, selectedElement: element, camera:moveCamera( pointXToMove , pointYToMove, prev.camera, zoomFactor)}));
+        console.log(clientViewRef.current.camera);
+    }, [canvas, setClientViewRef]);
 
     
 
+    
 
 
-    return {handleWheel}
+
+    return {handleWheel, handleFindElement};
 
 
 }

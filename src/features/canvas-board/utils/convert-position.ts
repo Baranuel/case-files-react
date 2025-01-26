@@ -40,6 +40,17 @@ export const panCamera = (deltaX: number, deltaY: number, camera: Camera, revers
     }
 }
 
+
+export const moveCamera = (x1: number, y1: number, camera: Camera, zoom:number = 1): Camera => {
+ 
+    return {
+        ...camera,
+        zoom,
+        x1,
+        y1
+    }
+}
+
 // Add new utility object
 export const CameraUtils = {
     createCamera: (zoom = 1, x1 = 0, y1 = 0): Camera => ({

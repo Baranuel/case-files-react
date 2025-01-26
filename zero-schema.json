@@ -9,6 +9,10 @@
           "id"
         ],
         "columns": {
+          "createdAt": {
+            "type": "string",
+            "optional": false
+          },
           "creatorId": {
             "type": "string",
             "optional": false
