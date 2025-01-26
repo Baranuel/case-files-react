@@ -11,12 +11,18 @@
 // Import Routes
 
 import { Route as rootRoute } from './routes/__root'
+import { Route as SignInImport } from './routes/sign-in'
 import { Route as IndexImport } from './routes/index'
 import { Route as LobbyIndexImport } from './routes/lobby/index'
-import { Route as LobbyUserIdImport } from './routes/lobby/$userId'
 import { Route as BoardBoardIdImport } from './routes/board/$boardId'
 
 // Create/Update Routes
+
+const SignInRoute = SignInImport.update({
+  id: '/sign-in',
+  path: '/sign-in',
+  getParentRoute: () => rootRoute,
+} as any)
 
 const IndexRoute = IndexImport.update({
   id: '/',
@@ -27,12 +33,6 @@ const IndexRoute = IndexImport.update({
 const LobbyIndexRoute = LobbyIndexImport.update({
   id: '/lobby/',
   path: '/lobby/',
-  getParentRoute: () => rootRoute,
-} as any)
-
-const LobbyUserIdRoute = LobbyUserIdImport.update({
-  id: '/lobby/$userId',
-  path: '/lobby/$userId',
   getParentRoute: () => rootRoute,
 } as any)
 
@@ -53,18 +53,18 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexImport
       parentRoute: typeof rootRoute
     }
+    '/sign-in': {
+      id: '/sign-in'
+      path: '/sign-in'
+      fullPath: '/sign-in'
+      preLoaderRoute: typeof SignInImport
+      parentRoute: typeof rootRoute
+    }
     '/board/$boardId': {
       id: '/board/$boardId'
       path: '/board/$boardId'
       fullPath: '/board/$boardId'
       preLoaderRoute: typeof BoardBoardIdImport
-      parentRoute: typeof rootRoute
-    }
-    '/lobby/$userId': {
-      id: '/lobby/$userId'
-      path: '/lobby/$userId'
-      fullPath: '/lobby/$userId'
-      preLoaderRoute: typeof LobbyUserIdImport
       parentRoute: typeof rootRoute
     }
     '/lobby/': {
@@ -81,46 +81,46 @@ declare module '@tanstack/react-router' {
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/sign-in': typeof SignInRoute
   '/board/$boardId': typeof BoardBoardIdRoute
-  '/lobby/$userId': typeof LobbyUserIdRoute
   '/lobby': typeof LobbyIndexRoute
 }
 
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/sign-in': typeof SignInRoute
   '/board/$boardId': typeof BoardBoardIdRoute
-  '/lobby/$userId': typeof LobbyUserIdRoute
   '/lobby': typeof LobbyIndexRoute
 }
 
 export interface FileRoutesById {
   __root__: typeof rootRoute
   '/': typeof IndexRoute
+  '/sign-in': typeof SignInRoute
   '/board/$boardId': typeof BoardBoardIdRoute
-  '/lobby/$userId': typeof LobbyUserIdRoute
   '/lobby/': typeof LobbyIndexRoute
 }
 
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/board/$boardId' | '/lobby/$userId' | '/lobby'
+  fullPaths: '/' | '/sign-in' | '/board/$boardId' | '/lobby'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/board/$boardId' | '/lobby/$userId' | '/lobby'
-  id: '__root__' | '/' | '/board/$boardId' | '/lobby/$userId' | '/lobby/'
+  to: '/' | '/sign-in' | '/board/$boardId' | '/lobby'
+  id: '__root__' | '/' | '/sign-in' | '/board/$boardId' | '/lobby/'
   fileRoutesById: FileRoutesById
 }
 
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  SignInRoute: typeof SignInRoute
   BoardBoardIdRoute: typeof BoardBoardIdRoute
-  LobbyUserIdRoute: typeof LobbyUserIdRoute
   LobbyIndexRoute: typeof LobbyIndexRoute
 }
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  SignInRoute: SignInRoute,
   BoardBoardIdRoute: BoardBoardIdRoute,
-  LobbyUserIdRoute: LobbyUserIdRoute,
   LobbyIndexRoute: LobbyIndexRoute,
 }
 
@@ -135,19 +135,19 @@ export const routeTree = rootRoute
       "filePath": "__root.tsx",
       "children": [
         "/",
+        "/sign-in",
         "/board/$boardId",
-        "/lobby/$userId",
         "/lobby/"
       ]
     },
     "/": {
       "filePath": "index.tsx"
     },
+    "/sign-in": {
+      "filePath": "sign-in.tsx"
+    },
     "/board/$boardId": {
       "filePath": "board/$boardId.tsx"
-    },
-    "/lobby/$userId": {
-      "filePath": "lobby/$userId.tsx"
     },
     "/lobby/": {
       "filePath": "lobby/index.tsx"

@@ -1,18 +1,17 @@
 import { Element } from "@/types";
 import {  PersonDefinition, ShapeDefinition } from "../types";
-import { BASE_URL } from "@/constants";
 
 
 export const person: PersonDefinition = {
-    minWidth: 250,
-    minHeight: 325,
-    color: '#F7EBE8',
-    padding:15,
-    gap:10
+    minWidth: 400,
+    minHeight: 500,
+    color: '#F7E3BB',
+    padding:10,
+    gap:20
 }
 
 
-export const createDefaultPerson = (mouseX: number, mouseY: number, mode: 'ghost' | 'create' = 'create'): Element => {
+export const createDefaultPerson = (mouseX: number, mouseY: number, mode: 'ghost' | 'create' = 'create',  creatorId:string, boardId?:string): Element => {
     const {minWidth, minHeight} = person;
     const randomAvatar = (Math.random() * 1) + 0.5 > 1 ? 'avatar-m.svg' : 'avatar-w.svg'
 
@@ -32,10 +31,11 @@ export const createDefaultPerson = (mouseX: number, mouseY: number, mode: 'ghost
     return {
         id: mode === 'ghost' ? `ghost-element-person` : crypto.randomUUID(),
         type: 'person',
-        title: 'Created Person',
-        content: 'SS',
-        imageUrl: `${BASE_URL}/${randomAvatar}`,
+        boardId: boardId ?? null,
+        contentId: null,
+        imageUrl: `${import.meta.env.VITE_DIGITAL_OCEAN_BUCKET_CDN_URL!}/${import.meta.env.VITE_DIGITAL_OCEAN_BUCKET_IMAGES_PATH!}/${randomAvatar}`,
         layer: 0,
         position: {x1, y1, x2, y2},
+        creatorId
     };
 }

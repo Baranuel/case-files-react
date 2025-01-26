@@ -4,11 +4,14 @@ import { getElementAtPosition, getMouseCoordinates } from "../utils/positions";
 import { handleInferAction } from "../utils/handle-infer-action";
 import { useHandleElement } from "./use-handle-element";
 import { EnrichedElement } from "@/types";
-import { useReplicache } from "@/app/providers/ReplicacheProvider";
 import { setCursor } from "../utils/cursor-state";
+import { ZeroSchema } from "@/schema";
+import { useZero } from "@rocicorp/zero/react";
+import { panCamera } from "../utils/convert-position";
 
 export const useCanvasEvents = () => {
-    const rep = useReplicache();
+    const z = useZero<ZeroSchema>();
+
     const {
         clientViewRef,
         tool,
@@ -17,7 +20,8 @@ export const useCanvasEvents = () => {
         canvasRef,
         setTool,
         setClientViewRef,
-        setPreviewElementId
+        setPreviewElementId,
+        previewElementId
     } = useCanvas();
     
     const {
@@ -31,10 +35,18 @@ export const useCanvasEvents = () => {
 
     const handleSelectElementId = useCallback((element: EnrichedElement | null) => {
         if(element?.id.includes('ghost-element')) return;
-        document.startViewTransition(() => {
+        if(!element && !previewElementId) return;
+        if(element?.type === 'line') return;
+
+
+        if('startViewTransition' in document) {
+            document.startViewTransition(() => {
+                setPreviewElementId(element?.id ?? null);
+            });
+        } else {
             setPreviewElementId(element?.id ?? null);
-        });
-    }, [setPreviewElementId]);
+        }
+    }, [setPreviewElementId, previewElementId]);
 
     const handleMouseDown = useCallback(async (e: React.MouseEvent<HTMLCanvasElement>) => {
         const clientView = clientViewRef.current;
@@ -51,9 +63,20 @@ export const useCanvasEvents = () => {
             const element = handleCreateElement(x1, y1, tool);
             if(element) {
                 setClientViewRef(prev => ({...prev, lastInteractionElement: element as EnrichedElement}));
-                await rep.mutate.create_element(element);
+                z.mutateBatch(async tx => {
+                    const randomId = crypto.randomUUID();
+                    await tx.element.insert(element)
+                    await tx.content.insert({
+                        id: randomId,
+                        title: element.type,
+                        content: element.type,
+                    })
+                    await tx.element.update({id:element.id, contentId: randomId})
+                });
             }
         }
+
+
         
 
         const action = handleInferAction(element?.positionWithinElement ?? null, tool);
@@ -65,6 +88,7 @@ export const useCanvasEvents = () => {
         const clientView = clientViewRef.current;
         const canvas = canvasRef.current;
         if(!clientView || !canvas) return;
+
         const {camera, elements, lastClickedPosition, lastInteractionElement} = clientView;
         
         const {x1, y1} = getMouseCoordinates(e, camera);
@@ -74,19 +98,20 @@ export const useCanvasEvents = () => {
         const isSamePosition = Math.abs(x1 - lastPos.x1) < 5 && Math.abs(y1 - lastPos.y1) < 5;
         
         if(tool === 'select' && isSamePosition) {
-            handleSelectElementId(element);
+                handleSelectElementId(element);
         }
 
         if(action === 'moving' || action === 'drawing' || action === 'resizing') {
             const interactionElement = elements?.find(el => el.id === lastInteractionElement?.id);
-            await rep.mutate.update_element(interactionElement) 
+            if(!interactionElement) return;
+            z.mutate.element.update({id: interactionElement.id, position: interactionElement.position});
         }
 
+        setClientViewRef(prev => ({...prev, lastClickedPosition: {x1: 0, y1: 0}, lastInteractionElement: null, ghostElement: null, panning: false}));
         setAction(null);
         setTool('select');
-        setClientViewRef(prev => ({...prev, lastClickedPosition: {x1: 0, y1: 0}, lastInteractionElement: null, ghostElement: null}));
         setCursor(canvas, tool, action,element);
-    }, [clientViewRef, setAction, handleSelectElementId, setTool, setClientViewRef, rep]);
+    }, [clientViewRef, setAction, handleSelectElementId, setTool, setClientViewRef]);
 
     const handleMouseMove = useCallback((e: React.MouseEvent<HTMLCanvasElement>) => {
         const clientView = clientViewRef.current;
@@ -98,6 +123,11 @@ export const useCanvasEvents = () => {
         const element = getElementAtPosition(x1, y1, elements);
 
         setCursor(canvas, tool, action, element);
+        
+        if(clientViewRef.current.panning) {
+            setCursor(canvas, tool, action, element, true);
+            setClientViewRef(prev => ({...prev, camera: panCamera(e.movementX, e.movementY, prev.camera, true)}));
+        }
 
         if(tool !== 'select') {
             requestAnimationFrame(() => handleGhostElement(x1, y1, tool));
@@ -118,10 +148,24 @@ export const useCanvasEvents = () => {
             requestAnimationFrame(() => handleResizeElement(x1, y1, lastInteractionElement));
         }
 
-    }, [clientViewRef, action, handleMoveElement, canvasRef, handleGhostElement, tool]);
+    }, [clientViewRef, action, handleMoveElement, canvasRef, handleGhostElement, tool, setClientViewRef]);
 
     const handleMouseLeave = useCallback(() => {
-        setClientViewRef(prev => ({...prev, ghostElement: null}));
+        setClientViewRef(prev => ({...prev, ghostElement: null, panning: false}));
+    }, [setClientViewRef]);
+
+    const handleKeyDown = useCallback((e: KeyboardEvent, canvas: HTMLCanvasElement) => {
+        if(e.key === ' ') {
+            canvas.style.cursor = 'grabbing';
+            setClientViewRef(prev => ({...prev, panning: true}));
+        }
+    }, [setClientViewRef]);
+
+    const handleKeyUp = useCallback((e: KeyboardEvent, canvas: HTMLCanvasElement) => {
+        if(e.key === ' ') {
+            canvas.style.cursor = 'default';
+            setClientViewRef(prev => ({...prev, panning: false}));
+        }
     }, [setClientViewRef]);
 
     // Return memoized event handlers
@@ -129,6 +173,8 @@ export const useCanvasEvents = () => {
         handleMouseDown,
         handleMouseUp,
         handleMouseMove,
-        handleMouseLeave
-    }), [handleMouseDown, handleMouseUp, handleMouseMove, handleMouseLeave]);
+        handleMouseLeave,
+        handleKeyDown,
+        handleKeyUp
+    }), [handleMouseDown, handleMouseUp, handleMouseMove, handleMouseLeave, handleKeyDown, handleKeyUp]);
 }

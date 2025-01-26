@@ -29,11 +29,14 @@ export const zoomAtPoint = (x1: number, y1: number , camera: Camera, zoomFactor:
     };
 }
 
-export const panCamera = (deltaX: number, deltaY: number, camera: Camera): Camera => {
+export const panCamera = (deltaX: number, deltaY: number, camera: Camera, reverse: boolean = false): Camera => {
+
+    const x1 = reverse ? camera.x1 - deltaX / camera.zoom : camera.x1 + deltaX / camera.zoom;
+    const y1 = reverse ? camera.y1 - deltaY / camera.zoom : camera.y1 + deltaY / camera.zoom;
     return {
         ...camera,
-        x1: camera.x1 + deltaX / camera.zoom,
-        y1: camera.y1 + deltaY / camera.zoom
+        x1,
+        y1
     }
 }
 

@@ -13,7 +13,7 @@ export const drawBackground = (ctx: CanvasRenderingContext2D, canvas: HTMLCanvas
     const endX = startX + (canvas.width / camera.zoom) + gridSize;
     const endY = startY + (canvas.height / camera.zoom) + gridSize;
 
-    ctx.fillStyle = '#525252';
+    ctx.fillStyle = '#483A32';
     for (let x = startX; x <= endX; x += gridSize) {
         for (let y = startY; y <= endY; y += gridSize) {
             ctx.fillRect(x, y, dotSize, dotSize);
@@ -22,8 +22,8 @@ export const drawBackground = (ctx: CanvasRenderingContext2D, canvas: HTMLCanvas
 }
 
 export const renderCanvas = (canvas: HTMLCanvasElement, camera: Camera, elements: Element[], ghostElement: Element | null) => {
-    const width = canvas.getBoundingClientRect().width;
-    const height = canvas.getBoundingClientRect().height;
+    const width = window.innerWidth;
+    const height = window.innerHeight;
     
     canvas.width = width * dpr;
     canvas.height = height * dpr;

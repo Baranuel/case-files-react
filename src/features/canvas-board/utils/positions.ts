@@ -1,10 +1,9 @@
 import type { Camera } from "../types";
 import { Element, EnrichedElement, PositionWithinElement } from "@/types/element";
-import { toCanvasPosition, toDevicePosition } from "./convert-position";
 
 
-export const nearPoint = (x: number, y: number, x1: number, y1: number, name: PositionWithinElement) => {
-    return Math.abs(x - x1) < 10 && Math.abs(y - y1) < 10 ? name : null;
+export const nearPoint = (x: number, y: number, x1: number, y1: number, name: PositionWithinElement, pointBuffer = 10) => {
+    return Math.abs(x - x1) < pointBuffer && Math.abs(y - y1) < pointBuffer ? name : null;
 };
 
 
@@ -27,10 +26,10 @@ export const positionWithinElement = (x: number, y: number, element: Element): P
 
     switch (type) {
         case "line":
-            const on = onLine(x1, y1, x2, y2, x, y);
-            const start = nearPoint(x, y, x1, y1, "start");
-            const end = nearPoint(x, y, x2, y2, "end");
-            const middle = nearPoint(x, y, x1 + (x2 - x1) / 2, y1 + (y2 - y1) / 2, "line_middle");
+            const on = onLine(x1, y1, x2, y2, x, y, 3);
+            const start = nearPoint(x, y, x1, y1, "start", 20);
+            const end = nearPoint(x, y, x2, y2, "end", 20);
+            const middle = nearPoint(x, y, x1 + (x2 - x1) / 2, y1 + (y2 - y1) / 2, "line_middle", 20);
             return start || end || middle || on;
         case "person":
         case "location":
@@ -58,7 +57,14 @@ export const positionWithinElement = (x: number, y: number, element: Element): P
 export const getElementAtPosition = (x: number, y: number, elements: Element[]): EnrichedElement | null => {
 
     return elements
-        .map(element => ({ ...element, positionWithinElement: positionWithinElement(x, y, element), offsetX: x - element.position.x1, offsetY: y - element.position.y1 }))
+        .map(element => {
+            // Where in the element we grabbed it with the mouse
+            const offset = {
+                x: x - element.position.x1,
+                y: y - element.position.y1
+            }
+            return { ...element, positionWithinElement: positionWithinElement(x, y, element), offsetX: offset.x, offsetY: offset.y }
+        })
         .find(element => element.positionWithinElement !== null) || null;
 };
 

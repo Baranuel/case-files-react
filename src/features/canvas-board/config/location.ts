@@ -1,20 +1,19 @@
 import { Element } from "@/types";
-import { LocationDefinition, ShapeDefinition } from "../types";
-import { BASE_URL } from "@/constants";
+import { LocationDefinition} from "../types";
 
 
 export const location: LocationDefinition = {
-    minWidth: 175,
-    minHeight: 200,
-    color: '#fcd34d',
-    polaroidBgColor: 'transparent',
-    textColor: '#2C2420',
-    padding: 15,
-    gap: 20
+    minWidth: 250,
+    minHeight: 300,
+    color: '#EF9952',
+    polaroidBgColor: '#EF9952',
+    textColor: '#0E0B09',
+    padding: 10,
+    gap:-10
 }
 
 
-export const createDefaultLocation = (mouseX: number, mouseY: number, mode: 'ghost' | 'create' = 'create'):Element => {
+export const createDefaultLocation = (mouseX: number, mouseY: number, mode: 'ghost' | 'create' = 'create',creatorId:string, boardId?:string):Element => {
     const {minWidth, minHeight} = location;
 
     const x1 = mouseX - minWidth / 2;
@@ -25,10 +24,11 @@ export const createDefaultLocation = (mouseX: number, mouseY: number, mode: 'gho
     return {
         id: mode === 'ghost' ? `ghost-element-location` : crypto.randomUUID(),
         type: 'location',
-        title: 'Location Area',
-        content: '',
-        imageUrl: `${BASE_URL}/location.svg`,
-        layer: 0,
+        contentId: null,
+        boardId: boardId ?? null,
+        imageUrl: `${import.meta.env.VITE_DIGITAL_OCEAN_BUCKET_CDN_URL!}/${import.meta.env.VITE_DIGITAL_OCEAN_BUCKET_IMAGES_PATH!}/location.svg`,
+        layer: 1,
         position: {x1, y1, x2, y2},
+        creatorId
     };
 }

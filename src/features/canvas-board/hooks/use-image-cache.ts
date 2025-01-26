@@ -1,27 +1,26 @@
-import { Element } from "@/types"
-import { loadAndCacheImage } from "@/utils/image-cache"
-import { useEffect, useState } from "react"
+import { Element } from "@/schema"
+import { loadAndCacheImageBitMap } from "@/utils/image-cache"
+import { useCallback, useEffect, useMemo, useState } from "react"
 
 export const useImageCache = (visibleElements: Element[]) => {
-    const [imagesLoaded, setImagesLoaded] = useState(false);
-    const loadImages = async () => {
-        if(visibleElements.length === 0) return;
-        const promises = visibleElements.map(element => {
-            if (element.imageUrl) {
-                return loadAndCacheImage(element.imageUrl);
-            }
-            return Promise.resolve();
+    const [imagesLoaded] = useState(false);
+    const variousImageUrls = useMemo(() => new Set(visibleElements.map(element => element.imageUrl)), [visibleElements]);
+
+    const loadImages = useCallback(async () => {
+        if (visibleElements.length === 0) return;
+        const arrayOfImageUrls = Array.from(variousImageUrls);
+
+        const promises = arrayOfImageUrls.map(imageUrl => {
+            if (!imageUrl) return Promise.resolve();
+            return loadAndCacheImageBitMap(imageUrl);
         });
-        try {
-            await Promise.all(promises);
-            setImagesLoaded(true);
-        } catch (error) {
-            console.error('Error loading images:', error);
-        }
-    };
+        
+        await Promise.all(promises);
+    }, [variousImageUrls]);
+
     useEffect(() => {
         loadImages();
-    }, [visibleElements]);
+    }, [variousImageUrls]);
 
     return { cacheLoaded: imagesLoaded };
 }

@@ -1,4 +1,6 @@
 
+import {Content, Element as ZeroElement} from '@/schema'
+
 export type ElementType = 'person' | 'location' | 'line'  
 
 export type ElementPosition = {
@@ -8,14 +10,8 @@ export type ElementPosition = {
     y2: number;
 }
 
-export type Element = {
-    id: string;
-    type: ElementType;
-    title: string;
-    content: string;
-    position: ElementPosition;
-    imageUrl: string | null;
-    layer: number;
+export type Element = ZeroElement & {
+    content?:readonly Content[];
 }
 
 export type PositionWithinElement = 'start' | 'end' | 'line_middle' | 'tl' | 'tr' | 'tm' | 'bl' | 'br' | 'bm' | 'ml' | 'mr' | 'inside' | null ;

@@ -8,6 +8,47 @@
     box-sizing: border-box;
 }
 
+body {
+    width: 100vw;
+    background-color: #FFF6EB;
+    overflow-x: hidden;
+}
+
+
+.no-scrollbar::-webkit-scrollbar {
+    display: none;
+}
+
+/* Hide scrollbar for IE, Edge and Firefox */
+.no-scrollbar {
+    -ms-overflow-style: none;  /* IE and Edge */
+    scrollbar-width: none;  /* Firefox */
+}
+
+
+
+
+.mdxeditor-root-contenteditable {
+    & > div:nth-child(1) {
+        overflow: hidden;
+        height: 100%;
+    }
+}
+
+.mdxeditor-popup-container {
+    display: none;
+}
+
+
+.no-scrollbar::-webkit-scrollbar {
+    display: none;
+}
+
+.no-scrollbar {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+}
+
 
 
 

@@ -1,28 +1,59 @@
-import { Link, Outlet, createRootRoute } from "@tanstack/react-router";
+import {
+  Outlet,
+  createRootRouteWithContext,
+} from "@tanstack/react-router";
 import { TanStackRouterDevtools } from "@tanstack/router-devtools";
+import {
+  useAuth,
+} from "@clerk/clerk-react";
+import { Zero } from "@rocicorp/zero";
+import { schema } from "@/schema";
+import { ZeroProvider } from "@rocicorp/zero/react";
+import Navigation from "@/app/components/ui/Navigation";
+import { RouterContext } from "@/types/router-context";
+import { Layout } from "@/app/components/ui/Layout";
+import { useMemo } from "react";
 
-export const Route = createRootRoute({
+
+export const Route = createRootRouteWithContext<RouterContext>()({
   component: RootComponent,
+  loader: async ({context}) => {
+    if(context.auth){
+      return await context.auth.getToken({ template: "casefiles" });
+    }
+  },
 });
 
 function RootComponent() {
+  const token = Route.useLoaderData()
+  const isProd = import.meta.env.PROD;
+  const {userId, getToken} = useAuth();
+
+  // Memoize the Zero instance to prevent recreation on re-renders
+  const zero = useMemo(() => new Zero({
+    userID: userId ?? 'anon',
+    schema,
+    server: isProd
+      ? import.meta.env.VITE_ZERO_SERVER_URL_PROD
+      : import.meta.env.VITE_ZERO_SERVER_URL_DEV,
+    kvStore: "mem",
+    auth: async (err) => {
+      if(err === 'invalid-token') return await getToken({template:'casefiles'}) ?? token!
+      return token!
+    },
+  }), [userId, token, isProd, getToken]);
+
+
+
+
+
   return (
-    <div className="flex flex-col h-screen">
-      <div style={{viewTransitionName: 'root-header'}} className="z-50 p-4 border-b bg-[#2c2420] text-[#ECD5B8]">
-        <Link
-          params={{ userId: "sss" }}
-          to="/lobby/$userId"
-          activeProps={{
-            className: "font-bold",
-          }}
-        >
-          Lobby
-        </Link>
-      </div>
-      <div className="flex-1 bg-[#ECD5B8]">
-        <Outlet />
-      </div>
-      <TanStackRouterDevtools position="bottom-right" />
-    </div>
+    <ZeroProvider zero={zero}>
+      <Navigation />
+        <Layout>
+           <Outlet />
+        </Layout>
+      {!isProd && <TanStackRouterDevtools position="bottom-right" />}
+    </ZeroProvider>
   );
 }

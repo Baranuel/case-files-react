@@ -1,23 +1,20 @@
-import ReactDOM from 'react-dom/client'
-import { RouterProvider, createRouter } from '@tanstack/react-router'
-import { routeTree } from './routeTree.gen'
-import './index.css'
+import ReactDOM from "react-dom/client";
+import { ClerkProvider } from "@clerk/clerk-react";
+import "./index.css";
+import { App } from "./app/components/App";
+import { BASE_URL } from "./constants";
+const rootElement = document.getElementById("app")!;
 
-
-const router = createRouter({
-  routeTree,
-  defaultPreload: 'intent',
-})
-
-declare module '@tanstack/react-router' {
-  interface Register {
-    router: typeof router
-  }
-}
-
-const rootElement = document.getElementById('app')!
 
 if (!rootElement.innerHTML) {
-  const root = ReactDOM.createRoot(rootElement)
-  root.render(<RouterProvider router={router} />)
+  const root = ReactDOM.createRoot(rootElement);
+  
+  root.render(
+    <ClerkProvider
+    afterSignOutUrl={BASE_URL}
+    publishableKey={import.meta.env.VITE_CLERK_PUBLISHABLE_KEY}
+    signInForceRedirectUrl={BASE_URL+'/lobby'}>
+      <App/>
+    </ClerkProvider>
+  );
 }

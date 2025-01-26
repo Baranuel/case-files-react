@@ -3,7 +3,6 @@ export const svgToPng = async (svg: string, targetWidth: number = 200, targetHei
 
     const svgResponse = await fetch(svg).then(res => res.text());
 
-
     const parser = new DOMParser();
     const svgDoc = parser.parseFromString(svgResponse, "image/svg+xml");
     const svgElement = svgDoc.documentElement;
