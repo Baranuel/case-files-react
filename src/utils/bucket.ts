@@ -12,7 +12,7 @@ const client = new S3({
 
 
 
-export const getAvailablePickerImages  = async (): Promise<string[]> => {
+export const getAvailablePickerImages = async (): Promise<string[]> => {
     const imageLocationPrefix = `${import.meta.env.VITE_DIGITAL_OCEAN_BUCKET_PORTRAITS_PATH!}/`
 
     const listObjectsCommand = new ListObjectsV2Command({
@@ -26,7 +26,7 @@ export const getAvailablePickerImages  = async (): Promise<string[]> => {
         const images = response.Contents?.reduce((acc, item) => {
 
             const imageNameWithoutPrefix = item.Key?.split(imageLocationPrefix)[1];
-            if(imageNameWithoutPrefix && imageNameWithoutPrefix.split('.').length > 1) {
+            if (imageNameWithoutPrefix && imageNameWithoutPrefix.split('.').length > 1) {
                 acc.push(imageNameWithoutPrefix);
             }
             return acc;
@@ -34,7 +34,6 @@ export const getAvailablePickerImages  = async (): Promise<string[]> => {
         return images;
 
     } catch (error) {
-        console.log(error);
         return [];
     }
 

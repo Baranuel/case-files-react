@@ -105,9 +105,7 @@ export const ImagePicker = ({ imageUrl, onSelect, elementsList }: ImagePickerPro
     setActiveTab("all");
   };
 
-  if (!imageUrl) {
-    return <div>No image selected</div>;
-  }
+
 
   if (!targetPortal) {
     return <div>No image picker root</div>;

@@ -36,6 +36,7 @@ export const useCanvasEvents = () => {
     const handleSelectElementId = useCallback((element: EnrichedElement | null) => {
         if(element?.id.includes('ghost-element')) return;
         if(!element && !previewElementId) return;
+        if(element?.type === 'line') return;
 
 
         if('startViewTransition' in document) {
@@ -97,7 +98,7 @@ export const useCanvasEvents = () => {
         const isSamePosition = Math.abs(x1 - lastPos.x1) < 5 && Math.abs(y1 - lastPos.y1) < 5;
         
         if(tool === 'select' && isSamePosition) {
-            handleSelectElementId(element);
+                handleSelectElementId(element);
         }
 
         if(action === 'moving' || action === 'drawing' || action === 'resizing') {

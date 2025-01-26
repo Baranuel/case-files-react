@@ -27,6 +27,6 @@ CREATE TABLE "element" (
   "boardId" VARCHAR,
   "contentId" VARCHAR,
   "creatorId" VARCHAR,
-  FOREIGN KEY ("contentId") REFERENCES "content"("id"),
-  FOREIGN KEY ("boardId") REFERENCES "board"("id")
+  FOREIGN KEY ("contentId") REFERENCES "content"("id") ON DELETE CASCADE,
+  FOREIGN KEY ("boardId") REFERENCES "board"("id") ON DELETE CASCADE
 );

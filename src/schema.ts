@@ -86,15 +86,7 @@ export const permissions = definePermissions<JWTPayload, Schema>(schema, () => {
 
 
       return {
-        element: {
-            row: {
-                insert: ANYONE_CAN,
-                select: ANYONE_CAN,
-                update: {
-                    postMutation: [allowIfCreator]
-                }
-            }
-        }
+   
     }
        
 });
