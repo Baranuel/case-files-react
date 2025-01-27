@@ -61,7 +61,7 @@ export const handleRenderLocation = (ctx: CanvasRenderingContext2D, element: Ele
     const textHeight = textAreaHeight
 
     
-    const text = element.content?.[0].title ?? element.type
+    const text = element.content?.title ?? element.type
     const textOptions = {
         x: textX + textWidth / 2,
         y: textY + textHeight / 2,

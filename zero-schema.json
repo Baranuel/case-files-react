@@ -3,102 +3,137 @@
   "schema": {
     "version": 1,
     "tables": {
-      "board": {
-        "tableName": "board",
-        "primaryKey": [
-          "id"
-        ],
-        "columns": {
-          "createdAt": {
-            "type": "number",
-            "optional": true
-          },
-          "creatorId": {
-            "type": "string",
-            "optional": false
-          },
-          "id": {
-            "type": "string",
-            "optional": false
-          },
-          "title": {
-            "type": "string",
-            "optional": false
-          }
-        },
-        "relationships": {}
-      },
-      "content": {
-        "tableName": "content",
-        "primaryKey": [
-          "id"
-        ],
-        "columns": {
-          "content": {
-            "type": "string",
-            "optional": false
-          },
-          "id": {
-            "type": "string",
-            "optional": false
-          },
-          "title": {
-            "type": "string",
-            "optional": false
-          }
-        },
-        "relationships": {}
-      },
       "element": {
-        "tableName": "element",
-        "primaryKey": [
-          "id"
-        ],
+        "name": "element",
         "columns": {
-          "boardId": {
-            "type": "string",
-            "optional": true
-          },
-          "contentId": {
-            "type": "string",
-            "optional": true
-          },
-          "creatorId": {
-            "type": "string",
-            "optional": false
-          },
           "id": {
             "type": "string",
-            "optional": false
-          },
-          "imageUrl": {
-            "type": "string",
-            "optional": true
-          },
-          "layer": {
-            "type": "number",
-            "optional": false
-          },
-          "position": {
-            "type": "json",
-            "optional": false
+            "optional": false,
+            "customType": null
           },
           "type": {
             "type": "string",
-            "optional": false
+            "optional": false,
+            "customType": null
+          },
+          "position": {
+            "type": "json",
+            "optional": false,
+            "customType": null
+          },
+          "imageUrl": {
+            "type": "string",
+            "optional": true,
+            "customType": null
+          },
+          "contentId": {
+            "type": "string",
+            "optional": true,
+            "customType": null
+          },
+          "boardId": {
+            "type": "string",
+            "optional": true,
+            "customType": null
+          },
+          "layer": {
+            "type": "number",
+            "optional": false,
+            "customType": null
           }
         },
-        "relationships": {
-          "content": {
+        "primaryKey": [
+          "id"
+        ]
+      },
+      "content": {
+        "name": "content",
+        "columns": {
+          "id": {
+            "type": "string",
+            "optional": false,
+            "customType": null
+          },
+          "title": {
+            "type": "string",
+            "optional": false,
+            "customType": null
+          },
+          "notes": {
+            "type": "string",
+            "optional": false,
+            "customType": null
+          },
+          "victim": {
+            "type": "boolean",
+            "optional": false,
+            "customType": null
+          },
+          "timeOfDeath": {
+            "type": "number",
+            "optional": true,
+            "customType": null
+          }
+        },
+        "primaryKey": [
+          "id"
+        ]
+      },
+      "board": {
+        "name": "board",
+        "columns": {
+          "id": {
+            "type": "string",
+            "optional": false,
+            "customType": null
+          },
+          "title": {
+            "type": "string",
+            "optional": false,
+            "customType": null
+          },
+          "creatorId": {
+            "type": "string",
+            "optional": false,
+            "customType": null
+          },
+          "createdAt": {
+            "type": "number",
+            "optional": true,
+            "customType": null
+          }
+        },
+        "primaryKey": [
+          "id"
+        ]
+      }
+    },
+    "relationships": {
+      "element": {
+        "content": [
+          {
             "sourceField": [
               "contentId"
             ],
             "destField": [
               "id"
             ],
-            "destSchema": "content"
+            "destSchema": "content",
+            "cardinality": "one"
           }
-        }
+        ],
+        "board": [
+          {
+            "sourceField": [
+              "boardId"
+            ],
+            "destField": [
+              "id"
+            ],
+            "destSchema": "board",
+            "cardinality": "one"
+          }
+        ]
       }
     }
   }

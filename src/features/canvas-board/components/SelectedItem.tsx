@@ -26,7 +26,7 @@ export function SelectedItem() {
   useEffect(() => {
     if (element) {
       setPreviewElement(element);
-      setElContent(element.content?.[0] ?? null);
+      setElContent(element.content ?? null);
     }
   }, [element]);
 
@@ -38,16 +38,16 @@ export function SelectedItem() {
 
   const handleImageSelect = (imageUrl: string) => {
     z.mutate.element.update({
-      id: element?.id,
+      id: element?.id!,
       imageUrl,
     });
   };
 
-  const handleDebouncedUpdateElement = useDebouncedCallback((updateProperty: Partial<Record<keyof Content, string>>) => {
+  const handleDebouncedUpdateElement = useDebouncedCallback((updateProperty: Partial<Record<keyof Content, any>>) => {
     if (!previewElement?.contentId) return;
 
     z.mutate.content.update({
-      id: previewElement.contentId,
+      id: previewElement.contentId!,
       ...updateProperty
     });
   }, 900);
@@ -96,12 +96,12 @@ export function SelectedItem() {
           </label>
           <MarkdownEditor
             previewId={previewElementId}
-            markdown={element?.content?.[0].content ?? ""}
+            markdown={element?.content?.notes ?? ""}
             onChange={(content) => {
               // Ensure empty lines are preserved by replacing them with a line break character
               const preservedContent = content
-              setElContent(prev => prev ? ({ ...prev, content:preservedContent }) : null);
-              handleDebouncedUpdateElement({ content:preservedContent });
+              setElContent(prev => prev ? ({ ...prev, notes:preservedContent }) : null);
+              handleDebouncedUpdateElement({notes:preservedContent });
               scrollToBottom();
             }}
           />

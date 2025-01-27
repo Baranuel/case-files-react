@@ -8,7 +8,6 @@ import {
 } from "react";
 import { createGenericContext } from "./genericContext";
 import { ActionType, Element, EnrichedElement, Tool } from "@/types";
-import { Element as ZeroElement } from "@/schema";
 import { Camera } from "@/features/canvas-board/types";
 import { useQuery, useZero } from "@rocicorp/zero/react";
 import { ZeroSchema } from "@/schema";
