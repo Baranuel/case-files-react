@@ -15,7 +15,8 @@ CREATE TABLE "content" (
 CREATE TABLE "board" (
   "id" VARCHAR PRIMARY KEY,
   "title" VARCHAR NOT NULL,
-  "creatorId" VARCHAR
+  "creatorId" VARCHAR NOT NULL,
+  "createdAt" TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
 
 CREATE TABLE "element" (

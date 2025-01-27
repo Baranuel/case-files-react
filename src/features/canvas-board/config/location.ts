@@ -27,7 +27,7 @@ export const createDefaultLocation = (mouseX: number, mouseY: number, mode: 'gho
         contentId: null,
         boardId: boardId ?? null,
         imageUrl: `${import.meta.env.VITE_DIGITAL_OCEAN_BUCKET_CDN_URL!}/${import.meta.env.VITE_DIGITAL_OCEAN_BUCKET_IMAGES_PATH!}/location.svg`,
-        layer: 1,
+        layer: 0,
         position: {x1, y1, x2, y2},
         creatorId
     };

@@ -65,6 +65,7 @@ export const getElementAtPosition = (x: number, y: number, elements: Element[]):
             }
             return { ...element, positionWithinElement: positionWithinElement(x, y, element), offsetX: offset.x, offsetY: offset.y }
         })
+        .sort((a, b) => b.layer - a.layer)
         .find(element => element.positionWithinElement !== null) || null;
 };
 

@@ -20,12 +20,17 @@ export const zoomAtPoint = (x1: number, y1: number , camera: Camera, zoomFactor:
     const newZoom = camera.zoom * zoomFactor;
     const mouseWorldBefore = toCanvasPosition(x1, y1, camera);
     const mouseWorldAfter = toCanvasPosition(x1, y1, { ...camera, zoom: newZoom });
-    const maxAllowedZoom = 0.15;
+    const maxAllowedZoom = 0.25;
     if(newZoom < maxAllowedZoom) return camera;
+
+    const zoomX1 = camera.x1 + (mouseWorldBefore.x1 - mouseWorldAfter.x1);
+    const zoomY1 = camera.y1 + (mouseWorldBefore.y1 - mouseWorldAfter.y1);
+    
     return {
         zoom: Math.max(maxAllowedZoom, newZoom),
-        x1: camera.x1 + (mouseWorldBefore.x1 - mouseWorldAfter.x1),
-        y1: camera.y1 + (mouseWorldBefore.y1 - mouseWorldAfter.y1),
+        x1: zoomX1,
+        y1: zoomY1,
+        animateCameraTo: {...camera, x1: zoomX1, y1: zoomY1, zoom: newZoom, applyEase:false}
     };
 }
 
@@ -36,7 +41,22 @@ export const panCamera = (deltaX: number, deltaY: number, camera: Camera, revers
     return {
         ...camera,
         x1,
-        y1
+        y1,
+        animateCameraTo: {...camera, x1, y1, applyEase:false}
+    }
+}
+
+
+export const moveCamera = (x1: number, y1: number, camera: Camera, zoom:number = 1): Camera => {
+ 
+    return {
+        ...camera,
+        animateCameraTo: {
+        zoom,
+        x1,
+        y1,
+        applyEase: true
+    }
     }
 }
 

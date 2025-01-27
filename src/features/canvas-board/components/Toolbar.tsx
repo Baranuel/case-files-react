@@ -1,5 +1,6 @@
 import { useCanvas } from "@/app/providers/CanvasProvider";
 import { Tool } from "@/types";
+import { JSX } from "react";
 import { FaLocationDot } from "react-icons/fa6";
 import { FiMove } from "react-icons/fi";
 import { IoPersonSharp } from "react-icons/io5";

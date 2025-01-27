@@ -33,6 +33,8 @@ export const renderCanvas = (canvas: HTMLCanvasElement, camera: Camera, elements
 
 
     const ctx = canvas.getContext("2d");
+
+    const layeredElements = elements.sort((a, b) => a.layer - b.layer);
     
     if(!ctx) return;
 
@@ -44,7 +46,7 @@ export const renderCanvas = (canvas: HTMLCanvasElement, camera: Camera, elements
     ctx.fillStyle = 'red';
 
     drawBackground(ctx, canvas, camera);
-    elements.forEach(element => handleRenderElement(ctx, element));
+    layeredElements.forEach(element => handleRenderElement(ctx, element));
     if(ghostElement) handleRenderElement(ctx, ghostElement);
     ctx.restore()
 }
