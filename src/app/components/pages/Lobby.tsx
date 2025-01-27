@@ -6,7 +6,7 @@ import { useCallback } from "react";
 import { FaPlus, FaTrash } from "react-icons/fa6";
 import { Button } from "../ui/Button";
 import { AnimatePresence, motion } from "framer-motion";
-
+import dayjs from "dayjs";
 export function Lobby() {
   const { userId } = useAuth();
   const z = useZero<ZeroSchema>();
@@ -25,6 +25,9 @@ export function Lobby() {
         .padStart(4, "0")}`,
     });
   }, [z.mutate.board, userId]);
+
+
+  console.log(dayjs(boards[0]?.createdAt));
 
   const handleDeleteBoard = useCallback(
     async (boardId: string) => {
@@ -82,7 +85,7 @@ export function Lobby() {
                       </h2>
                     </div>
                     <p className="text-[#2c2420]/60 text-sm font-mono">
-                      Opened on {new Date().toLocaleDateString()}
+                      Opened on {dayjs(board.createdAt).format('MMM DD, YYYY')}
                     </p>
                     <div className="mt-4 border-t border-dashed border-[#8B4513]/30" />
                   </div>
