@@ -82,7 +82,7 @@ export const useCanvasEvents = () => {
         const action = handleInferAction(element?.positionWithinElement ?? null, tool);
         setAction(action);
         setCursor(canvas, tool, action, element);
-    }, [clientViewRef, tool, setAction, handleCreateElement]);
+    }, [clientViewRef, tool, setAction, handleCreateElement, action]);
 
     const handleMouseUp = useCallback(async (e: React.MouseEvent<HTMLCanvasElement>) => {
         const clientView = clientViewRef.current;
@@ -95,10 +95,11 @@ export const useCanvasEvents = () => {
         const element = getElementAtPosition(x1, y1, elements);
 
         const lastPos = lastClickedPosition;
-        const isSamePosition = Math.abs(x1 - lastPos.x1) < 5 && Math.abs(y1 - lastPos.y1) < 5;
+        const pointClickBuffer = 15;
+        const isSamePosition = Math.abs(x1 - lastPos.x1) < pointClickBuffer && Math.abs(y1 - lastPos.y1) < pointClickBuffer;
         
         if(tool === 'select' && isSamePosition) {
-                handleSelectElementId(element);
+             handleSelectElementId(element);
         }
 
         if(action === 'moving' || action === 'drawing' || action === 'resizing') {
@@ -111,7 +112,7 @@ export const useCanvasEvents = () => {
         setAction(null);
         setTool('select');
         setCursor(canvas, tool, action,element);
-    }, [clientViewRef, setAction, handleSelectElementId, setTool, setClientViewRef]);
+    }, [clientViewRef, setAction, handleSelectElementId, setTool, setClientViewRef, action]);
 
     const handleMouseMove = useCallback((e: React.MouseEvent<HTMLCanvasElement>) => {
         const clientView = clientViewRef.current;

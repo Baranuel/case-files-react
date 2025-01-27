@@ -10,10 +10,11 @@ export function Lookup() {
   const {handleFindElement} = useUpdateCamera();
   const [searchTerm, setSearchTerm] = useState("");
 
-  const { elementsList } = useCanvas();
+  const { elementsList, setPreviewElementId } = useCanvas();
 
   const handleClose = useCallback(() => {
     setIsOpen(false);
+    setSearchTerm("");
   }, [setIsOpen]);
 
   const handleOpen = useCallback(() => {
@@ -62,7 +63,9 @@ export function Lookup() {
           <div
           key={element.id}
           className="flex items-center gap-2 p-2 hover:cursor-pointer hover:bg-[#fabc75] rounded-lg"
-          onClick={() => handleFindElement(element)}
+          onClick={() => {
+            handleFindElement(element)
+          }}
           >
           <img src={element.imageUrl ?? ''} className="w-8 h-8 " alt="Image" />
           <div className="flex flex-col gap-1">
