@@ -20,7 +20,7 @@ export const zoomAtPoint = (x1: number, y1: number , camera: Camera, zoomFactor:
     const newZoom = camera.zoom * zoomFactor;
     const mouseWorldBefore = toCanvasPosition(x1, y1, camera);
     const mouseWorldAfter = toCanvasPosition(x1, y1, { ...camera, zoom: newZoom });
-    const maxAllowedZoom = 0.15;
+    const maxAllowedZoom = 0.25;
     if(newZoom < maxAllowedZoom) return camera;
 
     const zoomX1 = camera.x1 + (mouseWorldBefore.x1 - mouseWorldAfter.x1);

@@ -42,7 +42,7 @@ export function Lookup() {
       onMouseLeave={handleClose}
       onMouseOver={handleOpen}
       className={cn(
-        `absolute right-0 top-4 bg-[#F5DEB3] flex flex-col gap-2 w-[30vw] h-[35vh] min-w-[400px] p-4 rounded-r-lg z-50 `
+        `absolute right-0 top-4 bg-[#F5DEB3] flex flex-col gap-2 w-[30vw] h-[35vh] min-w-[400px] p-4 rounded-r-lg rounded-bl-lg z-50 `
       )}
     >
       <div className=" hover:cursor-pointer absolute text-2xl top-0 -left-16 h-16 w-16 bg-[#E4C18D] border border-[#C4A475] rounded-l-lg flex items-center justify-center">
