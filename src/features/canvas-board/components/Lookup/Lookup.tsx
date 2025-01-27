@@ -31,6 +31,10 @@ export function Lookup() {
 
   return (
     <motion.div
+      layout
+      initial={{
+        x: "100%",
+      }}
       animate={{
         x: isOpen ? "0" : "100%",
         transition: {

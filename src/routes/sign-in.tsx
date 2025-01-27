@@ -6,5 +6,7 @@ export const Route = createFileRoute('/sign-in')({
 })
 
 function HomeComponent() {
-  return   <SignIn forceRedirectUrl={'/lobby'} /> 
+  return <section className="flex-1 flex items-center justify-center">
+    <SignIn forceRedirectUrl={'/lobby'} /> 
+  </section>
 }

@@ -2,6 +2,7 @@ import { IconBase } from "react-icons/lib";
 import { Button } from "../ui/Button";
 import {motion} from 'framer-motion';
 import { FaFileShield } from "react-icons/fa6";
+import { useNavigate } from "@tanstack/react-router";
 
 
 const cards: CardElementProps[] = [
@@ -46,9 +47,11 @@ const CardElement = ({title, description}: CardElementProps) => {
 }
 
 export const LandingPage = () => {
+  const navigate = useNavigate();
+
   return (
     <div className="w-full h-full max-w-[1440px] mx-auto p-4 md:pt-8">
-    <section className=" min-h-[75vh] max-h-fit-content flex flex-row md:flex-col md:items-start gap-6 md:gap-2 items-center justify-start">
+    <section className=" min-h-[75vh] md:min-h-[500px] max-h-fit-content flex flex-row md:flex-col md:items-start gap-6 md:gap-2 items-center justify-start">
       <div className="flex flex-col gap-6  w-2/3 md:w-full">
       <h1 className="">
         <motion.span
@@ -86,7 +89,7 @@ export const LandingPage = () => {
       animate={{opacity:1, x:0}}
       transition={{delay:0.7, duration:0.5}}
       className="flex">
-      <Button variant='primary' className="max-w-[150px]  text-base shadow-md" title="Create Board Button">
+      <Button onClick={() => navigate({ to: `/lobby` })} variant='primary' className="max-w-[150px]  text-base shadow-md" title="Create Board Button">
         Create Board
       </Button>
       </motion.div>
@@ -116,7 +119,7 @@ export const LandingPage = () => {
     <section className=" my-[150px] lg:mt-[100px] md:mt-[50px] h-full max-h-[500px] md:max-h-full w-full mx-auto flex flex-col gap-12 md:gap-6 items-center justify-start">
     <h3 className="text-5xl md:text-4xl font-black leading-tighter bg-gradient-to-r  from-[#B4540A] to-[#eb8415]  bg-clip-text text-transparent">Free Access</h3>
     <p className="text-xl text-center  text-[#333333]/90 leading-relaxed font-medium">You can start using Casefiles for free, create up to 3 boards without any payment required.</p>
-    <Button variant='primary' className="max-w-[150px]  text-base shadow-md" title="Create Board Button">
+    <Button onClick={() => navigate({ to: `/lobby` })} variant='primary' className="max-w-[150px]  text-base shadow-md" title="Create Board Button">
         Create Board
       </Button>
     </section>
