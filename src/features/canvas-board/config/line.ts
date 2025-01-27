@@ -30,6 +30,5 @@ export const createDefaultLine = (x1:number, y1:number, mode: 'ghost' | 'create'
         layer: -1,
         boardId: boardId ?? null,
         position: {x1, y1, x2:x1, y2:y1},
-        creatorId
     };
 }

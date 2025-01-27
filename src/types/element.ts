@@ -11,7 +11,7 @@ export type ElementPosition = {
 }
 
 export type Element = ZeroElement & {
-    content?:readonly Content[];
+    content?:Content;
 }
 
 export type PositionWithinElement = 'start' | 'end' | 'line_middle' | 'tl' | 'tr' | 'tm' | 'bl' | 'br' | 'bm' | 'ml' | 'mr' | 'inside' | null ;

@@ -36,6 +36,5 @@ export const createDefaultPerson = (mouseX: number, mouseY: number, mode: 'ghost
         imageUrl: `${import.meta.env.VITE_DIGITAL_OCEAN_BUCKET_CDN_URL!}/${import.meta.env.VITE_DIGITAL_OCEAN_BUCKET_IMAGES_PATH!}/${randomAvatar}`,
         layer: 1,
         position: {x1, y1, x2, y2},
-        creatorId
     };
 }
