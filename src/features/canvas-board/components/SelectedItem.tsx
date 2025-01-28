@@ -64,10 +64,12 @@ export function SelectedItem() {
       <h1 className="text-2xl font-bold text-[#8B4513] mb-2">
         {getTitle(element?.type)} #{element?.id.slice(-5, -1)}
       </h1>
+      
       <ImagePicker
         imageUrl={element?.imageUrl ?? undefined}
         onSelect={handleImageSelect}
         elementsList={elementsList}
+        element={element}
       />
 
       <div className="flex gap-4 my-2 p-3 bg-[#ECD5B8] rounded-lg">

@@ -1,82 +1,92 @@
 import { useIntersectionObserver } from "@/app/hooks/use-intersection-observer";
 import { getAvailablePickerImages } from "@/utils/bucket";
 import { cn } from "@/utils/cn";
-import { getImageCache } from "@/utils/image-cache";
 import { AnimatePresence, motion } from "framer-motion";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { createPortal } from "react-dom";
 import { IoIosCloseCircleOutline } from "react-icons/io";
 import { Element } from "@/types";
+import { DatePicker, Switch } from "antd";
+import { useZero } from "@rocicorp/zero/react";
+import { ZeroSchema } from "@/schema";
+import dayjs from "dayjs";
 
+// Types
 type ImagePickerProps = {
   imageUrl?: string;
   onSelect: (imageUrl: string) => void;
   elementsList: Element[];
+  element?: Element;
 };
 
-const tabs = [
-  {
-    title: "All",
-    value: "all",
+// Constants
+const TABS = [
+  { title: "All", value: "all" },
+  { title: "Men", value: "men" },
+  { title: "Women", value: "women" },
+] as const;
+
+// Animation variants
+const animations = {
+  modal: {
+    hidden: { opacity: 0 },
+    visible: { opacity: 1 },
+    exit: { opacity: 0 },
   },
-  {
-    title: "Men",
-    value: "men",
+  modalContent: {
+    hidden: { scale: 0.95, opacity: 0 },
+    visible: { scale: 1, opacity: 1 },
+    exit: { scale: 0.95, opacity: 0 },
   },
-  {
-    title: "Women",
-    value: "women",
+  grid: {
+    hidden: { opacity: 1 },
+    visible: {
+      opacity: 1,
+      transition: { staggerChildren: 0.06 },
+    },
   },
-];
-
-const modalVariants = {
-  hidden: { opacity: 0 },
-  visible: { opacity: 1 },
-  exit: { opacity: 0 }
-};
-
-const modalContentVariants = {
-  hidden: { scale: 0.95, opacity: 0 },
-  visible: { scale: 1, opacity: 1 },
-  exit: { scale: 0.95, opacity: 0 }
-};
-
-const gridVariants = {
-  hidden: { opacity: 1 },
-  visible: {
-    opacity: 1,
-    transition: {
-      staggerChildren: 0.06,
-    }
-  }
-};
-
-const imageVariants = {
-  hidden: { 
-    opacity: 0,
-    y: 10,
-    transition: {
-      duration: 0
-    }
+  image: {
+    hidden: {
+      opacity: 0,
+      y: 10,
+      transition: { duration: 0 },
+    },
+    visible: {
+      opacity: 1,
+      y: 0,
+      transition: {
+        duration: 0.2,
+        ease: "easeOut",
+      },
+    },
   },
-  visible: { 
-    opacity: 1,
-    y: 0,
-    transition: {
-      duration: 0.2,
-      ease: "easeOut"
-    }
-  }
 };
 
-export const ImagePicker = ({ imageUrl, onSelect, elementsList }: ImagePickerProps) => {
+export const ImagePicker = ({
+  imageUrl,
+  onSelect,
+  elementsList,
+  element,
+}: ImagePickerProps) => {
+  // State
   const [isOpen, setIsOpen] = useState(false);
   const [imageSelection, setImageSelection] = useState<string[] | null>(null);
-  const targetPortal = document.getElementById("image-picker-root");
   const [activeTab, setActiveTab] = useState("all");
-  const { observedElements, observe } = useIntersectionObserver('data-image-url');
-  const selectedImages = useMemo(() => new Set(elementsList.filter(el => el.imageUrl).map(el => el.imageUrl)), [elementsList]);
-  
+
+  // Hooks
+  const zero = useZero<ZeroSchema>();
+  const { observedElements, observe } =
+    useIntersectionObserver("data-image-url");
+  const targetPortal = document.getElementById("image-picker-root");
+
+  // Memoized values
+  const selectedImages = useMemo(
+    () =>
+      new Set(
+        elementsList.filter((el) => el.imageUrl).map((el) => el.imageUrl)
+      ),
+    [elementsList]
+  );
 
   const cdnUrl =
     import.meta.env.VITE_DIGITAL_OCEAN_BUCKET_CDN_URL! +
@@ -84,117 +94,192 @@ export const ImagePicker = ({ imageUrl, onSelect, elementsList }: ImagePickerPro
     import.meta.env.VITE_DIGITAL_OCEAN_BUCKET_PORTRAITS_PATH! +
     "/";
 
-  const handleSelectImage = (imageUrl: string) => {
-    onSelect(imageUrl);
-    setIsOpen(false);
-    setActiveTab("all");
-  };
+  // Handlers
+  const handleUpdateVictimStatus = useCallback(
+    async (victim: boolean) => {
+      if (!element?.content?.id) return;
+      await zero.mutate.content.update({
+        id: element.content.id,
+        victim,
+      });
+    },
+    [zero, element]
+  );
+
+  const handleUpdateTimeOfDeath = useCallback(
+    async (date: dayjs.Dayjs | null) => {
+      if (!element?.content?.id || !date) return;
+      console.log(date.unix());
+      await zero.mutate.content.update({
+        id: element.content.id,
+        timeOfDeath: date.unix(),
+      });
+    },
+    [zero, element]
+  );
+
+  const handleSelectImage = useCallback(
+    (imageUrl: string) => {
+      onSelect(imageUrl);
+      setIsOpen(false);
+      setActiveTab("all");
+    },
+    [onSelect]
+  );
+
+
+
 
   const handleGetAllImages = useCallback(async () => {
     try {
       const images = await getAvailablePickerImages();
-      const imageWithCdn = images.map((image) => cdnUrl + image);
-      setImageSelection(imageWithCdn);
+      setImageSelection(images.map((image) => cdnUrl + image));
     } catch (error) {
-      console.error('Error loading images:', error);
-    }   
-  }, []);
+      console.error("Error loading images:", error);
+    }
+  }, [cdnUrl]);
 
-  const handleClose = () => {
+  const handleClose = useCallback(() => {
     setIsOpen(false);
     setActiveTab("all");
-  };
+  }, []);
 
-
-
-  if (!targetPortal) {
-    return <div>No image picker root</div>;
-  }
-
+  // Filter images based on active tab
   const filteredImages = useMemo(() => {
     if (!imageSelection) return [];
-    
+
     switch (activeTab) {
       case "men":
-        return imageSelection.filter(image => 
-          image.toLowerCase().split('/').pop()?.startsWith('man')
+        return imageSelection.filter((image) =>
+          image.toLowerCase().split("/").pop()?.startsWith("man")
         );
       case "women":
-        return imageSelection.filter(image => 
-          image.toLowerCase().split('/').pop()?.startsWith('woman')
-
+        return imageSelection.filter((image) =>
+          image.toLowerCase().split("/").pop()?.startsWith("woman")
         );
       default:
         return imageSelection;
     }
   }, [imageSelection, activeTab]);
 
+  // Render image grid
   const renderImages = useCallback(() => {
-    return filteredImages.map((image) => { 
-      const imageAlreadySelected = !!selectedImages.has(image);
+    return filteredImages.map((image) => {
+      const imageAlreadySelected = selectedImages.has(image);
+      const selectedClassName = imageAlreadySelected
+        ? 'pointer-events-none after:content-["Selected"] after:absolute after:text-red-600 after:font-bold after:text-4xl after:top-[50%] after:left-[50%] after:-translate-x-[50%] after:-translate-y-[50%]'
+        : "";
 
-      return <motion.div
-        variants={imageVariants}
-        whileHover={{ scale: 1.05, y:0 }}
-        key={image}
-        onClick={() => handleSelectImage(image)}
-        className={ ` ${imageAlreadySelected && ' pointer-events-none after:content-["Selected"] after:absolute after:text-red-600 after:font-bold after:text-4xl after:top-[50%] after:left-[50%] after:-translate-x-[50%] after:-translate-y-[50%]'} relative hover:cursor-pointer hover:scale-105  w-full flex flex-col bg-[#F5E6D3] rounded-lg border border-[#D4B492] overflow-hidden shadow-md` }
-        ref={(el) => {
-          if (el) {
-            el.setAttribute('data-image-url', image);
-            observe(el);
-          }
-        }}
-      >
-        {observedElements.has(image) ? (
-          <motion.img
-            src={image}
-            alt="Image"
-            loading="lazy"
-            className={ `${imageAlreadySelected && 'grayscale blur-sm'} w-full h-full aspect-[1/1.1] object-cover hover:scale-105  shadow-md` }
-          />
-        ) : (
-          <div className="w-full h-full aspect-[1/1.1] bg-gray-200 animate-pulse" />
-        )}
-      </motion.div>
-     });
-  }, [filteredImages, observedElements, handleSelectImage, observe, activeTab]);
+      return (
+        <motion.div
+          variants={animations.image}
+          whileHover={{ scale: 1.05, y: 0 }}
+          key={image}
+          onClick={() => handleSelectImage(image)}
+          className={cn(
+            "relative hover:cursor-pointer hover:scale-105 w-full flex flex-col bg-[#F5E6D3] rounded-lg border border-[#D4B492] overflow-hidden shadow-md",
+            selectedClassName
+          )}
+          ref={(el) => {
+            if (el) {
+              el.setAttribute("data-image-url", image);
+              observe(el);
+            }
+          }}
+        >
+          {observedElements.has(image) ? (
+            <motion.img
+              src={image}
+              alt="Selected image"
+              loading="lazy"
+              className={cn(
+                "w-full h-full aspect-[1/1.1] object-cover hover:scale-105 shadow-md",
+                imageAlreadySelected && "grayscale blur-sm"
+              )}
+            />
+          ) : (
+            <div className="w-full h-full aspect-[1/1.1] bg-gray-200 animate-pulse" />
+          )}
+        </motion.div>
+      );
+    });
+  }, [
+    filteredImages,
+    observedElements,
+    handleSelectImage,
+    observe,
+    selectedImages,
+  ]);
 
+  // Effects
   useEffect(() => {
     handleGetAllImages();
-  }, []);
+  }, [handleGetAllImages]);
+
+  if (!targetPortal) {
+    return <div>No image picker root</div>;
+  }
 
   return (
     <>
+      {/* Preview Section */}
       <div className="relative w-full">
-        {/* Paper background */}
         <div className="relative bg-[#f4d3a7] p-3 rounded-lg shadow-md w-full [background-repeat:repeat]">
-          {/* Texture overlay */}
           <div className="flex gap-3">
             <img
               onClick={() => setIsOpen(!isOpen)}
               src={imageUrl}
               className="h-[200px] -rotate-1 aspect-square object-contain rounded-lg hover:cursor-pointer hover:opacity-80 hover:brightness-110 hover:bg-black/10 transition-all duration-300"
-              alt="Image"
+              alt="Preview"
             />
             <div className="flex flex-col gap-2 w-full justify-between py-4">
+              <div className="flex flex-col gap-3 justify-start">
+                <div className="flex flex-col gap-0.5 ">
+                  <label htmlFor="victim" className="text-[#8B4513] font-bold">
+                    Victim
+                  </label>
+                  <Switch
+                    id="victim"
+                    checked={element?.content?.victim}
+                    onChange={handleUpdateVictimStatus}
+                    className="w-10"
+                  />
+                </div>
 
-            <div className="flex flex-col justify-start">
-              <p className="text-[#8B4513] font-bold mb-2 blur-[1px]">||||| |||| |||||||</p>
-              <p className="text-[#8B4513] text-sm blur-[0.8px]">||||| ||||| || |||| |||| |||||||</p>
-            </div>
-            <div className="flex flex-col justify-end">
-              <p className="text-[#8B4513] font-bold mb-2 blur-[1px]">||||| |||| |||||||</p>
-            </div>
+                <div className="flex flex-col gap-0.5">
+                  <label
+                    htmlFor="timeOfDeath"
+                    className="text-[#8B4513] font-bold"
+                  >
+                    Time of Death
+                  </label>
+                  <DatePicker
+                    showTime
+                    defaultPickerValue={dayjs().year(1980)}
+                    disabled={!element?.content?.victim}
+                    id="timeOfDeath"
+                    value={
+                      element?.content?.timeOfDeath
+                        ? dayjs.unix(element?.content?.timeOfDeath)
+                        : null
+                    }
+                    onChange={handleUpdateTimeOfDeath}
+                    format="DD-MM HH:mm"
+                    picker="date"
+                  />
+                </div>
+              </div>
             </div>
           </div>
         </div>
       </div>
+
+      {/* Modal */}
       {createPortal(
         <AnimatePresence mode="wait">
           {isOpen && (
             <motion.dialog
-              variants={modalVariants}
+              variants={animations.modal}
               initial="hidden"
               animate="visible"
               exit="exit"
@@ -208,47 +293,46 @@ export const ImagePicker = ({ imageUrl, onSelect, elementsList }: ImagePickerPro
                 className="absolute top-0 left-0 w-full h-full bg-black/50"
               />
               <motion.div
-                variants={modalContentVariants}
+                variants={animations.modalContent}
                 initial="hidden"
                 animate="visible"
                 exit="exit"
                 transition={{ duration: 0.2 }}
                 className="z-50 p-4 top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-4/5 h-4/5 bg-[#ECD5B8] rounded-lg flex flex-col"
               >
-                {/** Header */}
-                <div className="flex justify-between  items-center text-3xl pb-4">
-                  <h1 className=" font-semibold text-[#8B4513] ">
-                    Image Picker
-                  </h1>
+                {/* Header */}
+                <div className="flex justify-between items-center text-3xl pb-4">
+                  <h1 className="font-semibold text-[#8B4513]">Image Picker</h1>
                   <IoIosCloseCircleOutline
                     onClick={handleClose}
-                    className="hover:cursor-pointer hover:text-[#B4540A] transition-all duration-200 "
+                    className="hover:cursor-pointer hover:text-[#B4540A] transition-all duration-200"
                   />
                 </div>
-                {/** Content */}
+
+                {/* Content */}
                 <div className="flex gap-4 w-full h-full overflow-hidden">
-                  {/** Image */}
+                  {/* Current Image */}
                   <div className="flex flex-col gap-2 rounded-lg min-w-[155px] w-1/5">
-                    <span className="text-base  text-[#8B4513]">Current:</span>
+                    <span className="text-base text-[#8B4513]">Current:</span>
                     <img
                       src={imageUrl}
-                      className="aspect-[1/1.1]  mx-auto "
-                      alt="Image"
+                      className="aspect-[1/1.1] mx-auto"
+                      alt="Current"
                     />
                   </div>
-                  {/** Selection */}
+
+                  {/* Image Selection */}
                   <div className="flex flex-col gap-0 bg-[#FFF0DF] rounded-lg min-w-[300px] h-full w-3/4 flex-1">
-                    {/** Tabs */}
+                    {/* Tabs */}
                     <div className="bg-[#2C2421] flex gap-1 rounded-t-lg">
-                      {tabs.map((tab) => (
+                      {TABS.map((tab) => (
                         <button
                           key={tab.value}
-                          onClick={() => {
-                            setActiveTab(tab.value);
-                          }}
+                          onClick={() => setActiveTab(tab.value)}
                           className={cn(
                             "text-[#8b7a6e] text-base rounded-tl-lg font-bold h-full p-4",
-                            activeTab === tab.value && "bg-[#B4540A] text-amber-300"
+                            activeTab === tab.value &&
+                              "bg-[#B4540A] text-amber-300"
                           )}
                         >
                           {tab.title}
@@ -256,11 +340,11 @@ export const ImagePicker = ({ imageUrl, onSelect, elementsList }: ImagePickerPro
                       ))}
                     </div>
 
-                    {/** Grid with filtered and searched images */}
+                    {/* Image Grid */}
                     <div className="grow border border-[#D4B492] overflow-y-auto rounded-b-lg">
                       <motion.div
-                      key={activeTab}
-                        variants={gridVariants}
+                        key={activeTab}
+                        variants={animations.grid}
                         initial="hidden"
                         animate="visible"
                         className="grid grid-cols-5 xl:grid-cols-4 lg:grid-cols-3 gap-2 p-4"

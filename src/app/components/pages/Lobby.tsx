@@ -4,16 +4,14 @@ import { useQuery, useZero } from "@rocicorp/zero/react";
 import { Link, useNavigate } from "@tanstack/react-router";
 import { ElementType, useCallback, useState } from "react";
 import { FaPlus, FaTrash } from "react-icons/fa6";
-import { Button } from "../ui/Button";
 import { AnimatePresence, motion } from "framer-motion";
 import dayjs from "dayjs";
-import {Input, Modal} from 'antd'
+import {Input, Modal, Popconfirm} from 'antd'
 
 
 export function Lobby() {
   const { userId } = useAuth();
   const z = useZero<ZeroSchema>();
-  const navigate = useNavigate();
 
   const [open, setOpen] = useState(false);
   const [title, setTitle] = useState('');
@@ -27,10 +25,12 @@ export function Lobby() {
   )
 
 
-  const detectiveBoards = boards.sort((a, b) => {
-    return dayjs(a.createdAt).diff(dayjs(b.createdAt))
-  })
 
+  const handleOnHoverPreloadContents = useCallback((boardId: string) => {
+    z.query.element.related("content").where("boardId", "=", boardId).preload()
+  }, [z.query.element])
+
+  const detectiveBoards = boards
   const findElementsByBoardId = (boardId: string) => {
     return elements.reduce((acc, element) => {
       if (element.boardId === boardId) {
@@ -68,10 +68,10 @@ export function Lobby() {
 
   return (
     <div className="h-full w-full bg-[#FFF6EB] p-12">
-
       <Modal
             destroyOnClose
             title="Create New Board"
+            okText="Create"
             open={open}
             onOk={handleCreateBoard}
             onCancel={handleCloseModal}
@@ -112,6 +112,7 @@ export function Lobby() {
               <Link
                 to="/board/$boardId"
                 params={{boardId: board.id}}
+                onMouseEnter={() => handleOnHoverPreloadContents(board.id)}
                 className="w-full h-64 bg-[#FDFBF7] rounded-lg hover:shadow-xl hover:-translate-y-1 transition-all"
                 >
                 <div className="h-full p-6 flex flex-col  gap-4 border border-[#8B4513] rounded-lg ">
@@ -138,15 +139,30 @@ export function Lobby() {
                   </div>
                 </Link>
 
-              <Button
-                onClick={(e) => {
-                  e.stopPropagation();
-                  handleDeleteBoard(board.id);
-                }}
-                className="absolute -top-2 -right-2 w-10 h-10 rounded-full bg-red-500 text-white hover:bg-red-600 opacity-0 group-hover:opacity-100 transition-all shadow-lg"
+                <Popconfirm
+                  title="Delete Board"
+                  description="Are you sure you want to delete this board?"
+                  onConfirm={async () => await handleDeleteBoard(board.id)}
+                  okText="Delete"
+                  cancelText="Cancel"
+                  placement="right"
+                  color="var(--color-bg-primary)"
+                  icon={<FaTrash className="text-red-500 hover:text-red-600 text-sm mr-2 mt-1" />}
+                  okButtonProps={{ 
+                    className: 'bg-red-500 hover:bg-red-600',
+                    type: 'primary',
+                    danger: true 
+                  }}
                 >
-                <FaTrash />
-              </Button>
+                  <button
+                    className="absolute top-2 right-2 p-2 rounded-full bg-[#FDFBF7]/80 
+                             hover:bg-red-100 transition-colors opacity-0 group-hover:opacity-100"
+                    onClick={(e) => e.stopPropagation()}
+                    aria-label="Delete Board"
+                  >
+                    <FaTrash className="text-red-500 hover:text-red-600 w-4 h-4" />
+                  </button>
+                </Popconfirm>
             </motion.div>
           ))}
           </AnimatePresence>

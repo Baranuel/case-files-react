@@ -38,8 +38,8 @@ export function Lookup() {
       animate={{
         x: isOpen ? "0" : "100%",
         transition: {
-          duration: 0.55,
-          ease: [0.06, 0.975, 0.195, 0.985],
+          duration: 0.35,
+          ease: [0.25, 0.1, 0.25, 1],
         },
       }}
       onMouseLeave={handleClose}
