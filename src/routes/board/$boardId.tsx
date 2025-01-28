@@ -33,7 +33,10 @@ function RouteComponent() {
   useEffect(() => {
     if(type !== 'complete') return;
     if(!board) navigate({to: '/lobby'})
+
   }, [type]);
+
+   !!boardId && zero.query.element.related("content").where("boardId", "=", boardId).preload()
 
 
 

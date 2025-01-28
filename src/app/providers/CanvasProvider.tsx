@@ -52,10 +52,7 @@ const CanvasProvider = ({ children }: CanvasProviderProps) => {
 
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const zero = useZero<ZeroSchema>();
-  const [elementsListZ, elementsListStatus] = useQuery(
-    zero.query.element.related("content").where("boardId", "=", boardId!),
-    true
-  );
+  const [elementsListZ, elementsListStatus] = useQuery(zero.query.element.related("content").where("boardId", "=", boardId!));
   const [previewElementId, setPreviewElementId] = useState<
     Element["id"] | null
   >(null);
