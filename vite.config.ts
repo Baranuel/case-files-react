@@ -21,6 +21,8 @@ export default defineConfig({
           react: ['react', 'react-dom'],
           tanstack: ['@tanstack/react-router', '@tanstack/router-devtools'],
           mdxEditor: ['@mdxeditor/editor'],
+          dayjs: ['dayjs'],
+          antd: ['antd'],
         }
       }
     }
