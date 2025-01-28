@@ -34,6 +34,7 @@
     "@tailwindcss/typography": "^0.5.16",
     "@tanstack/react-router": "^1.95.1",
     "@tanstack/router-devtools": "^1.95.1",
+    "antd": "^5.23.3",
     "clsx": "^2.1.1",
     "dayjs": "^1.11.13",
     "framer-motion": "^11.18.1",

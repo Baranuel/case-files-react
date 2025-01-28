@@ -1,13 +1,16 @@
 import { routeTree } from "@/routeTree.gen";
 import { createRouter, RouterProvider } from "@tanstack/react-router";
 import { useAuth, useClerk } from "@clerk/clerk-react";
+import { ConfigProvider } from "antd";
+import '@/index.css'
+import { theme } from "@/styles/theme";
 
 const router = createRouter({
   routeTree,
   defaultPreload: "intent",
   context: {
-    auth: null
-  }
+    auth: null,
+  },
 });
 
 declare module "@tanstack/react-router" {
@@ -17,6 +20,12 @@ declare module "@tanstack/react-router" {
 }
 
 export const App = () => {
-  const auth = useAuth()
-  return <RouterProvider router={router} context={{auth}} />;
+  const auth = useAuth();
+  return (
+    <ConfigProvider
+      theme={theme}
+    >
+      <RouterProvider router={router} context={{ auth }} />
+    </ConfigProvider>
+  );
 };

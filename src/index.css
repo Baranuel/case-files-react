@@ -2,6 +2,50 @@
 @import "tailwindcss/components";
 @import "tailwindcss/utilities";
 
+:root {
+    /* Primary Colors */
+    --color-primary: #B4540A;
+    --color-primary-light: #eb8415;
+    --color-primary-dark: #8B4513;
+  
+    /* Background Colors */
+    --color-bg-primary: #FDFBF7;
+    --color-bg-secondary: #FFF0DF;
+    --color-bg-tertiary: #ECD5B8;
+    --color-bg-dark: #2C2420;
+    --color-bg-brown: #483A32;
+  
+    /* Border Colors */
+    --color-border-primary: #D4B492;
+    --color-border-secondary: #8B4513;
+  
+    /* Element Colors */
+    --color-location: #EF9952;
+    --color-person: #F7E3BB;
+    --color-text-primary: #2c2420;
+    --color-text-secondary: #333333;
+  
+    /* Gradients */
+    --gradient-primary: linear-gradient(to right, #B4540A, #eb8415);
+  
+    /* Shadows */
+    --shadow-sm: 0 1px 2px rgba(44, 36, 32, 0.05);
+    --shadow-md: 0 4px 6px rgba(44, 36, 32, 0.1);
+    --shadow-lg: 0 10px 15px rgba(44, 36, 32, 0.1);
+    --shadow-xl: 0 20px 25px rgba(44, 36, 32, 0.1);
+  
+  
+  }
+  
+  [data-theme='dark'] {
+    --color-bg-primary: #2C2420;
+    --color-bg-secondary: #483A32;
+    --color-text-primary: #FFF0DF;
+    --color-text-secondary: #ECD5B8;
+  }
+
+  
+
 * {
     margin: 0;
     padding: 0;
