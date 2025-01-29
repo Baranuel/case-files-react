@@ -86,7 +86,7 @@ export function SelectedItem() {
             value={elContent?.title ?? ""}
             type="text"
             placeholder="Name"
-            className="w-full px-4 py-2 rounded-lg border border-[#D4B492] bg-[#FFF0DF] text-[#8B4513] focus:outline-none focus:ring-2 focus:ring-[#B4540A]"
+            className="w-full px-4 py-2 rounded-lg border border-[#D4B492] bg-[#FFF0DF] text-[#8B4513] focus:outline-none focus:ring-2 focus:ring-[#B4540A] placeholder:text-[#8B4513]/50"
           />
         </div>
       </div>

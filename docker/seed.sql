@@ -8,7 +8,7 @@ CREATE ROLE postgres WITH LOGIN SUPERUSER PASSWORD 'password';
 
 CREATE TABLE "content" (
   "id" VARCHAR PRIMARY KEY,
-  "title" VARCHAR NOT NULL,
+  "title" VARCHAR,
   "notes" TEXT,
   "victim" BOOLEAN NOT NULL DEFAULT FALSE,
   "timeOfDeath" TIMESTAMP

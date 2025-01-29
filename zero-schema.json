@@ -56,12 +56,12 @@
           },
           "title": {
             "type": "string",
-            "optional": false,
+            "optional": true,
             "customType": null
           },
           "notes": {
             "type": "string",
-            "optional": false,
+            "optional": true,
             "customType": null
           },
           "victim": {

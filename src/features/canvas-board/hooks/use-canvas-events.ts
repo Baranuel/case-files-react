@@ -68,8 +68,8 @@ export const useCanvasEvents = () => {
                     await tx.element.insert(element)
                     await tx.content.insert({
                         id: randomId,
-                        title: element.type,
-                        notes: element.type,
+                        title: null,
+                        notes: null,
                         victim: false,
                         timeOfDeath: null
                     })

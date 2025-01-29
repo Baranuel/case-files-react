@@ -64,7 +64,7 @@ export const handleRenderPerson = (ctx: CanvasRenderingContext2D, element: Eleme
     const textWidth = textAreaWidth 
     const textHeight = textAreaHeight
 
-    const text = element.content?.title ?? element.type
+    const text = element.content?.title ?? element.type ?? 'Person'
 
     const textOptions = {
         x: textX + textWidth / 2,

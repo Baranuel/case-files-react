@@ -5,8 +5,8 @@ import { createSchema, Schema, Row, ExpressionBuilder, ANYONE_CAN, table, enumer
 
 const content = table('content').columns({
     id: string(),
-    title: string(),
-    notes: string(),
+    title: string().optional(),
+    notes: string().optional(),
     victim: boolean(),
     timeOfDeath: number().optional(),
 }).primaryKey('id')
