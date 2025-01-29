@@ -1,48 +1,75 @@
-import { IconBase } from "react-icons/lib";
 import { Button } from "../ui/Button";
 import {motion} from 'framer-motion';
-import { FaFileShield } from "react-icons/fa6";
+import { SlSizeFullscreen } from "react-icons/sl";
 import { useNavigate } from "@tanstack/react-router";
+import { MdOutlineMoreTime } from "react-icons/md";
+import { CgNotes } from "react-icons/cg";
+import { FaRegImage, FaSearch } from "react-icons/fa";
+import { GrGroup } from "react-icons/gr";
+
 
 
 const cards: CardElementProps[] = [
   {
+    icon: <div className="p-2 bg-[#E6F2ED] border-2 border-[#2C6E49]/30 rounded-md text-2xl md:text-xl">
+            <GrGroup className="text-[#2C6E49]" />
+          </div>,
     title: "Collaborative Investigation",
     description: "Unite your team to crack challenging mysteries with seamless collaboration and cutting-edge tools."
   },
   {
-    title: "Real-time Updates",
+    icon: <div className="p-2 bg-[#FCEAEA] border-2 border-[#9B2226]/30 rounded-md text-2xl md:text-xl">
+            <MdOutlineMoreTime className="text-[#9B2226]" />
+          </div>,
+    title: "Real-time Updates", 
     description: "Experience seamless collaboration with live updates that keep everyone aligned and informed."
   },
   {
+    icon: <div className="p-2 bg-[#EBF3F8] border-2 border-[#457B9D]/30 rounded-md text-2xl md:text-xl">
+            <SlSizeFullscreen className="text-[#457B9D]" />
+          </div>,
     title: "Unlimited Space",
     description: "Boards can scale to any size you need for your investigation, making them able to support even the most complicated cases."
   },
   {
+    icon: <div className="p-2 bg-[#F4F0EC] border-2 border-[#7F5539]/30 rounded-md text-2xl md:text-xl">
+            <CgNotes className="text-[#7F5539]" />
+          </div>,
     title: "Markdown Notes",
     description: "Our notes support Markdown, allowing you to format and style your text exactly how you like, from bold headings to bullet points."
   },
   {
+    icon: <div className="p-2 bg-[#F5E6EF] border-2 border-[#5F0F40]/30 rounded-md text-2xl md:text-xl">
+            <FaRegImage className="text-[#5F0F40]" />
+          </div>,
     title: "Custom Portraits",
     description: "We Provide a wide selection of images to associate with a person. Making your case truly unique to what suspects you're dealing with."
+  },
+  {
+    icon: <div className="p-2 bg-[#E8F3E8] border-2 border-[#386641]/30 rounded-md text-2xl md:text-xl">
+            <FaSearch className="text-[#386641]" />
+          </div>,
+    title: "Searchable Evidence",
+    description: "Search through your detective board with our intuitive lookup system. With our search system you can search for any element in your board."
   }
 ]
 
 
 type CardElementProps = {
+  icon: React.ReactNode;
   title: string;
   description: string;
 }
 
-const CardElement = ({title, description}: CardElementProps) => {
+const CardElement = ({icon, title, description}: CardElementProps) => {
   return (
-    <motion.div className="flex max-h-[200px] flex-col p-8 md:p-4 gap-3 transition-colors  rounded-md ">
+    <div className="flex max-h-[200px] flex-col p-8 md:p-4 gap-3 rounded-md">
       <div className="flex gap-3 items-center">
-      <div className="p-2 border-2 border-[#B4540A] text-2xl md:text-xl max-w-fit bg-[#FFF0DF] text-[#B4540A] rounded-md"><FaFileShield /></div>
-      <h3 className="text-2xl md:text-xl font-bold text-[#2c2420]">{title}</h3>
+        {icon}
+        <h3 className="text-2xl md:text-xl font-bold text-[#2c2420]">{title}</h3>
       </div>
-      <p className="text-[#2c2420]/80 text-lg ">{description}</p>
-    </motion.div>
+      <p className="text-[#2c2420]/80 text-lg">{description}</p>
+    </div>
   );
 }
 
@@ -113,7 +140,7 @@ export const LandingPage = () => {
 
     <section className=" mt-[150px] lg:mt-[100px] md:mt-[50px] h-full max-h-fit-content md:max-h-full w-full mx-auto flex flex-col gap-12 md:gap-6 items-center justify-start">
     <h3 className="text-5xl md:text-4xl font-black leading-tighter bg-gradient-to-r  from-[#B4540A] to-[#eb8415]  bg-clip-text text-transparent">Overview</h3>
-      <div className=" w-full md:w-full grid grid-cols-3 xl:grid-cols-2 md:grid-cols-1 gap-2 ">{cards.map(( card, index ) => <CardElement key={index} title={card.title} description={card.description}/>)}</div>
+      <div className=" w-full md:w-full grid grid-cols-3 xl:grid-cols-2 md:grid-cols-1 gap-2 ">{cards.map(( card, index ) => <CardElement icon={card.icon} key={index} title={card.title} description={card.description}/>)}</div>
     </section>
 
     <section className=" my-[150px] lg:mt-[100px] md:mt-[50px] h-full max-h-[500px] md:max-h-full w-full mx-auto flex flex-col gap-12 md:gap-6 items-center justify-start">
