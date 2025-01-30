@@ -16,7 +16,10 @@ const Navigation = () => {
      className={ "flex items-center w-full h-16 p-2 text-white  z-50 px-4 "  + (showNavigation ? 'absolute bg-transparent' : 'bg-[#2C2421]')}>
       <ul className='flex gap-4 justify-between w-full'>
         <li className='flex items-center gap-2 text-amber-100 font-bold text-2xl'>
-          <Link to="/">Casefiles</Link>
+          <Link className='flex items-center gap-3' to="/">
+          <img src="/casefiles-logo.png" alt="Casefiles" className='w-8 h-8' />
+          <span className='text-2xl'>Casefiles</span>
+          </Link>
         </li>
         
         <div className='flex gap-4 items-center'>

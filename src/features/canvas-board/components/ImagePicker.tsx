@@ -10,6 +10,9 @@ import { DatePicker, Switch } from "antd";
 import { useZero } from "@rocicorp/zero/react";
 import { ZeroSchema } from "@/schema";
 import dayjs from "dayjs";
+import { FaClock } from "react-icons/fa";
+import { FaUserShield } from "react-icons/fa";
+import { FaUserCircle } from "react-icons/fa";
 
 // Types
 type ImagePickerProps = {
@@ -94,31 +97,7 @@ export const ImagePicker = ({
     import.meta.env.VITE_DIGITAL_OCEAN_BUCKET_PORTRAITS_PATH! +
     "/";
 
-  // Handlers
-  const handleUpdateVictimStatus = useCallback(
-    async (victim: boolean) => {
-      if (!element?.content?.id) return;
-      await zero.mutate.content.update({
-        id: element.content.id,
-        victim,
-      });
-    },
-    [zero, element]
-  );
-
-  const handleUpdateTimeOfDeath = useCallback(
-    async (date: dayjs.Dayjs | null) => {
-      if (!element?.content?.id || !date) return;
-      console.log(date.unix());
-      await zero.mutate.content.update({
-        id: element.content.id,
-        timeOfDeath: date.unix(),
-      });
-    },
-    [zero, element]
-  );
-
-  const handleSelectImage = useCallback(
+    const handleSelectImage = useCallback(
     (imageUrl: string) => {
       onSelect(imageUrl);
       setIsOpen(false);
@@ -224,51 +203,42 @@ export const ImagePicker = ({
     <>
       {/* Preview Section */}
       <div className="relative w-full">
-        <div className="relative bg-[#f4d3a7] p-3 rounded-lg shadow-md w-full [background-repeat:repeat]">
-          <div className="flex gap-3">
+        <div className="relative  p-3 w-full mb-2">
+          <div className="flex gap-6">
             <img
               onClick={() => setIsOpen(!isOpen)}
               src={imageUrl}
-              className="h-[200px] -rotate-1 aspect-square object-contain rounded-lg hover:cursor-pointer hover:opacity-80 hover:brightness-110 hover:bg-black/10 transition-all duration-300"
+              className="h-[170px] -rotate-1 aspect-square object-contain rounded-lg hover:cursor-pointer hover:opacity-80 hover:brightness-110 hover:bg-black/10 transition-all duration-300"
               alt="Preview"
             />
-            <div className="flex flex-col gap-2 w-full justify-between py-4">
-              <div className="flex flex-col gap-3 justify-start">
-                <div className="flex flex-col gap-0.5 ">
-                  <label htmlFor="victim" className="text-[#8B4513] font-bold">
-                    Victim
-                  </label>
-                  <Switch
-                    id="victim"
-                    checked={element?.content?.victim}
-                    onChange={handleUpdateVictimStatus}
-                    className="w-10"
-                  />
-                </div>
-
-                <div className="flex flex-col gap-0.5">
-                  <label
-                    htmlFor="timeOfDeath"
-                    className="text-[#8B4513] font-bold"
-                  >
-                    Time of Death
-                  </label>
-                  <DatePicker
-                    showTime
-                    defaultPickerValue={dayjs().year(1980)}
-                    disabled={!element?.content?.victim}
-                    id="timeOfDeath"
-                    value={
-                      element?.content?.timeOfDeath
-                        ? dayjs.unix(element?.content?.timeOfDeath)
-                        : null
-                    }
-                    onChange={handleUpdateTimeOfDeath}
-                    format="DD-MM HH:mm"
-                    picker="date"
-                  />
-                </div>
+            <div className="flex flex-col gap-2">
+              <div className="flex flex-col gap-0.5 items-start">
+                <span className="font-bold text-[#8B4513] flex items-center gap-1">
+                  <FaUserCircle className="text-base" />
+                  Name
+                </span>
+                <span className="text-[#8B4513]">{element?.content?.title || 'Unknown'}</span>
               </div>
+              <div className="flex flex-col gap-0.5 items-start">
+                <span className="font-bold text-[#8B4513] flex items-center gap-1">
+                  <FaUserShield className="text-base" />
+                  Status
+                </span>
+                <span className="text-[#8B4513]">
+                  {element?.content?.victim ? 'Victim' : 'Suspect'}
+                </span>
+              </div>
+              {element?.content?.victim && element?.content?.timeOfDeath && (
+                <div className="flex flex-col gap-0.5 items-start">
+                  <span className="font-bold text-[#8B4513] flex items-center gap-1">
+                    <FaClock className="text-base" />
+                    Time of Death
+                  </span>
+                  <span className="text-[#8B4513]">
+                    {dayjs.unix(element.content.timeOfDeath).format('MMM DD - HH:mm')}
+                  </span>
+                </div>
+              )}
             </div>
           </div>
         </div>

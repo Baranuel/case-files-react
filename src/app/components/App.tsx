@@ -29,6 +29,8 @@ export const App = () => {
         },
         components: {
           DatePicker: {
+            colorBgBase: "#FFF0DF",
+            addonBg: "#FFF0DF",
             colorTextPlaceholder: "#8B4513",
             colorTextDisabled: "#A8A8A8",
             colorBgContainer: "#FFF0DF",

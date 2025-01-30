@@ -11,7 +11,6 @@ export function Lookup() {
   const [searchTerm, setSearchTerm] = useState("");
 
   const { elementsList, setPreviewElementId } = useCanvas();
-  console.log(elementsList)
   const handleClose = useCallback(() => {
     setIsOpen(false);
     setSearchTerm("");

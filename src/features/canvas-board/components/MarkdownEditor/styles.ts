@@ -13,19 +13,19 @@ export const editorStyles = {
           h1: {
               color: '#8B4513',
               fontWeight: '600',
-              marginTop: '0.5rem',
+              marginTop: '2rem',
               marginBottom: '0.5rem',
           },
           h2: {
               color: '#8B4513',
               fontWeight: '600',
-              marginTop: '0.5rem',
+              marginTop: '2rem',
               marginBottom: '0.5rem',
           },
           h3: {
               color: '#8B4513',
               fontWeight: '600',
-              marginTop: '0.5rem',
+              marginTop: '2rem',
               marginBottom: '0.5rem',
           },
           ul: {
@@ -49,6 +49,7 @@ export const editorStyles = {
               borderLeftWidth: '0.25rem',
               padding: '0.75rem 1rem',
               margin: '0.5rem 0',
+              marginTop: '2rem',
               borderRadius: '0.25rem',
               quotes: '"\\201C""\\201D""\\2018""\\2019"',
               '> p': {
