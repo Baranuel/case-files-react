@@ -32,7 +32,7 @@ function RouteComponent() {
 
   useEffect(() => {
     if(type !== 'complete') return;
-    if(!board) navigate({to: '/lobby'})
+    if(!board) navigate({to: '/not-found'})
   }, [type]);
 
 

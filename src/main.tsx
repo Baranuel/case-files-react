@@ -13,7 +13,7 @@ if (!rootElement.innerHTML) {
     <ClerkProvider
     afterSignOutUrl={BASE_URL}
     publishableKey={import.meta.env.VITE_CLERK_PUBLISHABLE_KEY}
-    signInForceRedirectUrl={BASE_URL+'/lobby'}>
+  >
       <App/>
     </ClerkProvider>
   );

@@ -2,35 +2,38 @@ import { ZeroSchema } from "@/schema";
 import { useAuth } from "@clerk/clerk-react";
 import { useQuery, useZero } from "@rocicorp/zero/react";
 import { Link, useNavigate } from "@tanstack/react-router";
-import { ElementType, useCallback, useState } from "react";
+import { ElementType, useCallback, useEffect, useRef, useState } from "react";
 import { FaPlus, FaTrash } from "react-icons/fa6";
 import { AnimatePresence, motion } from "framer-motion";
 import dayjs from "dayjs";
-import {Input, Modal, Popconfirm} from 'antd'
-
+import { Input, InputRef, Modal, Popconfirm } from "antd";
 
 export function Lobby() {
   const { userId } = useAuth();
   const z = useZero<ZeroSchema>();
+  const controller = new AbortController();
+  const inputRef = useRef<InputRef | null>(null);
 
   const [open, setOpen] = useState(false);
-  const [title, setTitle] = useState('');
+  const [title, setTitle] = useState("");
 
   const [boards, boardsStatus] = useQuery(
     z.query.board.where("creatorId", "=", userId!)
-  )
+  );
 
-  const [elements, elementsStatus] = useQuery(
-    z.query.element.related("board")
-  )
+  const [elements, elementsStatus] = useQuery(z.query.element.related("board"));
 
+  const handleOnHoverPreloadContents = useCallback(
+    (boardId: string) => {
+      z.query.element
+        .related("content")
+        .where("boardId", "=", boardId)
+        .preload();
+    },
+    [z.query.element]
+  );
 
-
-  const handleOnHoverPreloadContents = useCallback((boardId: string) => {
-    z.query.element.related("content").where("boardId", "=", boardId).preload()
-  }, [z.query.element])
-
-  const detectiveBoards = boards
+  const detectiveBoards = boards;
   const findElementsByBoardId = (boardId: string) => {
     return elements.reduce((acc, element) => {
       if (element.boardId === boardId) {
@@ -38,28 +41,55 @@ export function Lobby() {
       }
       return acc;
     }, 0);
-  }
+  };
 
   const handleCloseModal = () => {
     setOpen(false);
-    setTitle('');
-  }
+    setTitle("");
+  };
+
+  const handleOpenModal = useCallback(() => {
+    setOpen(true);
+  }, [setOpen]);
 
   const handleCreateBoard = useCallback(async () => {
     await z.mutate.board.insert({
       id: crypto.randomUUID(),
       creatorId: userId!,
-      title
+      title,
     });
     handleCloseModal();
-  }, [z.mutate.board, userId, title]);
-
+  }, [z.mutate.board, userId, title, handleCloseModal]);
 
   const handleDeleteBoard = useCallback(
     async (boardId: string) => {
       await z.mutate.board.delete({ id: boardId });
     },
     [z.mutate.board]
+  );
+
+  useEffect(() => {
+    window.addEventListener(
+      "keydown",
+      (e) => {
+        e.key === "Enter" && handleCreateBoard();
+      },
+      { signal: controller.signal }
+    );
+
+    return () => {
+      controller.abort();
+    };
+  }, [handleCreateBoard, handleCloseModal]);
+
+  const handleAfterOpenChange = useCallback(
+    (open: boolean) => {
+      if (!inputRef.current) return;
+      if (open) {
+        inputRef.current?.focus();
+      }
+    },
+    [inputRef]
   );
 
   if (boardsStatus.type !== "complete") {
@@ -69,14 +99,21 @@ export function Lobby() {
   return (
     <div className="h-full w-full bg-[#FFF6EB] p-12">
       <Modal
-            destroyOnClose
-            title="Create New Board"
-            okText="Create"
-            open={open}
-            onOk={handleCreateBoard}
-            onCancel={handleCloseModal}
+        destroyOnClose
+        afterOpenChange={handleAfterOpenChange}
+        title="Create New Board"
+        okText="Create"
+        open={open}
+        onOk={handleCreateBoard}
+        onCancel={handleCloseModal}
       >
-        <Input value={title} onChange={(e) => setTitle(e.target.value)} placeholder="Board Title" />
+        <Input
+          ref={inputRef}
+          value={title}
+          autoFocus
+          onChange={(e) => setTitle(e.target.value)}
+          placeholder="Board Title"
+        />
       </Modal>
 
       <div className="max-w-7xl mx-auto">
@@ -86,7 +123,7 @@ export function Lobby() {
 
         <div className="grid grid-cols-4 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
           <button
-            onClick={() => setOpen(true)}
+            onClick={handleOpenModal}
             className="h-64 border-2 border-dashed border-[#8B4513] rounded-lg hover:border-[#B4540A] hover:shadow-xl hover:-translate-y-1 bg-[#FDFBF7] transition-all "
           >
             <div className="flex flex-col items-center justify-center h-full p-6">
@@ -98,36 +135,37 @@ export function Lobby() {
               </p>
             </div>
           </button>
-        <AnimatePresence>
-          {detectiveBoards.map((board, index) => (
-            <motion.div
-            layout
-            key={board.id}
-            className="relative group"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            transition={{ duration: 0.25 }}
-            >
-              <Link
-                to="/board/$boardId"
-                params={{boardId: board.id}}
-                onMouseEnter={() => handleOnHoverPreloadContents(board.id)}
-                className="w-full h-64 bg-[#FDFBF7] rounded-lg hover:shadow-xl hover:-translate-y-1 transition-all"
+          <AnimatePresence>
+            {detectiveBoards.map((board, index) => (
+              <motion.div
+                layout
+                key={board.id}
+                className="relative group"
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
+                transition={{ duration: 0.25 }}
+              >
+                <Link
+                  to="/board/$boardId"
+                  params={{ boardId: board.id }}
+                  onMouseEnter={() => handleOnHoverPreloadContents(board.id)}
+                  className="w-full h-64 bg-[#FDFBF7] rounded-lg hover:shadow-xl hover:-translate-y-1 transition-all"
                 >
-                <div className="h-full p-6 flex flex-col  gap-4 border border-[#8B4513] rounded-lg ">
-                  <div>
-                    <div className="flex items-center gap-2 mb-4">
-                      <div className="w-3 h-3 bg-red-500 rounded-full" />
-                      <h2 className="text-[#2c2420] text-lg text-left font-serif font-bold">
-                        {board.title}
-                      </h2>
-                    </div>
+                  <div className="h-full p-6 flex flex-col  gap-4 border border-[#8B4513] rounded-lg ">
+                    <div>
+                      <div className="flex items-center gap-2 mb-4">
+                        <div className="w-3 h-3 bg-red-500 rounded-full" />
+                        <h2 className="text-[#2c2420] text-lg text-left font-serif font-bold">
+                          {board.title}
+                        </h2>
+                      </div>
                       <p className="text-sm font-mono text-[#2c2420]/60">
-                        Opened on {dayjs(board.createdAt).format('MMM DD, YYYY')}
+                        Opened on{" "}
+                        {dayjs(board.createdAt).format("MMM DD, YYYY")}
                       </p>
                       <div className="border-t border-dashed border-[#8B4513]/30" />
-                  </div>
+                    </div>
                     <div className="h-full flex items-end justify-between grow mt-6 gap-4">
                       <span className="text-base  text-[#8B4513]">
                         {findElementsByBoardId(board.id)} Elements
@@ -147,11 +185,13 @@ export function Lobby() {
                   cancelText="Cancel"
                   placement="right"
                   color="var(--color-bg-primary)"
-                  icon={<FaTrash className="text-red-500 hover:text-red-600 text-sm mr-2 mt-1" />}
-                  okButtonProps={{ 
-                    className: 'bg-red-500 hover:bg-red-600',
-                    type: 'primary',
-                    danger: true 
+                  icon={
+                    <FaTrash className="text-red-500 hover:text-red-600 text-sm mr-2 mt-1" />
+                  }
+                  okButtonProps={{
+                    className: "bg-red-500 hover:bg-red-600",
+                    type: "primary",
+                    danger: true,
                   }}
                 >
                   <button
@@ -163,8 +203,8 @@ export function Lobby() {
                     <FaTrash className="text-red-500 hover:text-red-600 w-4 h-4" />
                   </button>
                 </Popconfirm>
-            </motion.div>
-          ))}
+              </motion.div>
+            ))}
           </AnimatePresence>
         </div>
       </div>
