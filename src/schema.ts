@@ -28,6 +28,16 @@ const element = table('element').columns({
     layer: number(),
 }).primaryKey('id')
 
+const collaboration = table('collaboration').columns({
+    id: string(),
+    boardId: string(),
+    boardCreatorId: string(),
+    userId: string(),
+    status: enumeration<'pending' | 'accepted' | 'rejected'>(),
+    createdAt: number().optional(),
+}).primaryKey('id')
+
+
 const elementRelationships = relationships(element, ({one}) => ({
     content: one({
         sourceField:['contentId'],
@@ -41,10 +51,17 @@ const elementRelationships = relationships(element, ({one}) => ({
     })
 }))
 
+const collaborationRelationships = relationships(collaboration, ({one}) => ({
+    board: one({
+        sourceField:['boardId'],
+        destField: ['id'],
+        destSchema: board
+    }),
+}))
 
 export const schema = createSchema( 1, {
-    tables: [element, content, board],
-    relationships: [elementRelationships]
+    tables: [element, content, board, collaboration],
+    relationships: [elementRelationships, collaborationRelationships]
 })
 
 type AuthData = any

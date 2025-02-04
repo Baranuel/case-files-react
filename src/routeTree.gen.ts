@@ -12,6 +12,7 @@
 
 import { Route as rootRoute } from './routes/__root'
 import { Route as SignInImport } from './routes/sign-in'
+import { Route as RequestAccessImport } from './routes/request-access'
 import { Route as NotFoundImport } from './routes/not-found'
 import { Route as IndexImport } from './routes/index'
 import { Route as LobbyIndexImport } from './routes/lobby/index'
@@ -22,6 +23,12 @@ import { Route as BoardBoardIdImport } from './routes/board/$boardId'
 const SignInRoute = SignInImport.update({
   id: '/sign-in',
   path: '/sign-in',
+  getParentRoute: () => rootRoute,
+} as any)
+
+const RequestAccessRoute = RequestAccessImport.update({
+  id: '/request-access',
+  path: '/request-access',
   getParentRoute: () => rootRoute,
 } as any)
 
@@ -67,6 +74,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof NotFoundImport
       parentRoute: typeof rootRoute
     }
+    '/request-access': {
+      id: '/request-access'
+      path: '/request-access'
+      fullPath: '/request-access'
+      preLoaderRoute: typeof RequestAccessImport
+      parentRoute: typeof rootRoute
+    }
     '/sign-in': {
       id: '/sign-in'
       path: '/sign-in'
@@ -96,6 +110,7 @@ declare module '@tanstack/react-router' {
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/not-found': typeof NotFoundRoute
+  '/request-access': typeof RequestAccessRoute
   '/sign-in': typeof SignInRoute
   '/board/$boardId': typeof BoardBoardIdRoute
   '/lobby': typeof LobbyIndexRoute
@@ -104,6 +119,7 @@ export interface FileRoutesByFullPath {
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/not-found': typeof NotFoundRoute
+  '/request-access': typeof RequestAccessRoute
   '/sign-in': typeof SignInRoute
   '/board/$boardId': typeof BoardBoardIdRoute
   '/lobby': typeof LobbyIndexRoute
@@ -113,6 +129,7 @@ export interface FileRoutesById {
   __root__: typeof rootRoute
   '/': typeof IndexRoute
   '/not-found': typeof NotFoundRoute
+  '/request-access': typeof RequestAccessRoute
   '/sign-in': typeof SignInRoute
   '/board/$boardId': typeof BoardBoardIdRoute
   '/lobby/': typeof LobbyIndexRoute
@@ -120,13 +137,26 @@ export interface FileRoutesById {
 
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/not-found' | '/sign-in' | '/board/$boardId' | '/lobby'
+  fullPaths:
+    | '/'
+    | '/not-found'
+    | '/request-access'
+    | '/sign-in'
+    | '/board/$boardId'
+    | '/lobby'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/not-found' | '/sign-in' | '/board/$boardId' | '/lobby'
+  to:
+    | '/'
+    | '/not-found'
+    | '/request-access'
+    | '/sign-in'
+    | '/board/$boardId'
+    | '/lobby'
   id:
     | '__root__'
     | '/'
     | '/not-found'
+    | '/request-access'
     | '/sign-in'
     | '/board/$boardId'
     | '/lobby/'
@@ -136,6 +166,7 @@ export interface FileRouteTypes {
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   NotFoundRoute: typeof NotFoundRoute
+  RequestAccessRoute: typeof RequestAccessRoute
   SignInRoute: typeof SignInRoute
   BoardBoardIdRoute: typeof BoardBoardIdRoute
   LobbyIndexRoute: typeof LobbyIndexRoute
@@ -144,6 +175,7 @@ export interface RootRouteChildren {
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   NotFoundRoute: NotFoundRoute,
+  RequestAccessRoute: RequestAccessRoute,
   SignInRoute: SignInRoute,
   BoardBoardIdRoute: BoardBoardIdRoute,
   LobbyIndexRoute: LobbyIndexRoute,
@@ -161,6 +193,7 @@ export const routeTree = rootRoute
       "children": [
         "/",
         "/not-found",
+        "/request-access",
         "/sign-in",
         "/board/$boardId",
         "/lobby/"
@@ -171,6 +204,9 @@ export const routeTree = rootRoute
     },
     "/not-found": {
       "filePath": "not-found.tsx"
+    },
+    "/request-access": {
+      "filePath": "request-access.tsx"
     },
     "/sign-in": {
       "filePath": "sign-in.tsx"

@@ -21,6 +21,15 @@ CREATE TABLE "board" (
   "createdAt" TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
 
+CREATE TABLE "collaboration" (
+  "id" VARCHAR PRIMARY KEY,
+  "boardCreatorId" VARCHAR NOT NULL,
+  "boardId" VARCHAR NOT NULL,
+  "userId" VARCHAR NOT NULL,
+  "status" VARCHAR NOT NULL CHECK ("status" IN ('pending', 'accepted', 'rejected')) DEFAULT 'pending',
+  FOREIGN KEY ("boardId") REFERENCES "board"("id") ON DELETE CASCADE
+);
+
 CREATE TABLE "element" (
   "id" VARCHAR PRIMARY KEY,
   "type" VARCHAR NOT NULL CHECK ("type" IN ('person', 'location', 'line')),

@@ -106,6 +106,44 @@
         "primaryKey": [
           "id"
         ]
+      },
+      "collaboration": {
+        "name": "collaboration",
+        "columns": {
+          "id": {
+            "type": "string",
+            "optional": false,
+            "customType": null
+          },
+          "boardId": {
+            "type": "string",
+            "optional": false,
+            "customType": null
+          },
+          "boardCreatorId": {
+            "type": "string",
+            "optional": false,
+            "customType": null
+          },
+          "userId": {
+            "type": "string",
+            "optional": false,
+            "customType": null
+          },
+          "status": {
+            "type": "string",
+            "optional": false,
+            "customType": null
+          },
+          "createdAt": {
+            "type": "number",
+            "optional": true,
+            "customType": null
+          }
+        },
+        "primaryKey": [
+          "id"
+        ]
       }
     },
     "relationships": {
@@ -122,6 +160,20 @@
             "cardinality": "one"
           }
         ],
+        "board": [
+          {
+            "sourceField": [
+              "boardId"
+            ],
+            "destField": [
+              "id"
+            ],
+            "destSchema": "board",
+            "cardinality": "one"
+          }
+        ]
+      },
+      "collaboration": {
         "board": [
           {
             "sourceField": [
