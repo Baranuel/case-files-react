@@ -77,7 +77,7 @@ export type ZeroSchema = typeof schema
 export type Element = Row<typeof schema.tables.element>
 export type Content = Row<typeof schema.tables.content>
 export type Board = Row<typeof schema.tables.board>
-export type Collaboration = Row<typeof schema.tables.collaboration>
+export type Collaboration = Row<typeof schema.tables.collaboration> 
 
 export type ElementSchema = typeof element
 export type ContentSchema = typeof content

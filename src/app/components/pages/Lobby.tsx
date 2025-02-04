@@ -1,36 +1,34 @@
-import { ZeroSchema } from "@/schema";
+import { Board, ZeroSchema } from "@/schema";
 import { useAuth } from "@clerk/clerk-react";
 import { useQuery, useZero } from "@rocicorp/zero/react";
 import { Link, useNavigate } from "@tanstack/react-router";
-import { ElementType, useCallback, useEffect, useRef, useState } from "react";
-import { FaPlus, FaTrash } from "react-icons/fa6";
+import { useCallback, useEffect, useRef, useState } from "react";
+import { FaPlus, FaTrash, FaBell } from "react-icons/fa6";
 import { AnimatePresence, motion } from "framer-motion";
 import dayjs from "dayjs";
-import { Alert, Input, InputRef, Modal, Popconfirm } from "antd";
+import { Alert, Input, InputRef, Modal, Popconfirm, Button, Drawer } from "antd";
 import { PendingRequest } from "../ui/PendingRequest";
+import { DetectiveBoardCard } from "../ui/DetectiveBoardCard";
+import { SharedBoardCard } from "../ui/SharedBoardCard";
 
 export function Lobby() {
   const { userId } = useAuth();
   const z = useZero<ZeroSchema>();
-  const controller = new AbortController();
   const inputRef = useRef<InputRef | null>(null);
-
   const [open, setOpen] = useState(false);
   const [title, setTitle] = useState("");
+  const [drawerOpen, setDrawerOpen] = useState(false);
 
-  const [boards, boardsStatus] = useQuery(
-    z.query.board.where("creatorId", "=", userId!)
-  );
+  // Queries
+  const [boards] = useQuery(z.query.board.where("creatorId", "=", userId!));
 
-  const [pendingCollaborations, pendingCollaborationsStatus] = useQuery(
+  const [pendingCollaborations] = useQuery(
     z.query.collaboration.where(q => q.and(
       q.cmp('status', '=', 'pending'),
       q.cmp('boardCreatorId', '=', userId!),
     ))
   );
-
-
-  const [acceptedCollaborationBoards, acceptedCollaborationsStatus] = useQuery(
+  const [acceptedCollaborationBoards] = useQuery(
     z.query.collaboration.where(q => q.and(
       q.cmp('status', '=', 'accepted'),
       q.cmp('userId', '=', userId!),
@@ -38,48 +36,28 @@ export function Lobby() {
     )).related("board", q => q.where(q => q.cmp('creatorId', '!=', userId!)))
   );
 
-
-  const [elements, elementsStatus] = useQuery(z.query.element.related("board"));
-
+  // Handlers
   const handleOnHoverPreloadContents = useCallback(
     (boardId: string) => {
       z.query.element
         .related("content")
         .where("boardId", "=", boardId)
         .preload();
-        
-        z.query.collaboration.where(q => q.and(
-          q.cmp('boardId', '=', boardId),
-          q.cmp('userId', '=', userId!),
-        )).preload();
+      
+      z.query.collaboration.where(q => q.and(
+        q.cmp('boardId', '=', boardId),
+        q.cmp('userId', '=', userId!),
+      )).preload();
 
-        z.query.board.where('id', '=', boardId).preload();
-      },
-    [z.query.element, z.query.collaboration, userId]
+      z.query.board.where('id', '=', boardId).preload();
+    },
+    [z.query.element, z.query.collaboration, z.query.board, userId]
   );
 
-  const detectiveBoards = boards;
-  const findElementsByBoardId = (boardId: string) => {
-    return elements.reduce((acc, element) => {
-      if (element.boardId === boardId) {
-        acc++;
-      }
-      return acc;
-    }, 0);
-  };
 
-  const handleCloseModal = () => {
-    setOpen(false);
-    setTitle("");
-  };
-
-  const handleOpenModal = useCallback(() => {
-    setOpen(true);
-  }, [setOpen]);
 
   const handleCreateBoard = useCallback(async () => {
     const boardId = crypto.randomUUID();
-
     await z.mutate.board.insert({
       id: boardId,
       creatorId: userId!,
@@ -93,7 +71,7 @@ export function Lobby() {
       boardCreatorId: userId!,
     });
     handleCloseModal();
-  }, [z.mutate.board, userId, title, handleCloseModal]);
+  }, [z.mutate.board, z.mutate.collaboration, userId, title]);
 
   const handleDeleteBoard = useCallback(
     async (boardId: string) => {
@@ -102,41 +80,58 @@ export function Lobby() {
     [z.mutate.board]
   );
 
-  useEffect(() => {
-    window.addEventListener(
-      "keydown",
-      (e) => {
-        e.key === "Enter" && handleCreateBoard();
-      },
-      { signal: controller.signal }
-    );
+  const handleCloseModal = () => {
+    setOpen(false);
+    setTitle("");
+  };
 
-    return () => {
-      controller.abort();
-    };
-  }, [handleCreateBoard, handleCloseModal]);
-
+  const handleOpenModal = () => setOpen(true);
+  
   const handleAfterOpenChange = useCallback(
     (open: boolean) => {
-      if (!inputRef.current) return;
-      if (open) {
-        inputRef.current?.focus();
+      if (open && inputRef.current) {
+        inputRef.current.focus();
       }
     },
-    [inputRef]
+    []
   );
 
+  // Effects
+  useEffect(() => {
+    const controller = new AbortController();
+    const handleEnter = (e: KeyboardEvent) => {
+      if (e.key === "Enter") handleCreateBoard();
+    };
 
-  if (boardsStatus.type !== "complete") {
-    return <div className="min-h-[calc(80vh-4rem)] mx-auto px-4 py-8" />;
-  }
+    window.addEventListener("keydown", handleEnter, { signal: controller.signal });
+    return () => controller.abort();
+  }, [handleCreateBoard]);
+
+  // Render Methods
+  const renderSharedBoards = () => {
+    if (acceptedCollaborationBoards.length === 0) return null;
+    return (
+      <div className="mb-16">
+        <h4 className="text-2xl font-serif text-[#8B4513] mb-6">Shared Cases</h4>
+        <div className="grid grid-cols-4 md:grid-cols-2 lg:grid-cols-2 gap-2">
+          {acceptedCollaborationBoards.map(collaboration => (
+            <SharedBoardCard
+              key={collaboration.id}
+              board={collaboration.board as Board}
+              onHoverPreload={handleOnHoverPreloadContents}
+            />
+          ))}
+        </div>
+      </div>
+    );
+  };
 
   return (
-    <div className="h-full w-full bg-[#FFF6EB] p-12">
+    <div className="min-h-screen w-full bg-[#FFF6EB] p-12">
       <Modal
         destroyOnClose
         afterOpenChange={handleAfterOpenChange}
-        title="Create New Board"
+        title="Create New Case"
         okText="Create"
         open={open}
         onOk={handleCreateBoard}
@@ -147,121 +142,95 @@ export function Lobby() {
           value={title}
           autoFocus
           onChange={(e) => setTitle(e.target.value)}
-          placeholder="Board Title"
+          placeholder="Case Title"
         />
       </Modal>
 
-      <div className="max-w-7xl mx-auto">
-        <h3 className="text-5xl md:text-4xl font-black leading-tighter bg-gradient-to-r from-[#B4540A] to-[#eb8415]  bg-clip-text text-transparent mb-6">
-          Detective Boards
-        </h3>
-
-        {pendingCollaborations.length > 0 && (
-          <div className="mb-4 space-y-4">
+      <Drawer
+        title={
+          <h3 className="text-2xl font-black leading-tighter bg-gradient-to-r from-[#B4540A] to-[#eb8415] bg-clip-text text-transparent">
+            Pending Collaborations
+          </h3>
+        }
+        placement="right"
+        onClose={() => setDrawerOpen(false)}
+        open={drawerOpen}
+        width={400}
+        styles={{
+          header: {
+            borderBottom: '2px solid rgba(139, 69, 19, 0.1)',
+            padding: '16px 24px',
+          },
+          body: {
+            backgroundColor: '#FFF6EB',
+            padding: '24px',
+          }
+        }}
+      >
+        {pendingCollaborations.length > 0 ? (
+          <div className="flex flex-col gap-4">
             {pendingCollaborations.map(collaboration => (
               <PendingRequest key={collaboration.id} collaboration={collaboration} />
             ))}
           </div>
-        )}
-        
-
-        {acceptedCollaborationBoards.length > 0 && (
-          <div className="mb-4 space-y-4">
-            {acceptedCollaborationBoards.map(collaboration => (
-              <div key={collaboration.id} className="p-4 bg-[#FDFBF7] rounded-lg border border-[#8B4513] shadow-sm hover:shadow-md transition-all">
-                <div className="flex items-center gap-2">
-                  <div className="w-2 h-2 bg-green-500 rounded-full" />
-                  <h3 className="text-lg font-serif text-[#2c2420] font-semibold">{collaboration.board?.title}</h3>
-                </div>
-              </div>
-            ))}
+        ) : (
+          <div className="p-6 bg-[#FDFBF7] rounded-xl border-2 border-[#8B4513]/30 text-center">
+            <p className="text-[#8B4513]/70 font-serif">No pending requests</p>
           </div>
         )}
-        <div className="grid grid-cols-4 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
-          <button
-            onClick={handleOpenModal}
-            className="h-64 border-2 border-dashed border-[#8B4513] rounded-lg hover:border-[#B4540A] hover:shadow-xl hover:-translate-y-1 bg-[#FDFBF7] transition-all "
-          >
-            <div className="flex flex-col items-center justify-center h-full p-6">
-              <div className="w-16 h-16 rounded-full bg-[#8B4513] flex items-center justify-center shadow-lg">
-                <FaPlus className="text-[#FDFBF7] text-2xl" />
-              </div>
-              <p className="mt-4 text-[#2c2420] font-serif text-lg">
-                Open New Case
-              </p>
-            </div>
-          </button>
-          <AnimatePresence>
-            {detectiveBoards.map((board, index) => (
-              <motion.div
-                layout
-                key={board.id}
-                className="relative group"
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                exit={{ opacity: 0 }}
-                transition={{ duration: 0.25 }}
-              >
-                <Link
-                  to="/board/$boardId"
-                  params={{ boardId: board.id }}
-                  onMouseEnter={() => handleOnHoverPreloadContents(board.id)}
-                  className="w-full h-64 bg-[#FDFBF7] rounded-lg hover:shadow-xl hover:-translate-y-1 transition-all"
-                >
-                  <div className="h-full p-6 flex flex-col  gap-4 border border-[#8B4513] rounded-lg ">
-                    <div>
-                      <div className="flex items-center gap-2 mb-4">
-                        <div className="w-3 h-3 bg-red-500 rounded-full" />
-                        <h2 className="text-[#2c2420] text-lg text-left font-serif font-bold">
-                          {board.title}
-                        </h2>
-                      </div>
-                      <p className="text-sm font-mono text-[#2c2420]/60">
-                        Opened on{" "}
-                        {dayjs(board.createdAt).format("MMM DD, YYYY")}
-                      </p>
-                      <div className="border-t border-dashed border-[#8B4513]/30" />
-                    </div>
-                    <div className="h-full flex items-end justify-between grow mt-6 gap-4">
-                      <span className="text-base  text-[#8B4513]">
-                        {findElementsByBoardId(board.id)} Elements
-                      </span>
-                      <div className="text-base font-bold text-amber-700">
-                        CONFIDENTIAL
-                      </div>
-                    </div>
-                  </div>
-                </Link>
+      </Drawer>
 
-                <Popconfirm
-                  title="Delete Board"
-                  description="Are you sure you want to delete this board?"
-                  onConfirm={async () => await handleDeleteBoard(board.id)}
-                  okText="Delete"
-                  cancelText="Cancel"
-                  placement="right"
-                  color="var(--color-bg-primary)"
-                  icon={
-                    <FaTrash className="text-red-500 hover:text-red-600 text-sm mr-2 mt-1" />
-                  }
-                  okButtonProps={{
-                    className: "bg-red-500 hover:bg-red-600",
-                    type: "primary",
-                    danger: true,
-                  }}
+      <div className="max-w-7xl mx-auto">
+        <div className="fixed right-8 top-20 z-10">
+          <Button
+            onClick={() => setDrawerOpen(true)}
+            className="flex items-center justify-center gap-2 bg-[#8B4513] text-[#FDFBF7] hover:bg-[#B4540A] border-none h-12 w-12 rounded-full shadow-lg"
+            style={{ padding: 0 }}
+          >
+            <FaBell className="text-xl" />
+            {pendingCollaborations.length > 0 && (
+              <div className="absolute -top-1 -right-1 w-5 h-5 bg-red-500 rounded-full flex items-center justify-center">
+                <span className="text-xs text-white font-bold">
+                  {pendingCollaborations.length}
+                </span>
+              </div>
+            )}
+          </Button>
+        </div>
+
+        <div className="flex gap-12">
+          {/* Main Content */}
+          <div className="flex-1">
+            <h3 className="text-5xl md:text-4xl font-black leading-tighter bg-gradient-to-r from-[#B4540A] to-[#eb8415] bg-clip-text text-transparent mb-8">
+              Detective Boards
+            </h3>
+
+            {renderSharedBoards()}
+
+            {/* Board Grid */}
+            <div className="flex  gap-4">
+              <h4 className="text-2xl font-serif text-[#8B4513] mb-6">Your Cases</h4>
+            </div>
+            <div className="grid grid-cols-4 md:grid-cols-1 lg:grid-cols-2 gap-2">
+              <Button
+                onClick={handleOpenModal}
+                className="h-full min-h-32 bg-[#FDFBF7] text-[#8B4513] border-dashed border-2 border-[#8B4513] flex items-center gap-2 hover:bg-[#B4540A] hover:text-[#FDFBF7] text-base font-semibold"
                 >
-                  <button
-                    className="absolute top-2 right-2 p-2 rounded-full bg-[#FDFBF7]/80 
-                             hover:bg-red-100 transition-colors opacity-0 group-hover:opacity-100"
-                    onClick={(e) => e.stopPropagation()}
-                    aria-label="Delete Board"
-                  >
-                    <FaTrash className="text-red-500 hover:text-red-600 w-4 h-4" />
-                  </button>
-                </Popconfirm>
-              </motion.div>
-            ))}
-          </AnimatePresence>
+                  <FaPlus className="bg-[#8B4513] text-[#FDFBF7] rounded-full text-2xl p-1"  />
+                  Create New Case
+              </Button>
+              <AnimatePresence>
+                {boards.map((board) => (
+                  <DetectiveBoardCard
+                    key={board.id}
+                    board={board}
+                    onHoverPreload={handleOnHoverPreloadContents}
+                    onDelete={handleDeleteBoard}
+                  />
+                ))}
+              </AnimatePresence>
+            </div>
+          </div>
         </div>
       </div>
     </div>

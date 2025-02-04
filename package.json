@@ -15,6 +15,7 @@
     "start": "vite"
   },
   "devDependencies": {
+    "@tanstack/eslint-plugin-query": "^5.66.0",
     "@tanstack/router-cli": "^1.95.2",
     "@tanstack/router-plugin": "^1.95.1",
     "@types/react": "^19.0.8",
@@ -32,6 +33,7 @@
     "@mdxeditor/editor": "^3.21.0",
     "@rocicorp/zero": "0.12",
     "@tailwindcss/typography": "^0.5.16",
+    "@tanstack/react-query": "^5.66.0",
     "@tanstack/react-router": "^1.95.1",
     "@tanstack/router-devtools": "^1.95.1",
     "antd": "^5.23.3",

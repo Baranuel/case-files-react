@@ -1,11 +1,20 @@
 import { SignInButton, useAuth, UserButton } from '@clerk/clerk-react';
 import { Link, useRouterState } from '@tanstack/react-router';
 import { Button } from './Button';
-
+import { ZeroSchema } from '@/schema';
+import { useQuery, useZero } from '@rocicorp/zero/react';
 const Navigation = () => {
 
-  const {isSignedIn} = useAuth();
+  const {isSignedIn, userId} = useAuth();
+  const z = useZero<ZeroSchema>();
 
+  const [pendingCollaborations] = useQuery(
+    z.query.collaboration.where(q => q.and(
+      q.cmp('status', '=', 'pending'),
+      q.cmp('boardCreatorId', '=', userId!),
+    ))
+  );
+  
   const router = useRouterState();
   const showNavigation = router.location.pathname.includes('board')
 
@@ -25,7 +34,15 @@ const Navigation = () => {
         <div className='flex gap-4 items-center'>
         <li>
           <Link to="/lobby">
-          <Button variant='primary' className=''>Lobby</Button>
+          <Button variant='primary' className='relative'><span>Lobby</span> 
+          {pendingCollaborations && pendingCollaborations.length > 0 && router.location.pathname !== '/lobby' && (
+              <div className="absolute -top-1 -right-1 w-5 h-5 bg-red-500 rounded-full flex items-center justify-center">
+                <span className="text-xs text-white font-bold">
+                  {pendingCollaborations.length}
+                </span>
+              </div>
+            )}
+          </Button>
           </Link>
         </li>
         <hr className='h-[80%] border-l border-white' />

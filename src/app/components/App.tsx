@@ -2,9 +2,9 @@ import { routeTree } from "@/routeTree.gen";
 import { createRouter, RouterProvider } from "@tanstack/react-router";
 import { useAuth, useClerk } from "@clerk/clerk-react";
 import { ConfigProvider } from "antd";
-import '@/index.css'
+import "@/index.css";
 import { theme } from "@/styles/theme";
-
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 const router = createRouter({
   routeTree,
   defaultPreload: "intent",
@@ -42,7 +42,7 @@ export const App = () => {
         },
       }}
     >
-      <RouterProvider router={router} context={{ auth }} />
+        <RouterProvider router={router} context={{ auth }} />
     </ConfigProvider>
   );
 };

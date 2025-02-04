@@ -13,6 +13,8 @@ import dayjs from "dayjs";
 import { FaClock } from "react-icons/fa";
 import { FaUserShield } from "react-icons/fa";
 import { FaUserCircle } from "react-icons/fa";
+import { FaLocationPin } from "react-icons/fa6";
+import { IoLocationOutline } from "react-icons/io5";
 
 // Types
 type ImagePickerProps = {
@@ -20,6 +22,7 @@ type ImagePickerProps = {
   onSelect: (imageUrl: string) => void;
   elementsList: Element[];
   element?: Element;
+  nonSelectable?: boolean;
 };
 
 // Constants
@@ -70,6 +73,7 @@ export const ImagePicker = ({
   onSelect,
   elementsList,
   element,
+  nonSelectable = false
 }: ImagePickerProps) => {
   // State
   const [isOpen, setIsOpen] = useState(false);
@@ -202,7 +206,7 @@ export const ImagePicker = ({
   return (
     <>
       {/* Preview Section */}
-      <div className="relative w-full">
+      <div className={cn("relative w-full", nonSelectable && "pointer-events-none")}>
         <div className="relative  p-3 w-full mb-2">
           <div className="flex gap-6">
             <img
@@ -211,7 +215,16 @@ export const ImagePicker = ({
               className="h-[170px] -rotate-1 aspect-square object-contain rounded-lg hover:cursor-pointer hover:opacity-80 hover:brightness-110 hover:bg-black/10 transition-all duration-300"
               alt="Preview"
             />
-            <div className="flex flex-col gap-2">
+            {nonSelectable && (
+              <div className="flex flex-col gap-0.5 items-start">
+                <span className="font-bold text-[#8B4513] flex items-center gap-1">
+                  <IoLocationOutline className="text-base" />
+                  Name
+                </span>
+                <span className="text-[#8B4513]">{element?.content?.title || 'Unknown'}</span>
+              </div>
+            )}
+            {!nonSelectable && <div className="flex flex-col gap-2">
               <div className="flex flex-col gap-0.5 items-start">
                 <span className="font-bold text-[#8B4513] flex items-center gap-1">
                   <FaUserCircle className="text-base" />
@@ -239,7 +252,7 @@ export const ImagePicker = ({
                   </span>
                 </div>
               )}
-            </div>
+            </div>}
           </div>
         </div>
       </div>

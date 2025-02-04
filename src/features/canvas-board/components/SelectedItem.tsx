@@ -76,17 +76,26 @@ export function SelectedItem() {
     containerRef.current.scrollTo(0, scrollHeight);
   };
 
-  const mainContent = (
-    <>
-      <h1 className="text-2xl font-bold text-[#8B4513] mb-2">
-        {getTitle(element?.type)} #{element?.id.slice(-5, -1)}
-      </h1>
 
-      <ImagePicker
-        imageUrl={element?.imageUrl ?? undefined}
-        onSelect={handleImageSelect}
-        elementsList={elementsList}
-        element={element}
+  const renderSelectableSection = () => {
+    if (element?.type !== "person") return (
+        <div className="p-3 rounded-lg w-full mb-2">
+          <ImagePicker
+          imageUrl={element?.imageUrl ?? undefined}
+          onSelect={handleImageSelect}
+          elementsList={elementsList}
+          element={element}
+          nonSelectable={true}
+          />
+      </div>
+  )
+
+    return <div className="rounded-lg w-full">
+        <ImagePicker
+          imageUrl={element?.imageUrl ?? undefined}
+          onSelect={handleImageSelect}
+          elementsList={elementsList}
+          element={element}
       />
 
       <div className="space-y-2 my-2">
@@ -134,7 +143,19 @@ export function SelectedItem() {
             </div>
           </div>
         </div>
+      </div>
+    </div>
+  }
 
+  const mainContent = (
+    <>
+      <h1 className="text-2xl font-bold text-[#8B4513] mb-2">
+        {getTitle(element?.type)} #{element?.id.slice(-5, -1)}
+      </h1>
+
+      {renderSelectableSection()}
+
+      <div className="flex flex-col gap-2 my-2">
         <div className="p-3 bg-[#ECD5B8] rounded-lg">
           <label
             htmlFor="name"
