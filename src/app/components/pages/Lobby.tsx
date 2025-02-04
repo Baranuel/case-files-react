@@ -222,7 +222,7 @@ export function Lobby() {
             <div className="grid grid-cols-4 md:grid-cols-1 lg:grid-cols-2 gap-2">
               <Button
                 onClick={handleOpenModal}
-                className="h-full min-h-32 bg-[#FDFBF7] text-[#8B4513] border-dashed border-2 border-[#8B4513] flex items-center gap-2 hover:bg-[#B4540A] hover:text-[#FDFBF7] text-base font-semibold"
+                className="h-full min-h-36 bg-[#FDFBF7] text-[#8B4513] border-dashed border-2 border-[#8B4513] flex items-center gap-2 hover:bg-[#B4540A] hover:text-[#FDFBF7] text-base font-semibold"
                 >
                   <FaPlus className="bg-[#8B4513] text-[#FDFBF7] rounded-full text-2xl p-1"  />
                   Create New Case
