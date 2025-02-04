@@ -7,7 +7,7 @@ import { FaPlus, FaTrash } from "react-icons/fa6";
 import { AnimatePresence, motion } from "framer-motion";
 import dayjs from "dayjs";
 import { Alert, Input, InputRef, Modal, Popconfirm } from "antd";
-import { Button } from "../ui/Button";
+import { PendingRequest } from "../ui/PendingRequest";
 
 export function Lobby() {
   const { userId } = useAuth();
@@ -25,7 +25,17 @@ export function Lobby() {
   const [pendingCollaborations, pendingCollaborationsStatus] = useQuery(
     z.query.collaboration.where(q => q.and(
       q.cmp('status', '=', 'pending'),
+      q.cmp('boardCreatorId', '=', userId!),
     ))
+  );
+
+
+  const [acceptedCollaborationBoards, acceptedCollaborationsStatus] = useQuery(
+    z.query.collaboration.where(q => q.and(
+      q.cmp('status', '=', 'accepted'),
+      q.cmp('userId', '=', userId!),
+      q.cmp('boardCreatorId', '!=', userId!),
+    )).related("board", q => q.where(q => q.cmp('creatorId', '!=', userId!)))
   );
 
 
@@ -116,6 +126,7 @@ export function Lobby() {
     [inputRef]
   );
 
+
   if (boardsStatus.type !== "complete") {
     return <div className="min-h-[calc(80vh-4rem)] mx-auto px-4 py-8" />;
   }
@@ -147,37 +158,25 @@ export function Lobby() {
 
         {pendingCollaborations.length > 0 && (
           <div className="mb-4 space-y-4">
-            {pendingCollaborations.map((collab) => (
-              <div key={collab.id} className="flex items-center justify-between p-4 bg-[#FDFBF7] rounded-lg border border-[#8B4513]">
-                <div>
-                  <h4 className="font-medium text-[#2c2420]">Collaboration Request</h4>
-                  <p className="text-sm text-[#2c2420]/60">
-                    {collab.boardCreatorId} has invited you to collaborate on their board
-                  </p>
-                </div>
-                <div className="flex gap-2">
-                  <Button
-                    // onClick={() => handleAcceptCollaboration(collab.id)}
-                    size="sm"
-                    className="bg-green-600 hover:bg-green-700"
-                  >
-                    Accept
-                  </Button>
-                  <Button 
-                    // onClick={() => handleRejectCollaboration(collab.id)}
-                    size="sm"
-                    variant="outline"
-                    className="border-red-600 text-red-600 hover:bg-red-50"
-                  >
-                    Reject
-                  </Button>
-                </div>
-              </div>
+            {pendingCollaborations.map(collaboration => (
+              <PendingRequest key={collaboration.id} collaboration={collaboration} />
             ))}
           </div>
         )}
         
 
+        {acceptedCollaborationBoards.length > 0 && (
+          <div className="mb-4 space-y-4">
+            {acceptedCollaborationBoards.map(collaboration => (
+              <div key={collaboration.id} className="p-4 bg-[#FDFBF7] rounded-lg border border-[#8B4513] shadow-sm hover:shadow-md transition-all">
+                <div className="flex items-center gap-2">
+                  <div className="w-2 h-2 bg-green-500 rounded-full" />
+                  <h3 className="text-lg font-serif text-[#2c2420] font-semibold">{collaboration.board?.title}</h3>
+                </div>
+              </div>
+            ))}
+          </div>
+        )}
         <div className="grid grid-cols-4 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
           <button
             onClick={handleOpenModal}

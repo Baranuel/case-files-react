@@ -1,11 +1,12 @@
-import { createFileRoute, useSearch } from "@tanstack/react-router";
+import { createFileRoute, useNavigate, useSearch } from "@tanstack/react-router";
 import { z } from "zod";
 import { Button } from "@/app/components/ui/Button";
 import { useQuery, useZero } from "@rocicorp/zero/react";
 import { ZeroSchema } from "@/schema";
 import { useAuth } from "@clerk/clerk-react";
-import { useState } from "react";
-import { FaLock, FaSpinner } from "react-icons/fa6";
+import { useState, useEffect } from "react";
+import { FaLock, FaSpinner, } from "react-icons/fa6";
+import { FaTimes } from "react-icons/fa";
 
 export const Route = createFileRoute("/request-access")({
   component: RequestAccess,
@@ -17,6 +18,8 @@ export const Route = createFileRoute("/request-access")({
 function RequestAccess() {
   const { boardId } = useSearch({ from: "/request-access" });
   const { userId } = useAuth();
+  const navigate = useNavigate();
+
   const z = useZero<ZeroSchema>();
   const [isLoading, setIsLoading] = useState(false);
 
@@ -52,6 +55,13 @@ function RequestAccess() {
       setIsLoading(false);
     }
   };
+
+  useEffect(() => {
+    if (collaboration?.status === "accepted") {
+      navigate({ to: "/board/$boardId", params: { boardId: boardId! } });
+    }
+  }, [collaboration?.status, navigate, boardId]);
+
   if (
     collaborationsQueryStatus.type !== "complete" ||
     boardQueryStatus.type !== "complete"
@@ -62,20 +72,7 @@ function RequestAccess() {
       </div>
     );
 
-  if (!boardId) {
-    return (
-      <div className="flex-1 w-full flex items-center justify-center">
-        <div className="text-center">
-          <h1 className="text-2xl font-bold text-[#8B4513] mb-4">
-            Invalid Board ID
-          </h1>
-          <p className="text-[#8B4513]/80">
-            Please check your URL and try again.
-          </p>
-        </div>
-      </div>
-    );
-  }
+  if (!board) navigate({ to: "/not-found" });
 
 
   if(collaboration?.status === 'pending') {
@@ -92,6 +89,28 @@ function RequestAccess() {
               </h1>
               <p className="text-[#8B4513]/80">
                 Your request is pending. You will be redirected to the board once it is approved.
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  if(collaboration?.status === 'rejected') {
+    return (
+      <div className="flex-1 w-full flex items-center justify-center bg-[#FFF6EB]">
+        <div className="max-w-md w-full p-8 bg-[#FDFBF7] rounded-lg border-2 border-[#8B4513] shadow-xl">
+          <div className="flex flex-col items-center gap-6">
+            <div className="w-16 h-16 rounded-full bg-red-600 flex items-center justify-center shadow-lg">
+              <FaTimes className="text-[#FDFBF7] text-2xl" />
+            </div>
+            <div className="text-center">
+              <h1 className="text-3xl font-bold text-[#8B4513] mb-2">
+                Access Request Rejected
+              </h1>
+              <p className="text-[#8B4513]/80">
+                Your request was rejected. Please try again.
               </p>
             </div>
           </div>
