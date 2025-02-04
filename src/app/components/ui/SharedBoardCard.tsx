@@ -46,7 +46,7 @@ export function SharedBoardCard({
       onMouseEnter={() => onHoverPreload?.(board.id)}
     >
       <motion.div
-        className=" bg-[#FDFBF7] h-full min-h-40 items-center rounded-lg hover:shadow-lg hover:-translate-y-0.5 transition-all border border-[#8B4513]/20 p-6 flex  gap-3"
+        className=" bg-[#FDFBF7] h-full min-h-48 items-center rounded-lg hover:shadow-lg hover:-translate-y-0.5 transition-all border border-[#8B4513]/20 p-6 flex  gap-3"
       >
         <div className="flex-1 min-w-0">
           <h3
