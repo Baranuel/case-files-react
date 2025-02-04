@@ -51,7 +51,7 @@ export function DetectiveBoardCard({
         onMouseEnter={() => onHoverPreload(board.id)}
         className="w-full bg-[#FDFBF7] rounded-lg hover:shadow-xl hover:-translate-y-1 transition-all"
       >
-        <div className="h-full min-h-36 p-6 flex flex-col gap-4 border border-[#8B4513] rounded-lg">
+        <div className="h-full min-h-40 p-6 flex flex-col gap-4 border border-[#8B4513] rounded-lg">
           <div>
             <h2 className="text-[#2c2420] text-lg font-serif font-bold">{board.title}</h2>
             <p className="text-sm font-mono text-[#2c2420]/60 mt-2">
