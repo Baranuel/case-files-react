@@ -20,15 +20,15 @@ export function Lobby() {
   const [drawerOpen, setDrawerOpen] = useState(false);
 
   // Queries
-  const [boards] = useQuery(z.query.board.where("creatorId", "=", userId!));
+  const [boards, boardStatus] = useQuery(z.query.board.where("creatorId", "=", userId!));
 
-  const [pendingCollaborations] = useQuery(
+  const [pendingCollaborations, pendingCollaborationStatus] = useQuery(
     z.query.collaboration.where(q => q.and(
       q.cmp('status', '=', 'pending'),
       q.cmp('boardCreatorId', '=', userId!),
     ))
   );
-  const [acceptedCollaborationBoards] = useQuery(
+  const [acceptedCollaborationBoards, acceptedCollaborationBoardsStatus] = useQuery(
     z.query.collaboration.where(q => q.and(
       q.cmp('status', '=', 'accepted'),
       q.cmp('userId', '=', userId!),
@@ -57,6 +57,7 @@ export function Lobby() {
 
 
   const handleCreateBoard = useCallback(async () => {
+
     const boardId = crypto.randomUUID();
     await z.mutate.board.insert({
       id: boardId,
@@ -106,6 +107,13 @@ export function Lobby() {
     window.addEventListener("keydown", handleEnter, { signal: controller.signal });
     return () => controller.abort();
   }, [handleCreateBoard]);
+
+
+
+  if (boardStatus.type === 'unknown' || pendingCollaborationStatus.type === 'unknown' || acceptedCollaborationBoardsStatus.type === 'unknown') {
+    return  <div className="min-h-screen w-full bg-[#FFF6EB] p-12"/>
+  }
+
 
   // Render Methods
   const renderSharedBoards = () => {
@@ -219,7 +227,6 @@ export function Lobby() {
                   <FaPlus className="bg-[#8B4513] text-[#FDFBF7] rounded-full text-2xl p-1"  />
                   Create New Case
               </Button>
-              <AnimatePresence>
                 {boards.map((board) => (
                   <DetectiveBoardCard
                     key={board.id}
@@ -228,7 +235,6 @@ export function Lobby() {
                     onDelete={handleDeleteBoard}
                   />
                 ))}
-              </AnimatePresence>
             </div>
           </div>
         </div>

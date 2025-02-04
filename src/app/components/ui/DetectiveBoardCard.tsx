@@ -44,7 +44,7 @@ export function DetectiveBoardCard({
   });
 
   return (
-    <motion.div className="relative group" initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
+    <motion.div className="relative group">
       <Link
         to="/board/$boardId"
         params={{ boardId: board.id }}

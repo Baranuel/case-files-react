@@ -1,7 +1,7 @@
 import { Link } from "@tanstack/react-router";
 import { motion } from "framer-motion";
 import dayjs from "dayjs";
-import { Board, Collaboration, ZeroSchema } from "@/schema";
+import { Board, ZeroSchema } from "@/schema";
 import { BASE_API_URL } from "@/constants";
 import { useQuery, useZero } from "@rocicorp/zero/react";
 import { useQuery as useReactQuery } from "@tanstack/react-query";
@@ -46,8 +46,6 @@ export function SharedBoardCard({
       onMouseEnter={() => onHoverPreload?.(board.id)}
     >
       <motion.div
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
         className=" bg-[#FDFBF7] h-full min-h-32 items-center rounded-lg hover:shadow-lg hover:-translate-y-0.5 transition-all border border-[#8B4513]/20 p-6 flex  gap-3"
       >
         <div className="flex-1 min-w-0">
