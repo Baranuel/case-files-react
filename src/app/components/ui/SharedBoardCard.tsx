@@ -11,10 +11,7 @@ interface SharedBoardCardProps {
   onHoverPreload?: (boardId: string) => void;
 }
 
-export function SharedBoardCard({
-  board,
-  onHoverPreload,
-}: SharedBoardCardProps) {
+export function SharedBoardCard({ board, onHoverPreload }: SharedBoardCardProps) {
   const z = useZero<ZeroSchema>();
   const [collaborators] = useQuery(
     z.query.collaboration.where((q) =>
@@ -22,8 +19,8 @@ export function SharedBoardCard({
     )
   );
 
-  const uniqueUserIds = [...new Set(collaborators.map((c) => c.userId))];
-
+  const uniqueUserIds = [...new Set(collaborators.map(c => c.userId))];
+  
   const { data: userImages, isLoading } = useReactQuery({
     queryKey: ["userImages", uniqueUserIds],
     queryFn: async () => {
@@ -40,44 +37,48 @@ export function SharedBoardCard({
   });
 
   return (
-    <Link
-      to="/board/$boardId"
-      params={{ boardId: board.id }}
-      onMouseEnter={() => onHoverPreload?.(board.id)}
-    >
-      <motion.div
-        className=" bg-[#FDFBF7] h-full min-h-48 items-center rounded-lg hover:shadow-lg hover:-translate-y-0.5 transition-all border border-[#8B4513]/20 p-6 flex  gap-3"
+    <motion.div className="relative group">
+      <Link
+        to="/board/$boardId"
+        params={{ boardId: board.id }}
+        onMouseEnter={() => onHoverPreload?.(board.id)}
+        className="block w-full bg-[#FDFBF7] rounded-lg hover:shadow-xl hover:-translate-y-1 transition-all"
       >
-        <div className="flex-1 min-w-0">
-          <h3
-            className="text-base font-serif text-[#2c2420] font-bold truncate 
-                       group-hover:text-[#8B4513] transition-colors"
-          >
-            {board.title}
-          </h3>
-          <span className="mt-1 text-xs font-mono text-[#2c2420]/60">
-            {dayjs(board.createdAt).format("MMM DD")}
-          </span>
-        </div>
+        <div className="h-full min-h-32 p-4 flex flex-col gap-3 border border-[#8B4513]/30 rounded-lg">
+          <div className="flex items-center justify-between">
+            <h2 className="text-[#2c2420] text-base font-serif font-medium">
+              {board.title}
+            </h2>
+            <div className="text-xs font-mono text-amber-700 bg-amber-50 px-2 py-1 rounded border border-amber-200">
+              Shared Case
+            </div>
+          </div>
 
-        <div>
-          <p className="text-sm font-mono text-[#2c2420]/70">Detectives</p>
-          <div className="flex -space-x-2 mt-2">
-            {!isLoading ? (
-              userImages?.map((image, i) => (
-                <img
-                  key={i}
-                  src={image}
-                  alt={`Detective ${i + 1}`}
-                  className="w-6 h-6 rounded-full border-2 border-[#FDFBF7] object-cover shadow-sm"
-                />
-              ))
-            ) : (
-              <div className="w-6 h-6 rounded-full border-2 border-[#FDFBF7] bg-gray-200 animate-pulse" />
-            )}
+          <p className="text-xs font-mono text-[#2c2420]/60">
+            Opened on {dayjs(board.createdAt).format("MMM DD, YYYY")}
+          </p>
+          
+          <div className="flex items-center justify-between mt-auto">
+            <div className="flex items-center gap-2">
+              <span className="text-xs font-mono text-[#2c2420]/80">Detectives</span>
+              <div className="flex -space-x-2">
+                {!isLoading ? (
+                  userImages?.map((image, i) => (
+                    <img
+                      key={i}
+                      src={image}
+                      alt={`Detective ${i + 1}`}
+                      className="w-6 h-6 rounded-full border-2 border-[#FDFBF7] object-cover shadow-sm"
+                    />
+                  ))
+                ) : (
+                  <div className="w-6 h-6 rounded-full bg-[#8B4513]/10 animate-pulse" />
+                )}
+              </div>
+            </div>
           </div>
         </div>
-      </motion.div>
-    </Link>
+      </Link>
+    </motion.div>
   );
 }

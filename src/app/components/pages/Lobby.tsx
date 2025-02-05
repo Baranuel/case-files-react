@@ -1,12 +1,9 @@
 import { Board, ZeroSchema } from "@/schema";
 import { useAuth } from "@clerk/clerk-react";
 import { useQuery, useZero } from "@rocicorp/zero/react";
-import { Link, useNavigate } from "@tanstack/react-router";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { FaPlus, FaTrash, FaBell } from "react-icons/fa6";
-import { AnimatePresence, motion } from "framer-motion";
-import dayjs from "dayjs";
-import { Alert, Input, InputRef, Modal, Popconfirm, Button, Drawer } from "antd";
+import { Input, InputRef, Modal, Button, Drawer } from "antd";
 import { PendingRequest } from "../ui/PendingRequest";
 import { DetectiveBoardCard } from "../ui/DetectiveBoardCard";
 import { SharedBoardCard } from "../ui/SharedBoardCard";
@@ -21,6 +18,7 @@ export function Lobby() {
 
   // Queries
   const [boards, boardStatus] = useQuery(z.query.board.where("creatorId", "=", userId!));
+  const [user, userStatus] = useQuery(z.query.user.where("id", "=", userId!).one());
 
   const [pendingCollaborations, pendingCollaborationStatus] = useQuery(
     z.query.collaboration.where(q => q.and(
@@ -57,20 +55,31 @@ export function Lobby() {
 
 
   const handleCreateBoard = useCallback(async () => {
+    
+    z.mutateBatch(async tx => {
+      const boardId = crypto.randomUUID();
+      await tx.board.insert({
+        id: boardId,
+        creatorId: userId!,
+        title,
+      });
 
-    const boardId = crypto.randomUUID();
-    await z.mutate.board.insert({
-      id: boardId,
-      creatorId: userId!,
-      title,
-    });
-    await z.mutate.collaboration.insert({
-      id: crypto.randomUUID(),
-      boardId,
-      userId: userId!,
-      status: 'accepted',
-      boardCreatorId: userId!,
-    });
+      await tx.collaboration.insert({
+        id: crypto.randomUUID(),
+        boardId,
+        userId: userId!,
+        status: 'accepted',
+        boardCreatorId: userId!,
+      });
+
+      // await tx.user.upsert({
+      //   id: userId!,
+      //   tier: 'free',
+      //   maxBoards:2,
+      // });
+    })
+
+
     handleCloseModal();
   }, [z.mutate.board, z.mutate.collaboration, userId, title]);
 
@@ -110,7 +119,7 @@ export function Lobby() {
 
 
 
-  if (boardStatus.type === 'unknown' || pendingCollaborationStatus.type === 'unknown' || acceptedCollaborationBoardsStatus.type === 'unknown') {
+  if (boardStatus.type === 'unknown' || pendingCollaborationStatus.type === 'unknown' || acceptedCollaborationBoardsStatus.type === 'unknown' || userStatus.type === 'unknown') {
     return  <div className="min-h-screen w-full bg-[#FFF6EB] p-12"/>
   }
 
@@ -135,7 +144,7 @@ export function Lobby() {
   };
 
   return (
-    <div className="min-h-screen w-full bg-[#FFF6EB] p-12">
+    <div className="min-h-[calc(100vh-164px)] w-full bg-[#FFF6EB] p-12">
       <Modal
         destroyOnClose
         afterOpenChange={handleAfterOpenChange}
@@ -206,7 +215,7 @@ export function Lobby() {
           </Button>
         </div>
 
-        <div className="flex gap-12">
+        <div className="flex">
           {/* Main Content */}
           <div className="flex-1">
             <h3 className="text-5xl md:text-4xl font-black leading-tighter bg-gradient-to-r from-[#B4540A] to-[#eb8415] bg-clip-text text-transparent mb-8">
@@ -216,10 +225,10 @@ export function Lobby() {
             {renderSharedBoards()}
 
             {/* Board Grid */}
-            <div className="flex  gap-4">
+            <div className="flex gap-4">
               <h4 className="text-2xl font-serif text-[#8B4513] mb-6">Your Cases</h4>
             </div>
-            <div className="grid grid-cols-4 md:grid-cols-1 lg:grid-cols-2 gap-2">
+            <div className="grid grid-cols-4 md:grid-cols-2 lg:grid-cols-3 gap-2 bg-[#f6e6dc] rounded-lg p-4">
               <Button
                 onClick={handleOpenModal}
                 className="h-full min-h-48 bg-[#FDFBF7] text-[#8B4513] border-dashed border-2 border-[#8B4513] flex items-center gap-2 hover:bg-[#B4540A] hover:text-[#FDFBF7] text-base font-semibold"

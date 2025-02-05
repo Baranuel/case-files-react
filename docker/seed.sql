@@ -14,6 +14,15 @@ CREATE TABLE "content" (
   "timeOfDeath" TIMESTAMP
 );
 
+CREATE TABLE "user" (
+  "id" VARCHAR PRIMARY KEY,
+  "tier" VARCHAR NOT NULL CHECK ("tier" IN ('free', 'paid')) DEFAULT 'free',
+  "name" VARCHAR,
+  "imageUrl" VARCHAR,
+  "maxBoards" INTEGER NOT NULL DEFAULT 2,
+  "createdAt" TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
+);
+
 CREATE TABLE "board" (
   "id" VARCHAR PRIMARY KEY,
   "title" VARCHAR NOT NULL,

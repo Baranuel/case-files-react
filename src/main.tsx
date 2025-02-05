@@ -10,11 +10,14 @@ const rootElement = document.getElementById("app")!;
 if (!rootElement.innerHTML) {
   const root = ReactDOM.createRoot(rootElement);
   const queryClient = new QueryClient(); 
+
+  const clerkPublishableKey = import.meta.env.PROD ? import.meta.env.VITE_CLERK_PUBLISHABLE_KEY_PROD : import.meta.env.VITE_CLERK_PUBLISHABLE_KEY;
+  
   root.render(
     <QueryClientProvider client={queryClient}>
     <ClerkProvider
     afterSignOutUrl={BASE_URL}
-    publishableKey={import.meta.env.VITE_CLERK_PUBLISHABLE_KEY}
+    publishableKey={clerkPublishableKey}
   >
       <App/>
     </ClerkProvider>

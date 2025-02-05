@@ -144,6 +144,44 @@
         "primaryKey": [
           "id"
         ]
+      },
+      "user": {
+        "name": "user",
+        "columns": {
+          "id": {
+            "type": "string",
+            "optional": false,
+            "customType": null
+          },
+          "name": {
+            "type": "string",
+            "optional": true,
+            "customType": null
+          },
+          "imageUrl": {
+            "type": "string",
+            "optional": true,
+            "customType": null
+          },
+          "tier": {
+            "type": "string",
+            "optional": false,
+            "customType": null
+          },
+          "maxBoards": {
+            "type": "number",
+            "optional": false,
+            "customType": null
+          },
+          "createdAt": {
+            "type": "number",
+            "optional": true,
+            "customType": null
+          }
+        },
+        "primaryKey": [
+          "id"
+        ]
       }
     },
     "relationships": {

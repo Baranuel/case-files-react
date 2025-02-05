@@ -10,7 +10,7 @@ import { Content, ZeroSchema } from "@/schema";
 import { ImagePicker } from "./ImagePicker";
 import { MarkdownEditor } from "./MarkdownEditor/MarkdownEditor";
 import { useDebouncedCallback } from "use-debounce";
-import { DatePicker, Input, Switch } from "antd";
+import { DatePicker, Switch } from "antd";
 import dayjs from "dayjs";
 
 export function SelectedItem() {

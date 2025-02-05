@@ -37,6 +37,15 @@ const collaboration = table('collaboration').columns({
     createdAt: number().optional(),
 }).primaryKey('id')
 
+const user = table('user').columns({
+    id: string(),
+    name: string().optional(),
+    imageUrl: string().optional(),
+    tier: enumeration<'free' | 'paid'>(),
+    maxBoards: number(),
+    createdAt: number().optional(),
+}).primaryKey('id')
+
 
 const elementRelationships = relationships(element, ({one}) => ({
     content: one({
@@ -60,7 +69,7 @@ const collaborationRelationships = relationships(collaboration, ({one}) => ({
 }))
 
 export const schema = createSchema( 1, {
-    tables: [element, content, board, collaboration],
+    tables: [element, content, board, collaboration, user],
     relationships: [elementRelationships, collaborationRelationships]
 })
 
