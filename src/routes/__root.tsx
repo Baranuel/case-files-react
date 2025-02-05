@@ -29,6 +29,7 @@ function RootComponent() {
   const isProd = import.meta.env.PROD;
   const {userId, getToken} = useAuth();
 
+  console.log(import.meta.env.ZERO_AUTH_JWK)
   // Memoize the Zero instance to prevent recreation on re-renders
   const zero = useMemo(() => new Zero({
     userID: userId ?? 'anon',

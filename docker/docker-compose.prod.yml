@@ -34,6 +34,8 @@ services:
     image: rocicorp/zero:0.12.2025013100
     volumes:
       - ../zero-schema.json:/opt/app/zero-schema.json
+    env_file:
+      - ../.env.production
     environment:
       - ZERO_UPSTREAM_DB=postgresql://user:password@zstart_postgres:5432/zstart
       - ZERO_CVR_DB=postgresql://user:password@zstart_postgres:5432/zstart_cvr
