@@ -37,12 +37,12 @@ services:
     env_file:
       - ../.env.production
     environment:
-      - ZERO_UPSTREAM_DB=postgresql://user:password@zstart_postgres:5432/zstart
-      - ZERO_CVR_DB=postgresql://user:password@zstart_postgres:5432/zstart_cvr
-      - ZERO_CHANGE_DB=postgresql://user:password@zstart_postgres:5432/zstart_cdb
+      - ZERO_UPSTREAM_DB=${ZERO_UPSTREAM_DB}
+      - ZERO_CVR_DB=${ZERO_CVR_DB}
+      - ZERO_CHANGE_DB=${ZERO_CHANGE_DB}
+      - ZERO_AUTH_JWK=${ZERO_AUTH_JWK}
       - ZERO_REPLICA_FILE=/tmp/zstart_replica.db
       - ZERO_SCHEMA_FILE=./zero-schema.json
-      - ZERO_AUTH_JWK=${ZERO_AUTH_JWK}
     ports:
       - 4848:4848
 

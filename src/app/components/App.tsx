@@ -39,6 +39,9 @@ export const App = () => {
             colorPrimaryHover: "#B4540A",
             colorPrimaryActive: "#B4540A",
           },
+          Message: {
+            colorSuccess: "#B4540A",
+          },
         },
       }}
     >

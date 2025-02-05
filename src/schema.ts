@@ -66,6 +66,11 @@ const collaborationRelationships = relationships(collaboration, ({one}) => ({
         destField: ['id'],
         destSchema: board
     }),
+    user: one({
+        sourceField:['userId'],
+        destField: ['id'],
+        destSchema: user
+    })
 }))
 
 export const schema = createSchema( 1, {
@@ -87,8 +92,10 @@ export type Element = Row<typeof schema.tables.element>
 export type Content = Row<typeof schema.tables.content>
 export type Board = Row<typeof schema.tables.board>
 export type Collaboration = Row<typeof schema.tables.collaboration> 
+export type User = Row<typeof schema.tables.user>
 
 export type ElementSchema = typeof element
 export type ContentSchema = typeof content
 export type BoardSchema = typeof board
 export type CollaborationSchema = typeof collaboration
+export type UserSchema = typeof user

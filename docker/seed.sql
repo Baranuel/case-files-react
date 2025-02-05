@@ -36,7 +36,8 @@ CREATE TABLE "collaboration" (
   "boardId" VARCHAR NOT NULL,
   "userId" VARCHAR NOT NULL,
   "status" VARCHAR NOT NULL CHECK ("status" IN ('pending', 'accepted', 'rejected')) DEFAULT 'pending',
-  FOREIGN KEY ("boardId") REFERENCES "board"("id") ON DELETE CASCADE
+  FOREIGN KEY ("boardId") REFERENCES "board"("id") ON DELETE CASCADE,
+  FOREIGN KEY ("userId") REFERENCES "user"("id") ON DELETE CASCADE
 );
 
 CREATE TABLE "element" (

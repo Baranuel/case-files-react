@@ -1,4 +1,4 @@
-import { Collaboration, ZeroSchema } from "@/schema";
+import { Collaboration, User, ZeroSchema } from "@/schema";
 import { Button } from "./Button";
 import { useQuery, useZero } from "@rocicorp/zero/react";
 import { motion } from "framer-motion";
@@ -8,10 +8,13 @@ import { BASE_API_URL } from "@/constants";
 export const PendingRequest = ({
   collaboration,
 }: {
-  collaboration: Collaboration;
+  collaboration: Collaboration & {
+    user: User;
+  };
 }) => {
   const z = useZero<ZeroSchema>();
   const [board] = useQuery(z.query.board.where('id', '=', collaboration.boardId).one());
+  const {user} = collaboration;
 
   const handleAcceptCollaboration = () => {
     z.mutate.collaboration.update({
@@ -27,81 +30,6 @@ export const PendingRequest = ({
     });
   };
 
-  const { data: user, isLoading: userLoading } = useReactQuery({
-    queryKey: ["user", collaboration.userId],
-    queryFn: async () => {
-      const res = await fetch(`${BASE_API_URL}/${collaboration.userId}`);
-      const data = await res.json();
-      return data;
-    }
-  });
-
-  const makeFullName = (firstName: string, lastName: string) => {
-    if (!firstName || !lastName) return "";
-    return firstName.charAt(0).toUpperCase() + firstName.slice(1) + " " + lastName.charAt(0).toUpperCase() + lastName.slice(1);
-  }
-
-  if (userLoading) {
-    return (
-      <motion.div
-        initial={{ opacity: 0, }}
-        animate={{ opacity: 1, }}
-        exit={{ opacity: 0, }}
-        transition={{ duration: 0.3 }}
-        key={collaboration.id}
-        className="p-4 bg-[#FDFBF7] rounded-xl border-2 border-[#8B4513]/30 shadow-lg hover:shadow-xl transition-all min-h-[100px] h-full"
-      >
-        <div className="flex flex-col gap-4 justify-between h-full">
-          <div className="flex items-center gap-3">
-            <div className="w-10 h-10 bg-gray-200 rounded-full animate-pulse"/>
-            <div className="flex flex-col">
-              <h4 className="text-lg font-serif text-[#2c2420] font-bold">
-                New Case Partner
-              </h4>
-              <div className="h-4 w-48 bg-gray-200 rounded animate-pulse mt-1"/>
-            </div>
-          </div>
-          
-          <div className="flex gap-2 ">
-            <Button
-              onClick={handleAcceptCollaboration}
-              className="bg-[#8B4513] hover:bg-[#B4540A] text-[#FDFBF7] px-2"
-            >
-              Accept
-            </Button>
-            <Button
-              onClick={handleRejectCollaboration}
-              variant="outline"
-              className="border-[#8B4513] text-[#8B4513] hover:bg-[#8B4513]/10 px-2"
-            >
-              Reject
-            </Button>
-          </div>
-        </div>
-      </motion.div>
-    );
-  }
-
-  if (!user) {
-    return (
-      <div className="p-4 bg-[#FDFBF7] flex flex-col rounded-xl border-2 border-[#8B4513]/30 shadow-lg hover:shadow-xl transition-all animate-pulse">
-        <div className="flex flex-col gap-4">
-          <div className="flex items-center gap-3">
-            <div className="w-10 h-10 bg-gray-200 rounded-full"/>
-            <div className="flex flex-col">
-              <div className="h-6 w-32 bg-gray-200 rounded"/>
-              <div className="h-4 w-48 bg-gray-200 rounded mt-1"/>
-            </div>
-          </div>
-          
-          <div className="flex flex-col gap-2 mt-2">
-            <div className="flex-1 h-10 bg-gray-200 rounded"/>
-            <div className="flex-1 h-10 bg-gray-200 rounded"/>
-          </div>
-        </div>
-      </div>
-    );
-  }
 
   return (
     <motion.div
@@ -115,13 +43,13 @@ export const PendingRequest = ({
       <div className="flex flex-col h-full justify-between gap-4">
 
         <div className="flex items-start gap-3">
-          <img src={user?.imageUrl} alt={user?.firstName} className="w-8 h-8 mt-1 rounded-full shadow-md object-cover" />
+          <img src={user?.imageUrl ?? ""} alt={user?.name ?? ""} className="w-8 h-8 mt-1 rounded-full shadow-md object-cover" />
           <div className="flex flex-col">
             <h4 className="text-lg font-serif text-[#2c2420] font-bold">
               New Case Partner
             </h4>
             <p className="text-sm font-mono text-[#2c2420]/70">
-              <span className="font-semibold text-[#8B4513]">{makeFullName(user?.firstName, user?.lastName)} </span> 
+              <span className="font-semibold text-[#8B4513]">{user?.name} </span> 
               requests to join 
               <span className="font-bold text-slate-900 "> {board?.title}</span>
             </p>

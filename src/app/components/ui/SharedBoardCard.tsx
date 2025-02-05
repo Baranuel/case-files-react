@@ -13,28 +13,14 @@ interface SharedBoardCardProps {
 
 export function SharedBoardCard({ board, onHoverPreload }: SharedBoardCardProps) {
   const z = useZero<ZeroSchema>();
-  const [collaborators] = useQuery(
+
+  const [collaborations] = useQuery(
     z.query.collaboration.where((q) =>
       q.and(q.cmp("boardId", "=", board.id), q.cmp("status", "=", "accepted"))
-    )
+    ).related("user")
   );
 
-  const uniqueUserIds = [...new Set(collaborators.map(c => c.userId))];
-  
-  const { data: userImages, isLoading } = useReactQuery({
-    queryKey: ["userImages", uniqueUserIds],
-    queryFn: async () => {
-      const promises = uniqueUserIds.map(async (id) => {
-        const res = await fetch(`${BASE_API_URL}/${id}`);
-        return (await res.json()).imageUrl;
-      });
-      return Promise.all(promises);
-    },
-    enabled: uniqueUserIds.length > 0,
-    staleTime: Infinity,
-    refetchOnWindowFocus: false,
-    refetchOnMount: false,
-  });
+  const collaborators = collaborations.map((c) => c.user);
 
   return (
     <motion.div className="relative group">
@@ -62,18 +48,14 @@ export function SharedBoardCard({ board, onHoverPreload }: SharedBoardCardProps)
             <div className="flex items-center gap-2">
               <span className="text-xs font-mono text-[#2c2420]/80">Detectives</span>
               <div className="flex -space-x-2">
-                {!isLoading ? (
-                  userImages?.map((image, i) => (
-                    <img
-                      key={i}
-                      src={image}
-                      alt={`Detective ${i + 1}`}
-                      className="w-6 h-6 rounded-full border-2 border-[#FDFBF7] object-cover shadow-sm"
+                {collaborators?.map((user, i) => (
+                  <img
+                    key={i}
+                    src={user?.imageUrl ?? ""}
+                    alt={`Detective ${i + 1}`}
+                    className="w-6 h-6 rounded-full border-2 border-[#FDFBF7] object-cover shadow-sm"
                     />
-                  ))
-                ) : (
-                  <div className="w-6 h-6 rounded-full bg-[#8B4513]/10 animate-pulse" />
-                )}
+                ))}
               </div>
             </div>
           </div>

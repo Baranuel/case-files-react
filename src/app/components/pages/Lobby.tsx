@@ -1,4 +1,4 @@
-import { Board, ZeroSchema } from "@/schema";
+import { Board, Collaboration, User, ZeroSchema } from "@/schema";
 import { useAuth } from "@clerk/clerk-react";
 import { useQuery, useZero } from "@rocicorp/zero/react";
 import { useCallback, useEffect, useRef, useState } from "react";
@@ -7,6 +7,7 @@ import { Input, InputRef, Modal, Button, Drawer } from "antd";
 import { PendingRequest } from "../ui/PendingRequest";
 import { DetectiveBoardCard } from "../ui/DetectiveBoardCard";
 import { SharedBoardCard } from "../ui/SharedBoardCard";
+import { FaTimes } from "react-icons/fa";
 
 export function Lobby() {
   const { userId } = useAuth();
@@ -24,7 +25,7 @@ export function Lobby() {
     z.query.collaboration.where(q => q.and(
       q.cmp('status', '=', 'pending'),
       q.cmp('boardCreatorId', '=', userId!),
-    ))
+    )).related("user")
   );
   const [acceptedCollaborationBoards, acceptedCollaborationBoardsStatus] = useQuery(
     z.query.collaboration.where(q => q.and(
@@ -150,6 +151,9 @@ export function Lobby() {
         afterOpenChange={handleAfterOpenChange}
         title="Create New Case"
         okText="Create"
+        okButtonProps={{
+          disabled: title.length === 0,
+        }}
         open={open}
         onOk={handleCreateBoard}
         onCancel={handleCloseModal}
@@ -165,7 +169,7 @@ export function Lobby() {
 
       <Drawer
         title={
-          <h3 className="text-2xl font-black leading-tighter bg-gradient-to-r from-[#B4540A] to-[#eb8415] bg-clip-text text-transparent">
+          <h3 className="text-2xl font-black leading-tighter bg-[#FFF6EB] bg-clip-text text-transparent">
             Pending Collaborations
           </h3>
         }
@@ -173,25 +177,27 @@ export function Lobby() {
         onClose={() => setDrawerOpen(false)}
         open={drawerOpen}
         width={400}
+        closeIcon={<FaTimes className="text-xl text-[#FFF6EB]" />}
         styles={{
           header: {
+            backgroundColor: '#2C2421',
             borderBottom: '2px solid rgba(139, 69, 19, 0.1)',
             padding: '16px 24px',
           },
           body: {
             backgroundColor: '#FFF6EB',
             padding: '24px',
-          }
+          },
         }}
       >
         {pendingCollaborations.length > 0 ? (
           <div className="flex flex-col gap-4">
             {pendingCollaborations.map(collaboration => (
-              <PendingRequest key={collaboration.id} collaboration={collaboration} />
+              <PendingRequest key={collaboration.id} collaboration={collaboration as Collaboration & {user: User}} />
             ))}
           </div>
         ) : (
-          <div className="p-6 bg-[#FDFBF7] rounded-xl border-2 border-[#8B4513]/30 text-center">
+          <div className="p-6 h-full flex items-center justify-center  rounded-xl text-xl text-center">
             <p className="text-[#8B4513]/70 font-serif">No pending requests</p>
           </div>
         )}
@@ -226,15 +232,24 @@ export function Lobby() {
 
             {/* Board Grid */}
             <div className="flex gap-4">
-              <h4 className="text-2xl font-serif text-[#8B4513] mb-6">Your Cases</h4>
+              <h4 className="text-2xl font-serif text-[#8B4513] mb-6">Your Cases {boards.length}/{user?.maxBoards}</h4>
             </div>
             <div className="grid grid-cols-4 md:grid-cols-2 lg:grid-cols-3 gap-2 bg-[#f6e6dc] rounded-lg p-4">
               <Button
                 onClick={handleOpenModal}
-                className="h-full min-h-48 bg-[#FDFBF7] text-[#8B4513] border-dashed border-2 border-[#8B4513] flex items-center gap-2 hover:bg-[#B4540A] hover:text-[#FDFBF7] text-base font-semibold"
-                >
-                  <FaPlus className="bg-[#8B4513] text-[#FDFBF7] rounded-full text-2xl p-1"  />
-                  Create New Case
+                disabled={boards.length >= (user?.maxBoards ?? 2)}
+                className={`h-full min-h-48 flex items-center gap-2 text-base font-semibold border-2 border-dashed ${
+                  boards.length >= (user?.maxBoards ?? 2)
+                    ? "bg-[#FDFBF7]/50 text-[#8B4513]/50 border-[#8B4513]/50" 
+                    : "bg-[#FDFBF7] text-[#8B4513] border-[#8B4513]"
+                }`}
+              >
+                <FaPlus className={`rounded-full text-2xl p-1 ${
+                  boards.length >= (user?.maxBoards ?? 2)
+                    ? "bg-[#8B4513]/50 text-white/50"
+                    : "bg-[#8B4513] text-white" 
+                }`} />
+                Create New Case
               </Button>
                 {boards.map((board) => (
                   <DetectiveBoardCard
