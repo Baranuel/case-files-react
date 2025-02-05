@@ -26,6 +26,25 @@ services:
       - zstart_pgdata:/var/lib/postgresql/data
       - ./:/docker-entrypoint-initdb.d
 
+  zero:
+    platform: linux/arm64
+    depends_on:
+      zstart_postgres:
+        condition: service_healthy
+    image: rocicorp/zero:0.12.2025013100
+    volumes:
+      - ../zero-schema.json:/opt/app/zero-schema.json
+    environment:
+      - ZERO_UPSTREAM_DB=postgresql://user:password@zstart_postgres:5432/zstart
+      - ZERO_CVR_DB=postgresql://user:password@zstart_postgres:5432/zstart_cvr
+      - ZERO_CHANGE_DB=postgresql://user:password@zstart_postgres:5432/zstart_cdb
+      - ZERO_REPLICA_FILE=/tmp/zstart_replica.db
+      - ZERO_SCHEMA_FILE=./zero-schema.json
+    ports:
+      - "4848:4848"
+
 volumes:
   zstart_pgdata:
+    driver: local
+  zero_replica:
     driver: local

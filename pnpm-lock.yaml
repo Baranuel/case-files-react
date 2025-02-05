@@ -21,8 +21,8 @@ importers:
         specifier: ^3.21.0
         version: 3.21.0(@codemirror/language@6.10.8)(@lezer/highlight@1.2.1)(@types/react-dom@19.0.3(@types/react@19.0.8))(@types/react@19.0.8)(react-dom@19.0.0(react@19.0.0))(react@19.0.0)(yjs@13.6.23)
       '@rocicorp/zero':
-        specifier: '0.12'
-        version: 0.12.2025012501
+        specifier: 0.12.2025013100
+        version: 0.12.2025013100
       '@tailwindcss/typography':
         specifier: ^0.5.16
         version: 0.5.16(tailwindcss@3.4.17)
@@ -1803,8 +1803,8 @@ packages:
     resolution: {integrity: sha512-bm+VUdF4CnKVjUj/dSCmVu0hjcyXaF/nKkw2rNhZUjGeBOMRy/hh8z/32h311es4dxCVvcZ3+QHQHMxF2YG5Kw==}
     hasBin: true
 
-  '@rocicorp/zero@0.12.2025012501':
-    resolution: {integrity: sha512-lL+1dspZAo6xEsLZi/BlelN2sk+BL4zKLTITSaMLCKSgMgaf2zDPQ0zaSKSVLNedAgYKexFMMZmsoqSSFxM/3A==}
+  '@rocicorp/zero@0.12.2025013100':
+    resolution: {integrity: sha512-77Vs7clPsloK1eDHJg5qV9h4U+KU5XTYHe1UxcgvR8KmV5e476xrrcR13IRS4pK+MPPpDN2i/ZvLGbxcy1vySg==}
     engines: {node: '>=20'}
     hasBin: true
 
@@ -3124,6 +3124,9 @@ packages:
   lz-string@1.5.0:
     resolution: {integrity: sha512-h5bgJWpxJNswbU7qCrV0tIKQCaS3blPDrqKWx+QxzuzL1zGUzij9XCWLrSLsJPu5t+eWA/ycetzYAO5IOMcWAQ==}
     hasBin: true
+
+  magic-stopwatch@1.0.1:
+    resolution: {integrity: sha512-TEw2BmxonXw6YtluZis5CXRkyuA+4hoX41EK2r2x2TAxCHpjscVHxOdauQ10T6Gu7Er1y4d3ZojsGa+m6jfTEw==}
 
   markdown-table@3.0.4:
     resolution: {integrity: sha512-wiYz4+JrLyb/DqW2hkFJxP7Vd7JuTDm77fvbM8VfEQdmSMqcImWeeRbHwZjBjIFki/VaMK2BhFi7oUUZeM5bqw==}
@@ -6738,7 +6741,7 @@ snapshots:
       bindings: 1.5.0
       prebuild-install: 7.1.2
 
-  '@rocicorp/zero@0.12.2025012501':
+  '@rocicorp/zero@0.12.2025013100':
     dependencies:
       '@badrap/valita': 0.3.11
       '@databases/escape-identifier': 1.0.3
@@ -6770,6 +6773,7 @@ snapshots:
       js-xxhash: 4.0.0
       json-custom-numbers: 3.1.1
       kasi: 1.1.0
+      magic-stopwatch: 1.0.1
       nanoid: 5.0.9
       pg: 8.13.1
       pg-format: pg-format-fix@1.0.5
@@ -8292,6 +8296,8 @@ snapshots:
       yallist: 3.1.1
 
   lz-string@1.5.0: {}
+
+  magic-stopwatch@1.0.1: {}
 
   markdown-table@3.0.4: {}
 
