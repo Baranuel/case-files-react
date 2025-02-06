@@ -3,13 +3,9 @@ import { useCanvas } from "@/app/providers/CanvasProvider";
 import { Folder } from "./Folder/Folder";
 import { PaperLayers } from "./Folder/PaperLayers";
 import { ElementType } from "@/types";
-import { useEffect, useRef } from "react";
-import { useState } from "react";
 import { useQuery, useZero } from "@rocicorp/zero/react";
-import { Content, ZeroSchema } from "@/schema";
-import { ImagePicker } from "./SelectedItem/ImagePicker";
-import { MarkdownEditor } from "./MarkdownEditor/MarkdownEditor";
-import { useDebouncedCallback } from "use-debounce";
+import { ZeroSchema } from "@/schema";
+
 import { InputMapper } from "./SelectedItem/InputMapper";
 
 export function SelectedItem() {
@@ -21,45 +17,13 @@ export function SelectedItem() {
 
   const [element] = useQuery(z.query.element.where('id', '=', previewElementId!).related('content').one());
 
-  const [previewElement, setPreviewElement] = useState<Element | null>(
-    element || null
-  );
-  const containerRef = useRef<HTMLDivElement | null>(null);
 
-
-  useEffect(() => {
-    if (element) {
-      setPreviewElement(element);
-    }
-  }, [element]);
 
   const getTitle = (type: ElementType | undefined) => {
     if (!type) return "Selected Item";
     if (type === "person") return "Suspect";
     if (type === "location") return "Location";
   };
-
-
-  const handleDebouncedUpdateElement = useDebouncedCallback(
-    (updateProperty: Partial<Record<keyof Content, any>>) => {
-      if (!previewElement?.contentId) return;
-
-      z.mutate.content.update({
-        id: previewElement.contentId!,
-        ...updateProperty,
-      });
-    },
-    900
-  );
-
-
-  const scrollToBottom = () => {
-    if (!containerRef.current) return;
-    const scrollHeight = containerRef.current.getBoundingClientRect().bottom;
-    containerRef.current.scrollTo(0, scrollHeight);
-  };
-
-
 
 
   const mainContent = (
@@ -78,7 +42,7 @@ export function SelectedItem() {
     >
       <div className="z-20 flex min-w-[400px] w-[10vw] h-full relative">
         <Folder isOpen={!!element?.id} />
-        <PaperLayers ref={containerRef} isOpen={!!element?.id}>
+        <PaperLayers  isOpen={!!element?.id}>
           {!!element?.id && mainContent}
         </PaperLayers>
       </div>

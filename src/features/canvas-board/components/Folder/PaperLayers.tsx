@@ -4,15 +4,13 @@ import { cn } from "@/utils/cn";
 interface PaperLayersProps {
   isOpen: boolean;
   children: React.ReactNode;
-  ref: React.RefObject<HTMLDivElement| null>;
 }
 
-export const PaperLayers = ({ isOpen, children, ref}: PaperLayersProps) => {
+export const PaperLayers = ({ isOpen, children}: PaperLayersProps) => {
   const { setPreviewElementId} = useCanvas()
   return (
     <>
       <div
-      ref={ref}
       id="selected-item-content"
         style={{
           viewTransitionName: "selected-item",
