@@ -13,6 +13,7 @@ export const PaperLayers = ({ isOpen, children, ref}: PaperLayersProps) => {
     <>
       <div
       ref={ref}
+      id="selected-item-content"
         style={{
           viewTransitionName: "selected-item",
           transitionDuration: "0.3s",

@@ -3,9 +3,9 @@ import { handleRenderGhostElement } from "./handle-render-ghost-element";
 import { handleRenderPerson } from "./render-shapes/render-person";
 import { handleRenderLocation } from "./render-shapes/render-location";
 import { handleRenderLine } from "./render-shapes/render-line";
+import { handleRenderNote } from "./render-shapes/render-note";
 
 export const handleRenderElement = (ctx: CanvasRenderingContext2D, element: Element) => {
-
     if(element.id.includes('ghost-element')) return handleRenderGhostElement(ctx, element);
 
     switch(element.type) {
@@ -17,6 +17,9 @@ export const handleRenderElement = (ctx: CanvasRenderingContext2D, element: Elem
             break;
         case 'line':
             handleRenderLine(ctx, element);
+            break;
+        case 'note':
+            handleRenderNote(ctx, element);
             break;
         default:
             break;

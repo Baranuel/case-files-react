@@ -33,6 +33,7 @@ export const positionWithinElement = (x: number, y: number, element: Element): P
             return start || end || middle || on;
         case "person":
         case "location":
+        case "note":
             const { x1: rectX1, y1: rectY1, x2: rectX2, y2: rectY2 } = element.position;
 
             const middleX = (rectX1 + rectX2) / 2;

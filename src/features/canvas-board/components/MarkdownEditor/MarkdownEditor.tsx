@@ -10,42 +10,51 @@ import {
 } from "@mdxeditor/editor";
 import "@mdxeditor/editor/style.css";
 import { useCallback, useEffect, useMemo, useRef } from "react";
+import { Element, Content } from "@/schema";
+import { useZero } from "@rocicorp/zero/react";
+import { ZeroSchema } from "@/schema";
 
 export function MarkdownEditor({
-  onChange,
-  markdown,
-  previewId,
+  element,
 }: {
-  onChange: (content: string) => void;
-  markdown: string;
-  previewId: string | null;
+  element: Element & {content: Content};
 }) {
   const editorRef = useRef<MDXEditorMethods>(null);
-
-  
+  const itemContentParent = document.getElementById("selected-item-content");
+  const z = useZero<ZeroSchema>();
+  const {content} = element;
 
 
   const handleChange = useCallback(
     (value: string) => {
-      onChange(value);
+      if(itemContentParent) {
+        itemContentParent.scrollTo({
+          top: itemContentParent.scrollHeight,
+          behavior: 'smooth'
+        });
+      }
+      z.mutate.content.update({
+        id: content.id,
+        notes: value,
+      });
     },
-    [onChange]
+    [content.id, itemContentParent]
   );
 
   useEffect(() => {
     if (editorRef.current) {
-      editorRef.current.setMarkdown(markdown);
+      editorRef.current.setMarkdown(content.notes ?? "");
     }
-  }, [previewId]);
+  }, [element.id]);
 
   const editor = useMemo(() => {
     return (
       <MDXEditor
-        className="bg-[#FFF0DF] max-h-full"
+        className="bg-[#FFF0DF] flex-1 "
         ref={editorRef}
         onChange={handleChange}
-        contentEditableClassName="prose min-h-[100px] px-4 py-2"
-        markdown={markdown}
+        contentEditableClassName="prose min-h-[250px]  text-xl px-4 "
+        markdown={content.notes ?? ""}
         plugins={[
           headingsPlugin(),
           listsPlugin(),
@@ -62,7 +71,7 @@ export function MarkdownEditor({
         ]}
       />
     );
-  }, [previewId, onChange]);
+  }, [content]);
 
   return editor;
 }

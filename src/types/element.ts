@@ -1,7 +1,7 @@
 
 import {Content, Element as ZeroElement} from '@/schema'
 
-export type ElementType = 'person' | 'location' | 'line'  
+export type ElementType = 'person' | 'location' | 'line' | 'note'
 
 export type ElementPosition = {
     x1: number;

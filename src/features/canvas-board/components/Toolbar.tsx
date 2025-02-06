@@ -1,7 +1,8 @@
 import { useCanvas } from "@/app/providers/CanvasProvider";
 import { Tool } from "@/types";
 import { JSX } from "react";
-import { FaLocationDot } from "react-icons/fa6";
+import { CgNotes } from "react-icons/cg";
+import { FaFontAwesome, FaLocationDot } from "react-icons/fa6";
 import { FiMove } from "react-icons/fi";
 import { IoPersonSharp } from "react-icons/io5";
 import { TbArrowUpDashed } from "react-icons/tb"
@@ -27,6 +28,11 @@ const tools: { id: Tool; icon: JSX.Element; label: string }[] = [
       id:'line',
       icon:<TbArrowUpDashed/>,
       label:"Line" 
+    },
+    {
+      id: "note",
+      icon: <CgNotes />,
+      label: "Note",
     }
 ];
 

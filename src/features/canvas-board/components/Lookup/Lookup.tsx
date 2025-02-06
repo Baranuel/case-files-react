@@ -23,6 +23,7 @@ export function Lookup() {
   const filteredElements = useMemo(() => elementsList.filter((element) => {
     const searchTermLowerCase = searchTerm.toLowerCase();
     if(element.type === 'line') return false;
+    if(element.type === 'note') return false;
     if (element.content?.title?.toLowerCase().includes(searchTermLowerCase)) return true;
     return false;
   }), [elementsList, searchTerm]);
@@ -69,7 +70,7 @@ export function Lookup() {
             handleFindElement(element)
           }}
           >
-          <img src={element.imageUrl ?? ''} className="w-8 h-8 " alt="Image" />
+          <img src={element.imageUrl ?? null ?? ''} className="w-8 h-8 " alt="Image" />
           <div className="flex flex-col gap-1">
             <h2 className="text-[#8B4513] text-sm font-bold">{element.content?.title}</h2>
           </div>

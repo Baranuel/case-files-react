@@ -19,3 +19,8 @@ export type PersonDefinition = ShapeDefinition & {
     gap:number
 }
 
+export type NoteDefinition = ShapeDefinition & {
+    color:string,
+    padding:number;
+}
+

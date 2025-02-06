@@ -3,7 +3,7 @@ export const editorStyles = {
         css: {
           color: '#4a4643',
           p: {
-              fontSize: '0.95rem',
+              fontSize: '1.15rem',
               lineHeight: '1.5rem',
               marginTop: '0.5rem',
               marginBottom: '0.5rem',
@@ -32,7 +32,7 @@ export const editorStyles = {
               marginTop: '0.5rem',
               marginBottom: '0.5rem',
               '> li': {
-                  fontSize: '0.95rem',
+                  fontSize: '1.15rem',
                   lineHeight: '1.2rem',
                   marginBottom: '0.5rem',
                   color: '#4a4643',

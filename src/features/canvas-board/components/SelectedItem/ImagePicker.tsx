@@ -13,16 +13,11 @@ import dayjs from "dayjs";
 import { FaClock } from "react-icons/fa";
 import { FaUserShield } from "react-icons/fa";
 import { FaUserCircle } from "react-icons/fa";
-import { FaLocationPin } from "react-icons/fa6";
-import { IoLocationOutline } from "react-icons/io5";
+import { useCanvas } from "@/app/providers/CanvasProvider";
 
 // Types
 type ImagePickerProps = {
-  imageUrl?: string;
-  onSelect: (imageUrl: string) => void;
-  elementsList: Element[];
   element?: Element;
-  nonSelectable?: boolean;
 };
 
 // Constants
@@ -69,19 +64,17 @@ const animations = {
 };
 
 export const ImagePicker = ({
-  imageUrl,
-  onSelect,
-  elementsList,
   element,
-  nonSelectable = false
 }: ImagePickerProps) => {
   // State
+  const {elementsList} = useCanvas();
   const [isOpen, setIsOpen] = useState(false);
   const [imageSelection, setImageSelection] = useState<string[] | null>(null);
   const [activeTab, setActiveTab] = useState("all");
 
   // Hooks
-  const zero = useZero<ZeroSchema>();
+  const z = useZero<ZeroSchema>();
+
   const { observedElements, observe } =
     useIntersectionObserver("data-image-url");
   const targetPortal = document.getElementById("image-picker-root");
@@ -103,11 +96,14 @@ export const ImagePicker = ({
 
     const handleSelectImage = useCallback(
     (imageUrl: string) => {
-      onSelect(imageUrl);
+      z.mutate.element.update({
+        id: element?.id!,
+        imageUrl: imageUrl
+      })
       setIsOpen(false);
       setActiveTab("all");
     },
-    [onSelect]
+    [element?.id]
   );
 
 
@@ -206,25 +202,16 @@ export const ImagePicker = ({
   return (
     <>
       {/* Preview Section */}
-      <div className={cn("relative w-full", nonSelectable && "pointer-events-none")}>
+      <div className={cn("relative w-full")}>
         <div className="relative  p-3 w-full mb-2">
           <div className="flex gap-6">
             <img
               onClick={() => setIsOpen(!isOpen)}
-              src={imageUrl}
+              src={element?.imageUrl ?? ''}
               className="h-[170px] -rotate-1 aspect-square object-contain rounded-lg hover:cursor-pointer hover:opacity-80 hover:brightness-110 hover:bg-black/10 transition-all duration-300"
               alt="Preview"
             />
-            {nonSelectable && (
-              <div className="flex flex-col gap-0.5 items-start">
-                <span className="font-bold text-[#8B4513] flex items-center gap-1">
-                  <IoLocationOutline className="text-base" />
-                  Name
-                </span>
-                <span className="text-[#8B4513]">{element?.content?.title || 'Unknown'}</span>
-              </div>
-            )}
-            {!nonSelectable && <div className="flex flex-col gap-2">
+              <div className="flex flex-col gap-2">
               <div className="flex flex-col gap-0.5 items-start">
                 <span className="font-bold text-[#8B4513] flex items-center gap-1">
                   <FaUserCircle className="text-base" />
@@ -252,7 +239,7 @@ export const ImagePicker = ({
                   </span>
                 </div>
               )}
-            </div>}
+            </div>
           </div>
         </div>
       </div>
@@ -298,7 +285,7 @@ export const ImagePicker = ({
                   <div className="flex flex-col gap-2 rounded-lg min-w-[155px] w-1/5">
                     <span className="text-base text-[#8B4513]">Current:</span>
                     <img
-                      src={imageUrl}
+                      src={element?.imageUrl ?? ''}
                       className="aspect-[1/1.1] mx-auto"
                       alt="Current"
                     />

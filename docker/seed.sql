@@ -42,7 +42,7 @@ CREATE TABLE "collaboration" (
 
 CREATE TABLE "element" (
   "id" VARCHAR PRIMARY KEY,
-  "type" VARCHAR NOT NULL CHECK ("type" IN ('person', 'location', 'line')),
+  "type" VARCHAR NOT NULL CHECK ("type" IN ('person', 'location', 'line', 'note')),
   "position" JSONB NOT NULL,
   "imageUrl" VARCHAR,
   "layer" INTEGER NOT NULL,
@@ -52,3 +52,12 @@ CREATE TABLE "element" (
   FOREIGN KEY ("contentId") REFERENCES "content"("id") ON DELETE CASCADE,
   FOREIGN KEY ("boardId") REFERENCES "board"("id") ON DELETE CASCADE
 );
+
+
+
+INSERT INTO "user" ("id", "name", "tier", "maxBoards") VALUES 
+('user_2scshfSi2eyykM9AROjDS1yjlkS', 'Samuel Baran', 'free', 2),
+('user_9xJ1M5kLqR', 'Jane Smith', 'paid', 10),
+('user_4vB7H2nWsT', 'Bob Wilson', 'free', 2),
+('user_8mK3F9pQxY', 'Alice Brown', 'paid', 10),
+('user_5hG4D6cNvU', 'Charlie Davis', 'free', 2);
