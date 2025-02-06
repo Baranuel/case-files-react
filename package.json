@@ -12,7 +12,8 @@
 
     "prod:db-up": "docker compose --env-file .env.production -f ./docker/docker-compose.prod.yml up -d",
     "prod:db-down": "docker compose --env-file .env.production -f ./docker/docker-compose.prod.yml down",
-
+    "prod:clean": "source .env.production && docker volume rm -f docker_zstart_pgdata && rm -rf \"${ZERO_REPLICA_FILE}\"*",
+    
     "dev:clean": "source .env && docker volume rm -f docker_zstart_pgdata && rm -rf \"${ZERO_REPLICA_FILE}\"*",
     "prod:build": "vite build --mode production",
     "build": "vite build",
