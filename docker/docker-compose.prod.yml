@@ -41,7 +41,7 @@ services:
       - ZERO_CVR_DB=${ZERO_CVR_DB}
       - ZERO_CHANGE_DB=${ZERO_CHANGE_DB}
       - ZERO_AUTH_JWK=${ZERO_AUTH_JWK}
-      - ZERO_REPLICA_FILE=/tmp/zstart_replica.db
+      - ZERO_REPLICA_FILE=${ZERO_REPLICA_FILE}
       - ZERO_SCHEMA_FILE=./zero-schema.json
     ports:
       - 4848:4848
