@@ -21,7 +21,7 @@ export const useCanvasEvents = () => {
         setTool,
         setClientViewRef,
         setPreviewElementId,
-        previewElementId
+        previewElementId,
     } = useCanvas();
     
     const {
@@ -35,7 +35,7 @@ export const useCanvasEvents = () => {
 
     const handleSelectElementId = useCallback((element: EnrichedElement | null) => {
         if(element?.id.includes('ghost-element')) return;
-        if(!element && !previewElementId) return;
+        if(!element && !previewElementId) return
         if(element?.type === 'line') return;
 
 
@@ -57,8 +57,7 @@ export const useCanvasEvents = () => {
         setClientViewRef(prev => ({...prev, lastClickedPosition: {x1, y1}}));
         
         const element = getElementAtPosition(x1, y1, elements);
-        setClientViewRef(prev => ({...prev, lastInteractionElement: element}));
-        
+        setClientViewRef(prev => ({...prev, lastInteractionElement: element, selectedItemId: element?.id ?? null}));
         if(tool !== 'select') {
             const element = handleCreateElement(x1, y1, tool);
             if(element) {

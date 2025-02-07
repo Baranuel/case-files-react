@@ -2,7 +2,7 @@ import { Element } from "@/types/element";
 import { config } from "@/features/canvas-board/config";
 import { LineDefinition } from "@/features/canvas-board/config/line";
 
-export const handleRenderLine = (ctx: CanvasRenderingContext2D, element: Element) => {
+export const handleRenderLine = (ctx: CanvasRenderingContext2D, element: Element, selectedItemId: Element["id"] | null) => {
     if (element.type !== 'line') return;
 
     const {color, lineWidth, dash} = config[element.type] as LineDefinition;
@@ -12,9 +12,9 @@ export const handleRenderLine = (ctx: CanvasRenderingContext2D, element: Element
 
     ctx.save();
     
-    ctx.strokeStyle = color;
-    ctx.fillStyle = color;
-    ctx.lineWidth = lineWidth;
+    ctx.strokeStyle = selectedItemId === element.id ? '#FFEB3B' : color;
+    ctx.fillStyle = selectedItemId === element.id ? '#FFEB3B' : color;
+    ctx.lineWidth = selectedItemId === element.id ? lineWidth * 2 : lineWidth;
 
     const dx = x2 - x1;
     const dy = y2 - y1;
@@ -54,5 +54,12 @@ export const handleRenderLine = (ctx: CanvasRenderingContext2D, element: Element
         ctx.stroke();
     }
 
-    ctx.restore();
+        // Draw noir style selection box if selected
+        if (selectedItemId === element.id) {
+            ctx.strokeStyle = '#FFEB3B';
+            ctx.shadowColor = '#FFEB3B';
+            ctx.shadowBlur = 10;
+        }
+    
+    ctx.restore()
 }

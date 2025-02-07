@@ -34,5 +34,6 @@ export const createDefaultNote = (mouseX: number, mouseY: number, mode: 'ghost' 
         imageUrl:null,
         layer: 1,
         position: {x1, y1, x2, y2},
+        creatorId: creatorId
     };
 }

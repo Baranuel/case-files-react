@@ -7,7 +7,7 @@ import { handleRenderText } from "../handle-render-text";
 
 
 
-export const handleRenderNote = (ctx: CanvasRenderingContext2D, element: Element) => {
+export const handleRenderNote = (ctx: CanvasRenderingContext2D, element: Element, selectedItemId: Element["id"] | null) => {
     const {type} = element;
     const {x1, y1, x2, y2} = element.position;
     const {minWidth, minHeight, color, padding} = config[type] as NoteDefinition
@@ -57,6 +57,15 @@ export const handleRenderNote = (ctx: CanvasRenderingContext2D, element: Element
     }
     
     handleRenderText(ctx, textOptions)
+      // Draw noir style selection box if selected
+      if (selectedItemId === element.id) {
+        ctx.strokeStyle = '#FFEB3B';
+        ctx.lineWidth = 5;
+        ctx.setLineDash([10, 10]);
+        ctx.strokeRect(x1 - 15, y1 - 15, width + 30, height + 30);
+        
+    }
+
     ctx.restore()
 }
 

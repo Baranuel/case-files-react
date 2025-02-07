@@ -27,7 +27,8 @@ CREATE TABLE "board" (
   "id" VARCHAR PRIMARY KEY,
   "title" VARCHAR NOT NULL,
   "creatorId" VARCHAR NOT NULL,
-  "createdAt" TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
+  "createdAt" TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  FOREIGN KEY ("creatorId") REFERENCES "user"("id") ON DELETE CASCADE
 );
 
 CREATE TABLE "collaboration" (
@@ -50,6 +51,7 @@ CREATE TABLE "element" (
   "contentId" VARCHAR,
   "creatorId" VARCHAR,
   FOREIGN KEY ("contentId") REFERENCES "content"("id") ON DELETE CASCADE,
-  FOREIGN KEY ("boardId") REFERENCES "board"("id") ON DELETE CASCADE
+  FOREIGN KEY ("boardId") REFERENCES "board"("id") ON DELETE CASCADE,
+  FOREIGN KEY ("creatorId") REFERENCES "user"("id") ON DELETE CASCADE
 );
 

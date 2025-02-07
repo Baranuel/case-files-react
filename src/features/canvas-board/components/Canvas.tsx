@@ -13,7 +13,6 @@ import { renderCanvas } from "../utils/canvas-rendering/handle-render-canvas";
 import { useImageCache } from "../hooks/use-image-cache";
 
 export const Canvas = () => {
-
   const { clientViewRef,  canvasRef, elementsList, setClientViewRef} = useCanvas();
   const { cacheLoaded } = useImageCache(elementsList);
   const { handleMouseDown, handleMouseUp, handleMouseMove, handleMouseLeave, handleKeyDown, handleKeyUp } = useCanvasEvents();
@@ -24,6 +23,7 @@ export const Canvas = () => {
     const canvas = canvasRef.current;
     const clientView = clientViewRef.current;
     if (!canvas || !clientView) return;
+    const {selectedItemId} = clientView;
 
     const currentTime = timestamp || 0;
     const deltaTime = Math.min(
@@ -33,9 +33,11 @@ export const Canvas = () => {
     lastFrameTimeRef.current = currentTime;
 
     const {camera, elements, ghostElement} = clientView;
+    const selectedElement = elements.find(element => element.id === selectedItemId);
+
     
     const newCamera = handleAnimateCamera(camera, deltaTime, setClientViewRef);
-    renderCanvas(canvas, newCamera, elements, ghostElement);
+    renderCanvas(canvas, newCamera, elements, ghostElement, selectedItemId);
     requestAnimationFrame(handleRenderCanvas);
   }, [canvasRef, clientViewRef, setClientViewRef]);
 
@@ -72,5 +74,7 @@ export const Canvas = () => {
     [handleMouseDown, handleMouseUp, handleMouseMove, handleMouseLeave]
   );
 
-  return <canvas {...canvasProps} />;
+  return <>
+  <canvas {...canvasProps} />
+  </>
 };

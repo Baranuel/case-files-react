@@ -21,7 +21,7 @@ export const drawBackground = (ctx: CanvasRenderingContext2D, canvas: HTMLCanvas
     }
 }
 
-export const renderCanvas = (canvas: HTMLCanvasElement, camera: Camera, elements: Element[], ghostElement: Element | null) => {
+export const renderCanvas = (canvas: HTMLCanvasElement, camera: Camera, elements: Element[], ghostElement: Element | null, selectedItemId: Element["id"] | null) => {
     const width = window.innerWidth;
     const height = window.innerHeight;
     
@@ -31,14 +31,13 @@ export const renderCanvas = (canvas: HTMLCanvasElement, camera: Camera, elements
     canvas.style.width = `${width}px`;
     canvas.style.height = `${height}px`;
 
-
     const ctx = canvas.getContext("2d");
-
-    const layeredElements = elements.sort((a, b) => a.layer - b.layer);
     
     if(!ctx) return;
 
-    ctx.save()
+    const layeredElements = elements.sort((a, b) => a.layer - b.layer);
+    
+    ctx.save();
     ctx.scale(dpr, dpr);
     ctx.scale(camera.zoom, camera.zoom);
     ctx.clearRect(0, 0, width, height);
@@ -46,7 +45,27 @@ export const renderCanvas = (canvas: HTMLCanvasElement, camera: Camera, elements
     ctx.fillStyle = 'red';
 
     drawBackground(ctx, canvas, camera);
-    layeredElements.forEach(element => handleRenderElement(ctx, element));
-    if(ghostElement) handleRenderElement(ctx, ghostElement);
-    ctx.restore()
+    
+    // Get selected element position for menu
+    const selectedElement = elements.find(el => el.id === selectedItemId);
+    let menuPosition = null;
+    
+    layeredElements.forEach(element => {
+        handleRenderElement(ctx, element, selectedItemId);
+        
+        // Calculate menu position for selected element
+        if (element.id === selectedItemId) {
+            const { x2, y1 } = element.position;
+            menuPosition = {
+                x: (x2 + 10) * camera.zoom - camera.x1 * camera.zoom,
+                y: y1 * camera.zoom - camera.y1 * camera.zoom
+            };
+        }
+    });
+    
+    if(ghostElement) handleRenderElement(ctx, ghostElement, selectedItemId);
+    ctx.restore();
+
+    // Return menu position for the selected element
+    return menuPosition;
 }
