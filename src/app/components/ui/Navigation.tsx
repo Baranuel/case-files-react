@@ -19,10 +19,12 @@ const Navigation = () => {
   const showNavigation = router.location.pathname.includes('board')
 
   return (
-    <nav style={{
+    <nav 
+     className={ "flex items-center w-full h-16 p-2 text-white  z-50 px-4  bg-[#2C2421] border-b border-[#3C3431]"}
+     style={{
       viewTransitionName:'navigation'
-    }}
-     className={ "flex items-center w-full h-16 p-2 text-white  z-50 px-4 "  + (showNavigation ? 'absolute bg-transparent' : 'bg-[#2C2421]')}>
+     }}
+     >
       <ul className='flex gap-4 justify-between w-full'>
         <li className='flex items-center gap-2 text-amber-100 font-bold text-2xl'>
           <Link className='flex items-center gap-3' to="/">

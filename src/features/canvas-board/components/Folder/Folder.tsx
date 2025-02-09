@@ -1,16 +1,20 @@
+import { motion } from "framer-motion";
+
 interface FolderProps {
   isOpen?: boolean;
 }
 
 export const Folder = ({ isOpen = false }: FolderProps) => {
   return (
-    <div
-      style={{
-        zIndex: 20,
-        viewTransitionName: "selected-item-folder",
-        transitionDuration: "0.3s",
+    <motion.div
+      animate={{
+        translateX: isOpen ? "-8%" : "0",
+        transition: {
+          duration: 0.3,
+          ease: "easeInOut",
+        },
       }}
-      className={` w-full h-full bg-[#E4C18D] rounded-md p-5 shadow-lg ${isOpen ? "-translate-x-[10%]" : "translate-x-0"} relative`}
+      className={` w-full h-full bg-[#E4C18D] rounded-md p-5 shadow-lg relative z-10`}
     >
 
       {/* Folder content */}
@@ -54,6 +58,6 @@ export const Folder = ({ isOpen = false }: FolderProps) => {
           CONFIDENTIAL
         </div>
       </div>
-    </div>
+    </motion.div>
   );
 };

@@ -1,9 +1,9 @@
 import { useCanvas } from "@/app/providers/CanvasProvider";
-import { useCallback, useMemo, useState } from "react";
+import { useCallback, useMemo } from "react";
 import { getElementAtPosition, getMouseCoordinates } from "../utils/positions";
 import { handleInferAction } from "../utils/handle-infer-action";
 import { useHandleElement } from "./use-handle-element";
-import { EnrichedElement } from "@/types";
+import {  EnrichedElement } from "@/types";
 import { setCursor } from "../utils/cursor-state";
 import { ZeroSchema } from "@/schema";
 import { useZero } from "@rocicorp/zero/react";
@@ -37,16 +37,29 @@ export const useCanvasEvents = () => {
         if(element?.id.includes('ghost-element')) return;
         if(!element && !previewElementId) return
         if(element?.type === 'line') return;
+        setPreviewElementId(element?.id ?? null);
 
-
-        if('startViewTransition' in document) {
-            document.startViewTransition(() => {
-                setPreviewElementId(element?.id ?? null);
-            });
-        } else {
-            setPreviewElementId(element?.id ?? null);
-        }
     }, [setPreviewElementId, previewElementId]);
+
+    const isClickingDeleteButton = (x: number, y: number, element: EnrichedElement | null) => {
+        if (!element) return false;
+        const { x1, y1, x2, y2 } = element.position;
+        
+        // Determine actual top-right corner
+        const rightX = Math.max(x1, x2);
+        const topY = Math.min(y1, y2);
+        
+        const deleteButtonX = rightX + 60;
+        const deleteButtonY = topY - 40;
+        const radius = 30;
+        
+        // Check if click is within delete button circle
+        const distance = Math.sqrt(
+            Math.pow(x - deleteButtonX, 2) + 
+            Math.pow(y - deleteButtonY, 2)
+        );
+        return distance <= radius;
+    }
 
     const handleMouseDown = useCallback(async (e: React.MouseEvent<HTMLCanvasElement>) => {
         const clientView = clientViewRef.current;
@@ -76,9 +89,8 @@ export const useCanvasEvents = () => {
                 });
             }
         }
-
-
-        
+        const selectedElement = elements.find(el => el.id === clientView.selectedItemId);
+        isClickingDeleteButton(x1, y1, selectedElement as EnrichedElement) && z.mutate.element.delete({id: selectedElement?.id!});
 
         const action = handleInferAction(element?.positionWithinElement ?? null, tool);
         setAction(action);
@@ -100,7 +112,7 @@ export const useCanvasEvents = () => {
         const isSamePosition = Math.abs(x1 - lastPos.x1) < pointClickBuffer && Math.abs(y1 - lastPos.y1) < pointClickBuffer;
         
         if(tool === 'select' && isSamePosition) {
-             handleSelectElementId(element);
+            handleSelectElementId(element);
         }
 
         if(action === 'moving' || action === 'drawing' || action === 'resizing') {

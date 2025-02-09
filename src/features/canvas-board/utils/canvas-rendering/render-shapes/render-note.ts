@@ -52,7 +52,7 @@ export const handleRenderNote = (ctx: CanvasRenderingContext2D, element: Element
         width: textAreaWidth,
         height: textAreaHeight,
         text,
-        font: 'bold 36px "Courier New"',
+        font: 'bold 42px "Courier New"',
         color: '#2B2B2B'
     }
     

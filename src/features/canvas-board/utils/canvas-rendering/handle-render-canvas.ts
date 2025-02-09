@@ -46,26 +46,40 @@ export const renderCanvas = (canvas: HTMLCanvasElement, camera: Camera, elements
 
     drawBackground(ctx, canvas, camera);
     
-    // Get selected element position for menu
-    const selectedElement = elements.find(el => el.id === selectedItemId);
-    let menuPosition = null;
-    
     layeredElements.forEach(element => {
         handleRenderElement(ctx, element, selectedItemId);
         
-        // Calculate menu position for selected element
+        // Draw delete button for selected element
         if (element.id === selectedItemId) {
-            const { x2, y1 } = element.position;
-            menuPosition = {
-                x: (x2 + 10) * camera.zoom - camera.x1 * camera.zoom,
-                y: y1 * camera.zoom - camera.y1 * camera.zoom
-            };
+            const { x1, y1, x2, y2 } = element.position;
+            
+            // Determine actual top-right corner
+            const rightX = Math.max(x1, x2);
+            const topY = Math.min(y1, y2);
+            
+            // Draw delete button
+            ctx.save();
+            ctx.beginPath();
+            const deleteButtonX = rightX + 60;
+            const deleteButtonY = topY - 40;
+            ctx.arc(deleteButtonX, deleteButtonY, 30, 0, Math.PI * 2);
+            ctx.fillStyle = '#FF4444';
+            ctx.fill();
+
+            // Draw X icon
+            ctx.beginPath();
+            ctx.moveTo(deleteButtonX - 10, deleteButtonY - 10);
+            ctx.lineTo(deleteButtonX + 10, deleteButtonY + 10);
+            ctx.moveTo(deleteButtonX + 10, deleteButtonY - 10);
+            ctx.lineTo(deleteButtonX - 10, deleteButtonY + 10);
+            ctx.strokeStyle = '#FFFFFF';
+            ctx.lineWidth = 2;
+            ctx.stroke();
+            ctx.restore();
         }
     });
     
     if(ghostElement) handleRenderElement(ctx, ghostElement, selectedItemId);
     ctx.restore();
 
-    // Return menu position for the selected element
-    return menuPosition;
 }
