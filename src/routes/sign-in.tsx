@@ -9,7 +9,7 @@ function HomeComponent() {
   const router = useRouterState()
   const from = router.redirect?._fromLocation?.pathname || '/lobby'
 
-  return <section className="flex-1 flex items-center justify-center">
+  return <section className="min-h-[calc(100vh-4rem-100px)] w-screen flex items-center justify-center bg-[#FFF6EB]">
     <SignIn  forceRedirectUrl={from} />
   </section>
 }

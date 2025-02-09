@@ -8,7 +8,7 @@ export const Route = createFileRoute("/not-found")({
 
 function RouteComponent() {
   return (
-    <div className="flex-1 w-full flex flex-col items-center justify-center gap-4">
+    <div className="min-h-[calc(100vh-4rem-100px)] w-screen flex flex-col items-center justify-center gap-4">
       <h1 className="text-8xl font-bold text-[#B4540A]">404</h1>
       <p className="text-2xl text-[#2C2421]">Oops! Board not found</p>
       <p className="text-lg text-gray-600">

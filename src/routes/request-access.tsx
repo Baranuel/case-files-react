@@ -77,7 +77,7 @@ function RequestAccess() {
 
   if(collaboration?.status === 'pending') {
     return (
-      <div className="flex-1 w-full flex items-center justify-center bg-[#FFF6EB]">
+      <div className="min-h-[calc(100vh-4rem-100px)] w-full flex items-center justify-center bg-[#FFF6EB]">
         <div className="max-w-md w-full p-8 bg-[#FDFBF7] rounded-lg border-2 border-[#8B4513] shadow-xl">
           <div className="flex flex-col items-center gap-6">
             <div className="w-16 h-16 rounded-full bg-[#8B4513] flex items-center justify-center shadow-lg">
@@ -99,7 +99,7 @@ function RequestAccess() {
 
   if(collaboration?.status === 'rejected') {
     return (
-      <div className="flex-1 w-full flex items-center justify-center bg-[#FFF6EB]">
+      <div className="min-h-[calc(100vh-4rem-100px)] w-full flex items-center justify-center bg-[#FFF6EB]">
         <div className="max-w-md w-full p-8 bg-[#FDFBF7] rounded-lg border-2 border-[#8B4513] shadow-xl">
           <div className="flex flex-col items-center gap-6">
             <div className="w-16 h-16 rounded-full bg-red-600 flex items-center justify-center shadow-lg">
@@ -120,7 +120,7 @@ function RequestAccess() {
   }
 
   return (
-    <div className="flex-1 w-full flex items-center justify-center bg-[#FFF6EB]">
+    <div className="min-h-[calc(100vh-4rem-100px)] w-full flex items-center justify-center bg-[#FFF6EB]">
       <div className="max-w-md w-full p-8 bg-[#FDFBF7] rounded-lg border-2 border-[#8B4513] shadow-xl">
         <div className="flex flex-col items-center gap-6">
           <div className="w-16 h-16 rounded-full bg-[#8B4513] flex items-center justify-center shadow-lg">
