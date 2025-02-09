@@ -50,7 +50,6 @@ function RootComponent() {
 
   return (
     <ZeroProvider zero={zero}>
-      <Navigation />
         <Layout>
            <Outlet />
         </Layout>

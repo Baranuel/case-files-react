@@ -49,7 +49,7 @@ export function SelectedItem() {
           ease: "easeInOut",
         },
       }}
-      className={`absolute top-[4%]  min-w-[400px] w-fit-content h-[85%]`}
+      className={`absolute top-[4%]  min-w-[400px] w-fit-content h-[90%]`}
     >
       <div className="z-50 flex min-w-[400px] w-[10vw] h-full relative">
         <Folder isOpen={!!element?.id} />
