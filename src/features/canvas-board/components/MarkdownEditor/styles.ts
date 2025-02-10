@@ -48,7 +48,6 @@ export const editorStyles = {
               borderLeftColor: '#B4540A',
               borderLeftWidth: '0.25rem',
               padding: '0.75rem 1rem',
-              margin: '0.5rem 0',
               marginTop: '2rem',
               borderRadius: '0.25rem',
               quotes: '"\\201C""\\201D""\\2018""\\2019"',

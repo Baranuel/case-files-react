@@ -12,6 +12,7 @@ export const PaperLayers = ({ isOpen, children}: PaperLayersProps) => {
   return (
     <>
       <motion.div
+      id='selected-item-content'
         animate={{
           translateX: !isOpen ? `2%` : `95%`,
           transition: {

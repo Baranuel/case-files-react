@@ -1,4 +1,4 @@
-import { createFileRoute, useNavigate, useSearch } from "@tanstack/react-router";
+import { createFileRoute, useNavigate, useSearch, redirect } from "@tanstack/react-router";
 import { z } from "zod";
 import { Button } from "@/app/components/ui/Button";
 import { useQuery, useZero } from "@rocicorp/zero/react";
@@ -10,10 +10,21 @@ import { FaTimes } from "react-icons/fa";
 
 export const Route = createFileRoute("/request-access")({
   component: RequestAccess,
+  beforeLoad: async ({ context }) => {
+    if(!context.auth) return
+    const { getToken } = context.auth;
+    const token = await getToken({ template: "casefiles" });
+
+    if (!token) {
+      throw redirect({ to: "/sign-in" });
+    }
+  },
   validateSearch: z.object({
     boardId: z.string().optional(),
   }),
 });
+
+
 
 function RequestAccess() {
   const { boardId } = useSearch({ from: "/request-access" });
@@ -24,9 +35,14 @@ function RequestAccess() {
   const [isLoading, setIsLoading] = useState(false);
 
   const [board, boardQueryStatus] = useQuery(
-    z.query.board.where("id", "=", boardId!).one(),
-    true
+    z.query.board.where("id", "=", boardId!).one());
+
+  const [boards, boardsQueryStatus] = useQuery(
+    z.query.board
   );
+  console.log('boardId', boardId)
+  console.log('board', board)
+  console.log('boards', boards)
 
   const [collaboration, collaborationsQueryStatus] = useQuery(
     z.query.collaboration
@@ -38,6 +54,8 @@ function RequestAccess() {
   );
 
   const handleRequestAccess = async () => {
+    console.log('boardId', boardId)
+    console.log('userId', userId)
     if (!boardId || !userId) return;
 
     setIsLoading(true);
@@ -57,10 +75,13 @@ function RequestAccess() {
   };
 
   useEffect(() => {
+    if(! boardId || boardQueryStatus.type === "unknown")  return
+    if (!board && boardQueryStatus.type === "complete") navigate({ to: "/not-found" });
+
     if (collaboration?.status === "accepted") {
       navigate({ to: "/board/$boardId", params: { boardId: boardId! } });
     }
-  }, [collaboration?.status, navigate, boardId]);
+  }, [collaboration?.status, navigate, boardId, board, boardQueryStatus.type]);
 
   if (
     collaborationsQueryStatus.type !== "complete" ||
@@ -72,7 +93,8 @@ function RequestAccess() {
       </div>
     );
 
-  if (!board) navigate({ to: "/not-found" });
+  console.log('board', board)
+  console.log('boardQueryStatus', boardQueryStatus)
 
 
   if(collaboration?.status === 'pending') {
