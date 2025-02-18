@@ -56,10 +56,32 @@ export const handleRenderLine = (ctx: CanvasRenderingContext2D, element: Element
 
         // Draw noir style selection box if selected
         if (selectedItemId === element.id) {
+            ctx.save()
             ctx.strokeStyle = '#FFEB3B';
             ctx.shadowColor = '#FFEB3B';
             ctx.shadowBlur = 10;
+            ctx.restore()
         }
     
+        if(selectedItemId === element.id) {
+            // Draw noir style handlebars at the start and end
+            ctx.save();
+            ctx.strokeStyle = '#8B4513'; // Dark brown
+            ctx.fillStyle = '#FFFFFF'; // White
+            ctx.lineWidth = 3;
+            // Draw at the start
+            ctx.beginPath();
+            ctx.arc(x1, y1, 15, 0, 2 * Math.PI);
+            ctx.fill();
+            ctx.stroke();
+
+            // Draw at the end
+            ctx.beginPath();
+            ctx.arc(x2, y2, 15, 0, 2 * Math.PI);
+            ctx.fill();
+            ctx.stroke();
+
+            ctx.restore();
+        }
     ctx.restore()
 }
