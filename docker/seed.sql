@@ -2,8 +2,6 @@ CREATE DATABASE zstart;
 CREATE DATABASE zstart_cvr;
 CREATE DATABASE zstart_cdb;
 
-CREATE ROLE postgres WITH LOGIN SUPERUSER PASSWORD 'password';
-
 \c zstart;
 
 CREATE TABLE "content" (

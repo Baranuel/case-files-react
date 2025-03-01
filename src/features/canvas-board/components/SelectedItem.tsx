@@ -34,7 +34,6 @@ export function SelectedItem() {
       exit={{ opacity: 0 }}
       className="flex flex-col h-full py-2"
     >
-      <h1 className="text-2xl font-bold text-[#8B4513] mb-2"> {getTitle(element?.type)} #{element?.id.slice(-5, -1)}</h1>
       <InputMapper element={element} />
     </motion.div>
   );

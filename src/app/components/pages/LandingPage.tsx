@@ -145,7 +145,7 @@ export const LandingPage = () => {
 
     <section className=" my-[150px] lg:mt-[100px] md:mt-[50px] h-full max-h-[500px] md:max-h-full w-full mx-auto flex flex-col gap-12 md:gap-6 items-center justify-start">
     <h3 className="text-5xl md:text-4xl font-black leading-tighter bg-gradient-to-r  from-[#B4540A] to-[#eb8415]  bg-clip-text text-transparent">Free Access</h3>
-    <p className="text-xl text-center  text-[#333333]/90 leading-relaxed font-medium">You can start using Casefiles for free, create up to 3 boards without any payment required.</p>
+    <p className="text-xl text-center  text-[#333333]/90 leading-relaxed font-medium">You can start using Casefiles for free, create up to 2 boards without any limits.</p>
     <Button onClick={() => navigate({ to: `/lobby` })} variant='primary' className="max-w-[150px]  text-base shadow-md" title="Create Board Button">
         Create Board
       </Button>

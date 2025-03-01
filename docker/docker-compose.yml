@@ -5,16 +5,18 @@ services:
     user: postgres
     restart: always
     healthcheck:
-      test: 'pg_isready -U user --dbname=postgres'
+      test: 'pg_isready -U ${POSTGRES_USER} --dbname=postgres'
       interval: 10s
       timeout: 5s
       retries: 5
     ports:
       - 5430:5432
+    env_file:
+      - ../.env
     environment:
-      POSTGRES_USER: user
+      POSTGRES_USER: ${POSTGRES_USER}
       POSTGRES_DB: postgres
-      POSTGRES_PASSWORD: password
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
     command: |
       postgres 
       -c wal_level=logical
@@ -37,9 +39,9 @@ services:
     volumes:
       - ../zero-schema.json:/opt/app/zero-schema.json
     environment:
-      - ZERO_UPSTREAM_DB=postgresql://user:password@zstart_postgres:5432/zstart
-      - ZERO_CVR_DB=postgresql://user:password@zstart_postgres:5432/zstart_cvr
-      - ZERO_CHANGE_DB=postgresql://user:password@zstart_postgres:5432/zstart_cdb
+      - ZERO_UPSTREAM_DB=${ZERO_UPSTREAM_DB}
+      - ZERO_CVR_DB=${ZERO_CVR_DB}
+      - ZERO_CHANGE_DB=${ZERO_CHANGE_DB}
       - ZERO_REPLICA_FILE=/tmp/zstart_replica.db
       - ZERO_SCHEMA_FILE=./zero-schema.json
     ports:
