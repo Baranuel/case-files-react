@@ -23,6 +23,7 @@ export default defineConfig({
           mdxEditor: ['@mdxeditor/editor'],
           dayjs: ['dayjs'],
           antd: ['antd'],
+          posthog: ['posthog-js'],
         }
       }
     }
