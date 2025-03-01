@@ -6,6 +6,7 @@ import { MdOutlineMoreTime } from "react-icons/md";
 import { CgNotes } from "react-icons/cg";
 import { FaRegImage, FaSearch } from "react-icons/fa";
 import { GrGroup } from "react-icons/gr";
+import posthog from "posthog-js";
 
 
 
@@ -93,6 +94,7 @@ export const LandingPage = () => {
         </motion.span>
         <br />
         <motion.span
+          onClick={() => posthog.capture('click_detective_board')}
                initial={{opacity:0}}
                animate={{opacity:1}}
                transition={{delay:0.4, duration:0.5}} 

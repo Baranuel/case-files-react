@@ -9,11 +9,9 @@
     "dev:zero-cache": "zero-cache-dev -p ./src/schema.ts",
     "dev:db-up": "docker compose --env-file .env -f ./docker/docker-compose.yml up -d",
     "dev:db-down": "docker compose --env-file .env -f ./docker/docker-compose.yml down",
-
     "prod:db-up": "docker compose --env-file .env.production -f ./docker/docker-compose.prod.yml up -d",
     "prod:db-down": "docker compose --env-file .env.production -f ./docker/docker-compose.prod.yml down",
     "prod:clean": "source .env.production && docker volume rm -f docker_zstart_pgdata && rm -rf \"${ZERO_REPLICA_FILE}\"*",
-    
     "dev:clean": "source .env && docker volume rm -f docker_zstart_pgdata && rm -rf \"${ZERO_REPLICA_FILE}\"*",
     "prod:build": "vite build --mode production",
     "build": "vite build",
@@ -46,11 +44,13 @@
     "clsx": "^2.1.1",
     "dayjs": "^1.11.13",
     "framer-motion": "^11.18.1",
+    "posthog-js": "^1.224.1",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
     "react-icons": "^5.4.0",
     "tailwind-merge": "^2.6.0",
     "use-debounce": "^10.0.4",
     "zod": "^3.24.1"
-  }
+  },
+  "packageManager": "pnpm@9.15.4+sha512.b2dc20e2fc72b3e18848459b37359a32064663e5627a51e4c74b2c29dd8e8e0491483c3abb40789cfd578bf362fb6ba8261b05f0387d76792ed6e23ea3b1b6a0"
 }

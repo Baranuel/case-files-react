@@ -8,6 +8,7 @@ import { PendingRequest } from "../ui/PendingRequest";
 import { DetectiveBoardCard } from "../ui/DetectiveBoardCard";
 import { SharedBoardCard } from "../ui/SharedBoardCard";
 import { FaTimes } from "react-icons/fa";
+import posthog from "posthog-js";
 
 export function Lobby() {
   const { userId } = useAuth();
@@ -56,7 +57,7 @@ export function Lobby() {
 
 
   const handleCreateBoard = useCallback(async () => {
-    
+    posthog.capture('create_board', { userId: userId! });
     z.mutateBatch(async tx => {
       const boardId = crypto.randomUUID();
       await tx.board.insert({
@@ -72,12 +73,6 @@ export function Lobby() {
         status: 'accepted',
         boardCreatorId: userId!,
       });
-
-      // await tx.user.upsert({
-      //   id: userId!,
-      //   tier: 'free',
-      //   maxBoards:2,
-      // });
     })
 
 
@@ -86,9 +81,10 @@ export function Lobby() {
 
   const handleDeleteBoard = useCallback(
     async (boardId: string) => {
+      posthog.capture('delete_board', { boardId, userId: userId! });
       await z.mutate.board.delete({ id: boardId });
     },
-    [z.mutate.board]
+    [z.mutate.board, userId]
   );
 
   const handleCloseModal = () => {
