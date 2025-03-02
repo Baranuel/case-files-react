@@ -69,7 +69,7 @@ export function DetectiveBoardCard({
           <div className="font-bold text-xs text-amber-700">CONFIDENTIAL</div>
         </div>
       </Link>
-      <div className="absolute top-0 p-4 right-0 hidden gap-2 group-hover:flex">
+      <div className="absolute top-0 p-4 right-0 hidden gap-2 md:flex group-hover:flex ">
         <button
           title="Copy Board ID"
           onClick={(e) => {

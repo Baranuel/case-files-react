@@ -40,9 +40,6 @@ function RequestAccess() {
   const [boards, boardsQueryStatus] = useQuery(
     z.query.board
   );
-  console.log('boardId', boardId)
-  console.log('board', board)
-  console.log('boards', boards)
 
   const [collaboration, collaborationsQueryStatus] = useQuery(
     z.query.collaboration
@@ -54,8 +51,6 @@ function RequestAccess() {
   );
 
   const handleRequestAccess = async () => {
-    console.log('boardId', boardId)
-    console.log('userId', userId)
     if (!boardId || !userId) return;
 
     setIsLoading(true);
@@ -92,9 +87,6 @@ function RequestAccess() {
 
       </div>
     );
-
-  console.log('board', board)
-  console.log('boardQueryStatus', boardQueryStatus)
 
 
   if(collaboration?.status === 'pending') {

@@ -141,7 +141,7 @@ export function Lobby() {
   };
 
   return (
-    <div className="min-h-[calc(100vh-164px)] w-full bg-[#FFF6EB] p-12">
+    <div className="min-h-[calc(100vh-164px)] w-full bg-[#FFF6EB] p-12 md:p-4">
       <Modal
         destroyOnClose
         afterOpenChange={handleAfterOpenChange}
@@ -230,7 +230,7 @@ export function Lobby() {
             <div className="flex gap-4">
               <h4 className="text-2xl font-serif text-[#8B4513] mb-6">Your Cases {boards.length}/{user?.maxBoards}</h4>
             </div>
-            <div className="grid grid-cols-4 md:grid-cols-2 lg:grid-cols-3 gap-2 bg-[#f6e6dc] rounded-lg p-4">
+            <div className="grid grid-cols-4 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-2 bg-[#f6e6dc] rounded-lg p-4">
               <Button
                 onClick={handleOpenModal}
                 disabled={boards.length >= (user?.maxBoards ?? 2)}
