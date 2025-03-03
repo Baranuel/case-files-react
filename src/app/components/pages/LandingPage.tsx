@@ -137,7 +137,7 @@ export const LandingPage = () => {
     transition={{delay:0.7, duration:0.5}}
     className=" md:mt-[50px] h-full lg:h-3/4 md:h-1/2 w-full flex flex-col gap-12 md:gap-6 items-center justify-center ">
     <h3 className="text-5xl md:text-4xl font-black leading-tighter bg-gradient-to-r  from-[#B4540A] to-[#eb8415]  bg-clip-text text-transparent">Introduction</h3>
-    <div className=" h-[600px] xl:h-[600px] lg:h-[500px] md:h-[275px] w-[70%] md:w-full  bg-[#FFF0DF] border-4 shadow-2xl border-[#B4540A] rounded-md"/>
+    <iframe title='Introduction Video' src={'https://www.youtube.com/embed/PX84W8bDCfw'} className=" h-[600px] xl:h-[600px] lg:h-[500px] md:h-[275px] w-[70%] md:w-full  bg-[#FFF0DF] border-4 shadow-2xl border-[#B4540A] rounded-md"/>
     </motion.section>
 
     <section className=" mt-[150px] lg:mt-[100px] md:mt-[50px] h-full max-h-fit-content md:max-h-full w-full mx-auto flex flex-col gap-12 md:gap-6 items-center justify-start">
