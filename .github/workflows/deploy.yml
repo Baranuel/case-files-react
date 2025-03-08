@@ -35,8 +35,8 @@ jobs:
           push: true
           platforms: linux/amd64
           tags: |
-            ghcr.io/baranuel/web:latest
-            ghcr.io/baranuel/web:${{ github.sha }}
+            ghcr.io/baranuel/case-files-react:latest
+            ghcr.io/baranuel/case-files-react:${{ github.sha }}
           cache-from: type=gha
           cache-to: type=gha,mode=max
 
