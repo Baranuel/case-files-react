@@ -1,11 +1,4 @@
 services:
-  web:
-    image: ghcr.io/baranuel/case-files-react:${GITHUB_SHA:-latest}
-    ports:
-      - 5173:5173
-    env_file:
-      - ../.env.production
-
   zstart_postgres:
     image: postgres:16.2-alpine
     shm_size: 1g
