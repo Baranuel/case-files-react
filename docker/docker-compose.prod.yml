@@ -18,17 +18,19 @@ services:
     user: postgres
     restart: always
     healthcheck:
-      test: "pg_isready -U ${POSTGRES_USER} --dbname=postgres"
+      test: "pg_isready -U ${POSTGRES_USER} --dbname=postgres --port=5430"
       interval: 10s
       timeout: 5s
-      retries: 5
-
+      retries: 5 
     env_file:
       - ../.env.production
     environment:
       POSTGRES_USER: ${POSTGRES_USER}
       POSTGRES_DB: postgres
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+    expose:
+      - 5430
+      
     command: |
       postgres 
       -c wal_level=logical
@@ -36,9 +38,13 @@ services:
       -c max_replication_slots=5 
       -c hot_standby=on 
       -c hot_standby_feedback=on
+      -p 5430
     volumes:
       - zstart_pgdata:/var/lib/postgresql/data
       - ./:/docker-entrypoint-initdb.d
+
+    networks:
+      - vps_network
 
   zero:
     platform: linux/amd64
@@ -57,6 +63,8 @@ services:
       - ZERO_AUTH_JWK=${ZERO_AUTH_JWK}
       - ZERO_REPLICA_FILE=${ZERO_REPLICA_FILE}
       - ZERO_SCHEMA_FILE=./zero-schema.json
+    networks:
+      - vps_network
 
 volumes:
   zstart_pgdata:
