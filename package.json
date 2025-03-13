@@ -9,7 +9,7 @@
     "dev:zero-cache": "zero-cache-dev -p ./src/schema.ts",
     "dev:db-up": "docker compose --env-file .env -f ./docker/docker-compose.yml up -d",
     "dev:db-down": "docker compose --env-file .env -f ./docker/docker-compose.yml down",
-    "prod:db-up": "docker compose --env-file .env.production -f ./docker/docker-compose.prod.yml up -d",
+    "prod:db-up": "docker compose --env-file .env.production -f ./docker/docker-compose.prod.yml up ",
     "prod:db-down": "docker compose --env-file .env.production -f ./docker/docker-compose.prod.yml down",
     "prod:clean": "source .env.production && docker volume rm -f docker_zstart_pgdata && rm -rf \"${ZERO_REPLICA_FILE}\"*",
     "dev:clean": "source .env && docker volume rm -f docker_zstart_pgdata && rm -rf \"${ZERO_REPLICA_FILE}\"*",

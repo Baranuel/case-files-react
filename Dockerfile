@@ -1,34 +1,23 @@
-# Build stage
-FROM node:22-alpine AS base
+# Base stage
+FROM node:22-alpine
 
+# Set working directory
+WORKDIR /opt/app
 
-FROM base AS deps
-WORKDIR /app
-
+# Copy package files
 COPY package.json pnpm-lock.yaml ./
+
+# Install dependencies
 RUN corepack enable pnpm && pnpm i --frozen-lockfile
-# Production stage
 
-
-FROM base AS build
-WORKDIR /app
-COPY --from=deps /app/node_modules ./node_modules
+# Copy application code
 COPY . .
-RUN corepack enable pnpm && pnpm build
 
+# Build the application
+RUN pnpm build
 
-FROM build AS runner
-WORKDIR /app
+# Expose port 5173 for the Vite server
+EXPOSE 5173
 
-COPY --from=build /app/.env.production ./
-COPY --from=build /app/pnpm-lock.yaml ./
-COPY --from=build /app/package.json ./
-COPY --from=build /app/dist ./dist
-COPY --from=build /app/node_modules ./node_modules
-
-
-ENV NODE_ENV=production
-
-
-# Set the command to serve the app
-CMD ["pnpm", "start", "--host"]
+# Start Vite in preview mode (serves the built app)
+CMD ["pnpm", "serve", "--host"]

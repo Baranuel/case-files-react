@@ -1,16 +1,27 @@
 services:
-  zstart_postgres:
+  app:
+    build:
+      context: ../
+      dockerfile: Dockerfile
+    ports:
+      - 4173:4173
+    env_file:
+      - ../.env.production
+    volumes:
+      - ../zero-schema.json:/opt/app/zero-schema.json
+    networks:
+      - vps_network
+
+  postgres:
     image: postgres:16.2-alpine
     shm_size: 1g
     user: postgres
     restart: always
     healthcheck:
-      test: 'pg_isready -U ${POSTGRES_USER} --dbname=postgres'
+      test: "pg_isready -U ${POSTGRES_USER} --dbname=postgres"
       interval: 10s
       timeout: 5s
       retries: 5
-    ports:
-      - 5430:5432
 
     env_file:
       - ../.env.production
@@ -32,7 +43,7 @@ services:
   zero:
     platform: linux/amd64
     depends_on:
-      zstart_postgres:
+      postgres:
         condition: service_healthy
     image: rocicorp/zero:0.12.2025013100
     volumes:
@@ -46,11 +57,13 @@ services:
       - ZERO_AUTH_JWK=${ZERO_AUTH_JWK}
       - ZERO_REPLICA_FILE=${ZERO_REPLICA_FILE}
       - ZERO_SCHEMA_FILE=./zero-schema.json
-    ports:
-      - 4848:4848
 
 volumes:
   zstart_pgdata:
     driver: local
   zero_replica:
     driver: local
+
+networks:
+  vps_network:
+    external: true
