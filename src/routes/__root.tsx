@@ -29,7 +29,6 @@ function RootComponent() {
   const isProd = import.meta.env.PROD;
   const {userId, getToken} = useAuth();
 
-  // Memoize the Zero instance to prevent recreation on re-renders
   const zero = useMemo(() => new Zero({
     userID: userId ?? 'anon',
     schema,
@@ -39,6 +38,7 @@ function RootComponent() {
     kvStore: "mem",
     auth: async (err) => {
       if(err === 'invalid-token') return await getToken({template:'casefiles'}) ?? token!
+      console.log(token)
       return token!
     },
   }), [userId, token, isProd, getToken]);
