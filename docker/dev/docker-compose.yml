@@ -78,12 +78,12 @@ services:
     volumes:
       - type: volume
         source: zero_replica
-        target: /tmp/zstart_replica.db
+        target: /tmp
 
     configs:
       - source: zero_schema
         target: /opt/app/zero-schema.json
-        
+
     networks:
       - vps_network
     deploy:
