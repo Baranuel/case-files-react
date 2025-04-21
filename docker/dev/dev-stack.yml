@@ -52,7 +52,6 @@ services:
       - type: volume
         source: zstart_pgdata
         target: /var/lib/postgresql/data
-
     configs:
       - source: seed_sql
         target: /docker-entrypoint-initdb.d/seed.sql 
@@ -78,10 +77,10 @@ services:
       - type: volume
         source: zero_replica
         target: /tmp
-
     configs:
       - source: zero_schema
         target: /opt/app/zero-schema.json
+    networks:
 
   clerk_webhook:
     image: ghcr.io/baranuel/clerk-casefiles:latest
@@ -90,7 +89,6 @@ services:
         target: 1111
     env_file:
       - ./.env
-
     networks:
       - vps_network
     deploy:
