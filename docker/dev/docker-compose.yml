@@ -54,9 +54,9 @@ services:
         source: zstart_pgdata
         target: /var/lib/postgresql/data
 
-      - type: bind
-        source: seed_sql      
-        target: /docker-entrypoint-initdb.d
+    configs:                        # <<–– mount the config here
+      - source: seed_sql
+        target: /docker-entrypoint-initdb.d/seed.sql 
     networks:
       - vps_network
 
@@ -76,13 +76,14 @@ services:
       - published: 4848
         target: 4848
     volumes:
-      - type: bind
-        source: zero_schema  
-        target: /opt/app/zero-schema.json
-
       - type: volume
         source: zero_replica
         target: /tmp/zstart_replica.db
+
+    configs:
+      - source: zero_schema
+        target: /opt/app/zero-schema.json
+        
     networks:
       - vps_network
     deploy:
