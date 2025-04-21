@@ -4,6 +4,10 @@ FROM node:22-alpine
 # Set working directory
 WORKDIR /opt/app
 
+# Define ARG with a default value
+ARG PORT=4173
+ENV PORT=$PORT
+
 # Copy package files
 COPY package.json pnpm-lock.yaml ./
 
@@ -15,10 +19,9 @@ COPY . .
 
 # Build the application
 RUN pnpm build
-ARG PORT=4173
 
-# Expose port 3000
+# Expose port
 EXPOSE $PORT
 
 # Start Vite in preview mode (serves the built app)
-CMD ["pnpm", "serve", "--host", "--port", "$PORT"]
+CMD ["sh", "-c", "pnpm serve --host --port $PORT"]

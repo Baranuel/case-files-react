@@ -3,10 +3,15 @@ services:
   frontend:
     container_name: dev_casefiles
     image: ghcr.io/baranuel/casefiles:${GIT_COMMIT_HASH:-latest}
+    build:
+      context: ../..
+      args:
+        PORT: 3000
     ports:
       - 3000:3000
     environment:
       - PORT=3000
+    env_file:
       - ./.env
     networks:
       - vps_network
