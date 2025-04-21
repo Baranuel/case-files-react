@@ -1,18 +1,14 @@
 services:
 
   frontend:
-    container_name: frontend
     env_file:
       - ./.env
     networks:
       - vps_network
 
   postgres:
-    container_name: postgres
     image: postgres:16.2-alpine
-    shm_size: 1g
     user: postgres
-    restart: always
     healthcheck:
       test: 'pg_isready -U ${POSTGRES_USER} --dbname=postgres'
       interval: 10s
@@ -36,6 +32,8 @@ services:
     volumes:
       - zstart_pgdata:/var/lib/postgresql/data
       - ./:/docker-entrypoint-initdb.d
+    networks:
+      - vps_network
 
 #   zero:
 #     container_name: zero
