@@ -48,8 +48,8 @@ jobs:
       
       - name: create env file
         run: |
-          echo -e "\nGIT_COMMIT_HASH=${{ github.sha }}" >> .env
-          cat .env
+          echo -e "\nGIT_COMMIT_HASH=${{ github.sha }}" >> docker/dev/.env
+          cat docker/dev/.env
           sleep 15
 
       - name: Docker Stack Deploy
@@ -64,4 +64,4 @@ jobs:
           host: ${{ secrets.SSH_HOST }}
           user: root
           ssh_key: ${{ secrets.SSH_PRIVATE_KEY }}
-          env_file: .env
+          env_file: docker/dev/.env

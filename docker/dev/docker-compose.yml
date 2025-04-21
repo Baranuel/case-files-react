@@ -1,7 +1,7 @@
 services:
 
   frontend:
-    container_name: dev.casefiles
+    container_name: dev_casefiles
     image: ghcr.io/baranuel/casefiles:${GIT_COMMIT_HASH:-latest}
     ports:
       - 3000:3000
