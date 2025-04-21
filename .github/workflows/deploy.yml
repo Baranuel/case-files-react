@@ -55,7 +55,7 @@ jobs:
       - name: Docker Stack Deploy
         uses: cssnr/stack-deploy-action@v1
         with:
-          name: dev.casefiles
+          name: dev_casefiles
           registry_auth: true
           registry_host: 'ghcr.io'
           registry_user: ${{ github.actor }}
