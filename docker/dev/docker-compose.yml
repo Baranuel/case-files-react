@@ -15,7 +15,7 @@ services:
       timeout: 5s
       retries: 5
     ports:
-      - ${POSTGRES_PORT}:5432
+      - 5430:5432
     env_file:
       - ./.env
     environment:  
@@ -54,9 +54,9 @@ services:
 #     ports:
 #       - 4848:4848
 
-# volumes:
-#   zstart_pgdata:
-#     driver: local
+volumes:
+  zstart_pgdata:
+    driver: local
 #   zero_replica:
 #     driver: local
 
