@@ -49,12 +49,11 @@ services:
       -c hot_standby=on
       -c hot_standby_feedback=on
     volumes:
-      # named volume for PG data
       - type: volume
         source: zstart_pgdata
         target: /var/lib/postgresql/data
 
-    configs:                        # <<–– mount the config here
+    configs:
       - source: seed_sql
         target: /docker-entrypoint-initdb.d/seed.sql 
     networks:
@@ -83,6 +82,11 @@ services:
     configs:
       - source: zero_schema
         target: /opt/app/zero-schema.json
+
+  clerk_webhook:
+    image: ghcr.io/baranuel/clerk-casefiles:latest
+    env_file:
+      - ./.env
 
     networks:
       - vps_network
