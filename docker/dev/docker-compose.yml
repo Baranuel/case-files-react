@@ -37,14 +37,13 @@ services:
       - vps_network
 
   zero:
-    platform: linux/amd64 
     depends_on:
       - postgres
     image: rocicorp/zero:0.12.2025013100
     env_file:
       - ./.env
     volumes:
-      - ../zero-schema.json:/opt/app/zero-schema.json
+      - ../../zero-schema.json:/opt/app/zero-schema.json
     environment:
       - ZERO_UPSTREAM_DB=${ZERO_UPSTREAM_DB}
       - ZERO_CVR_DB=${ZERO_CVR_DB}
