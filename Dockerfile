@@ -16,8 +16,5 @@ COPY . .
 # Build the application
 RUN pnpm build
 
-# Expose port 5173 for the Vite server
-EXPOSE 5173
-
 # Start Vite in preview mode (serves the built app)
 CMD ["pnpm", "serve", "--host"]

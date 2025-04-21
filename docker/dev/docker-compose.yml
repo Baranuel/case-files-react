@@ -4,7 +4,7 @@ services:
     container_name: casefiles
     image: ghcr.io/baranuel/casefiles:${GIT_COMMIT_HASH:-latest}
     ports:
-      - 4173:4173
+      - 3000:3000
     environment:
       - ./.env
 
