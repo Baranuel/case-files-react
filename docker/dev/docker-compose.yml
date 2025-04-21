@@ -49,7 +49,7 @@ services:
         target: /var/lib/postgresql/data
 
       - type: bind
-        source: ./docker/seed.sql       # ← adjust to your real absolute path
+        source: ../seed.sql      
         target: /docker-entrypoint-initdb.d
     networks:
       - vps_network
@@ -71,7 +71,7 @@ services:
         target: 4848
     volumes:
       - type: bind
-        source: ./zero-schema.json  
+        source: ../../zero-schema.json  
         target: /opt/app/zero-schema.json
 
       - type: volume
