@@ -10,6 +10,12 @@ volumes:
   zero_replica:
     driver: local
 
+configs:
+  seed_sql:
+    file: ../seed.sql
+  zero_schema:
+    file: ../../zero-schema.json
+
 services:
   frontend:
     image: ghcr.io/baranuel/casefiles:${GIT_COMMIT_HASH:-latest}
@@ -49,7 +55,7 @@ services:
         target: /var/lib/postgresql/data
 
       - type: bind
-        source: ../seed.sql      
+        source: seed_sql      
         target: /docker-entrypoint-initdb.d
     networks:
       - vps_network
@@ -71,7 +77,7 @@ services:
         target: 4848
     volumes:
       - type: bind
-        source: ../../zero-schema.json  
+        source: zero_schema  
         target: /opt/app/zero-schema.json
 
       - type: volume
