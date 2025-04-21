@@ -81,6 +81,7 @@ services:
       - source: zero_schema
         target: /opt/app/zero-schema.json
     networks:
+      - vps_network
 
   clerk_webhook:
     image: ghcr.io/baranuel/clerk-casefiles:latest
