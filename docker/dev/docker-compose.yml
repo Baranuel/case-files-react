@@ -1,6 +1,7 @@
 services:
 
   frontend:
+    image: ghcr.io/baranuel/casefiles:${GIT_COMMIT_HASH:-latest}
     env_file:
       - ./.env
     networks:
