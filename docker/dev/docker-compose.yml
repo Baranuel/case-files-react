@@ -1,0 +1,65 @@
+services:
+
+  frontend:
+    container_name: casefiles
+    image: ghcr.io/baranuel/casefiles:${GIT_COMMIT_HASH:-latest}
+    ports:
+      - 4173:4173
+    environment:
+      - ./.env
+
+  postgres:
+    container_name: postgres
+    image: postgres:16.2-alpine
+    shm_size: 1g
+    user: postgres
+    restart: always
+    healthcheck:
+      test: 'pg_isready -U ${POSTGRES_USER} --dbname=postgres'
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    ports:
+      - 5430:5432
+    env_file:
+      - ./.env
+    environment:  
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_DB: postgres
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+    command: |
+      postgres 
+      -c wal_level=logical
+      -c max_wal_senders=10 
+      -c max_replication_slots=5 
+      -c hot_standby=on 
+      -c hot_standby_feedback=on
+    volumes:
+      - zstart_pgdata:/var/lib/postgresql/data
+      - ./:/docker-entrypoint-initdb.d
+
+  zero:
+    container_name: zero
+    platform: linux/amd64 
+    depends_on:
+      postgres:
+        condition: service_healthy
+    image: rocicorp/zero:0.12.2025013100
+    env_file:
+      - ./.env
+    volumes:
+      - ../zero-schema.json:/opt/app/zero-schema.json
+    environment:
+      - ZERO_UPSTREAM_DB=${ZERO_UPSTREAM_DB}
+      - ZERO_CVR_DB=${ZERO_CVR_DB}
+      - ZERO_CHANGE_DB=${ZERO_CHANGE_DB}
+      - ZERO_REPLICA_FILE=/tmp/zstart_replica.db
+      - ZERO_SCHEMA_FILE=./zero-schema.json
+    ports:
+      - 4848:4848
+
+volumes:
+  zstart_pgdata:
+    driver: local
+  zero_replica:
+    driver: local
