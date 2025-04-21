@@ -31,8 +31,12 @@ services:
       -c hot_standby=on 
       -c hot_standby_feedback=on
     volumes:
-      - zstart_pgdata:/var/lib/postgresql/data
-      - ../../docker/seed.sql:/docker-entrypoint-initdb.d/seed.sql
+      - type: volume
+        source: zstart_pgdata
+        target: /var/lib/postgresql/data
+      - type: bind
+        source: ../seed.sql
+        target: /docker-entrypoint-initdb.d/seed.sql
     networks:
       - vps_network
 
@@ -43,7 +47,9 @@ services:
     env_file:
       - ./.env
     volumes:
-      - ../../zero-schema.json:/opt/app/zero-schema.json
+      - type: bind
+        source: ../../zero-schema.json
+        target: /opt/app/zero-schema.json
     environment:
       - ZERO_UPSTREAM_DB=${ZERO_UPSTREAM_DB}
       - ZERO_CVR_DB=${ZERO_CVR_DB}
