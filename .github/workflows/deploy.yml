@@ -34,8 +34,6 @@ jobs:
           context: .
           push: true
           platforms: linux/amd64
-          build-args: |
-            PORT=3000
           tags: |
             ghcr.io/baranuel/casefiles:${{ github.sha }}
             ghcr.io/baranuel/casefiles:latest

@@ -1,48 +1,41 @@
 services:
 
   frontend:
-    container_name: dev_casefiles
-    image: ghcr.io/baranuel/casefiles:${GIT_COMMIT_HASH:-latest}
-    build:
-      context: ../..
-      args:
-        PORT: 3000
-    ports:
-      - 3000:3000
+    container_name: frontend
     env_file:
       - ./.env
     networks:
       - vps_network
 
-#   postgres:
-#     container_name: postgres
-#     image: postgres:16.2-alpine
-#     shm_size: 1g
-#     user: postgres
-#     restart: always
-#     healthcheck:
-#       test: 'pg_isready -U ${POSTGRES_USER} --dbname=postgres'
-#       interval: 10s
-#       timeout: 5s
-#       retries: 5
-#     ports:
-#       - 5430:5432
-#     env_file:
-#       - ./.env
-#     environment:  
-#       POSTGRES_USER: ${POSTGRES_USER}
-#       POSTGRES_DB: postgres
-#       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
-#     command: |
-#       postgres 
-#       -c wal_level=logical
-#       -c max_wal_senders=10 
-#       -c max_replication_slots=5 
-#       -c hot_standby=on 
-#       -c hot_standby_feedback=on
-#     volumes:
-#       - zstart_pgdata:/var/lib/postgresql/data
-#       - ./:/docker-entrypoint-initdb.d
+  postgres:
+    container_name: postgres
+    image: postgres:16.2-alpine
+    shm_size: 1g
+    user: postgres
+    restart: always
+    healthcheck:
+      test: 'pg_isready -U ${POSTGRES_USER} --dbname=postgres'
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    ports:
+      - ${POSTGRES_PORT}:5432
+    env_file:
+      - ./.env
+    environment:  
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_DB: postgres
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+    command: |
+      postgres 
+      -c wal_level=logical
+      -c max_wal_senders=10 
+      -c max_replication_slots=5 
+      -c hot_standby=on 
+      -c hot_standby_feedback=on
+    volumes:
+      - zstart_pgdata:/var/lib/postgresql/data
+      - ./:/docker-entrypoint-initdb.d
 
 #   zero:
 #     container_name: zero
