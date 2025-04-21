@@ -48,18 +48,11 @@ services:
         source: zstart_pgdata
         target: /var/lib/postgresql/data
 
-      # bind‑mount your init scripts directory;
-      # make sure this exact path exists on every Swarm node
       - type: bind
-        source: /home/ubuntu/case-files-react/docker       # ← adjust to your real absolute path
+        source: ./docker/seed.sql       # ← adjust to your real absolute path
         target: /docker-entrypoint-initdb.d
     networks:
       - vps_network
-    deploy:
-      # example: ensure this service only ever runs on the manager
-      placement:
-        constraints:
-          - node.role == manager
 
   zero:
     image: rocicorp/zero:0.12.2025013100
@@ -77,12 +70,10 @@ services:
       - published: 4848
         target: 4848
     volumes:
-      # bind your schema JSON
       - type: bind
-        source: /home/ubuntu/case-files-react/zero-schema.json  
+        source: ./zero-schema.json  
         target: /opt/app/zero-schema.json
 
-      # named volume for Zero's replica DB
       - type: volume
         source: zero_replica
         target: /tmp/zstart_replica.db
