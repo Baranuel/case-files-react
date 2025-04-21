@@ -1,12 +1,14 @@
 services:
 
-  dev.casefiles:
+  frontend:
     container_name: dev.casefiles
     image: ghcr.io/baranuel/casefiles:${GIT_COMMIT_HASH:-latest}
     ports:
       - 3000:3000
     environment:
       - ./.env
+    networks:
+      - vps_network
 
 #   postgres:
 #     container_name: postgres
@@ -62,3 +64,7 @@ services:
 #     driver: local
 #   zero_replica:
 #     driver: local
+
+networks:
+  vps_network:
+    external: true
