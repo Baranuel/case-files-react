@@ -35,7 +35,7 @@ services:
         source: zstart_pgdata
         target: /var/lib/postgresql/data
       - type: bind
-        source: ../seed.sql
+        source: ${GITHUB_WORKSPACE:-..}/docker/seed.sql
         target: /docker-entrypoint-initdb.d/seed.sql
     networks:
       - vps_network
@@ -48,7 +48,7 @@ services:
       - ./.env
     volumes:
       - type: bind
-        source: ../../zero-schema.json
+        source: ${GITHUB_WORKSPACE:-../..}/zero-schema.json
         target: /opt/app/zero-schema.json
     environment:
       - ZERO_UPSTREAM_DB=${ZERO_UPSTREAM_DB}
