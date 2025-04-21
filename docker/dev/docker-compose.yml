@@ -36,30 +36,31 @@ services:
     networks:
       - vps_network
 
-#   zero:
-#     container_name: zero
-#     platform: linux/amd64 
-#     depends_on:
-#       - postgres
-#     image: rocicorp/zero:0.12.2025013100
-#     env_file:
-#       - ./.env
-#     volumes:
-#       - ../zero-schema.json:/opt/app/zero-schema.json
-#     environment:
-#       - ZERO_UPSTREAM_DB=${ZERO_UPSTREAM_DB}
-#       - ZERO_CVR_DB=${ZERO_CVR_DB}
-#       - ZERO_CHANGE_DB=${ZERO_CHANGE_DB}
-#       - ZERO_REPLICA_FILE=/tmp/zstart_replica.db
-#       - ZERO_SCHEMA_FILE=./zero-schema.json
-#     ports:
-#       - 4848:4848
+  zero:
+    platform: linux/amd64 
+    depends_on:
+      - postgres
+    image: rocicorp/zero:0.12.2025013100
+    env_file:
+      - ./.env
+    volumes:
+      - ../zero-schema.json:/opt/app/zero-schema.json
+    environment:
+      - ZERO_UPSTREAM_DB=${ZERO_UPSTREAM_DB}
+      - ZERO_CVR_DB=${ZERO_CVR_DB}
+      - ZERO_CHANGE_DB=${ZERO_CHANGE_DB}
+      - ZERO_REPLICA_FILE=/tmp/zstart_replica.db
+      - ZERO_SCHEMA_FILE=./zero-schema.json
+    ports:
+      - 4848:4848
+    networks:
+      - vps_network
 
 volumes:
   zstart_pgdata:
     driver: local
-#   zero_replica:
-#     driver: local
+  zero_replica:
+    driver: local
 
 networks:
   vps_network:
