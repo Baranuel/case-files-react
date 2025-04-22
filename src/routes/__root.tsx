@@ -9,7 +9,6 @@ import {
 import { Zero } from "@rocicorp/zero";
 import { schema } from "@/schema";
 import { ZeroProvider } from "@rocicorp/zero/react";
-import Navigation from "@/app/components/ui/Navigation";
 import { RouterContext } from "@/types/router-context";
 import { Layout } from "@/app/components/ui/Layout";
 import { useMemo } from "react";
@@ -26,22 +25,18 @@ export const Route = createRootRouteWithContext<RouterContext>()({
 
 function RootComponent() {
   const token = Route.useLoaderData()
-  const isProd = import.meta.env.PROD;
   const {userId, getToken} = useAuth();
 
   const zero = useMemo(() => new Zero({
     userID: userId ?? 'anon',
     schema,
-    server: isProd
-      ? import.meta.env.VITE_ZERO_SERVER_URL_PROD
-      : import.meta.env.VITE_ZERO_SERVER_URL_DEV,
+    server: import.meta.env.VITE_ZERO_SERVER_URL,
     kvStore: "mem",
     auth: async (err) => {
       if(err === 'invalid-token') return await getToken({template:'casefiles'}) ?? token!
-      console.log(token)
       return token!
     },
-  }), [userId, token, isProd, getToken]);
+  }), [userId, token, getToken]);
 
 
 
@@ -52,7 +47,6 @@ function RootComponent() {
         <Layout>
            <Outlet />
         </Layout>
-      {/* {!isProd && <TanStackRouterDevtools position="bottom-right" />} */}
     </ZeroProvider>
   );
 }

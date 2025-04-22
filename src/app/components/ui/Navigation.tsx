@@ -16,7 +16,6 @@ const Navigation = () => {
   );
   
   const router = useRouterState();
-  const showNavigation = router.location.pathname.includes('board')
 
   return (
     <nav 

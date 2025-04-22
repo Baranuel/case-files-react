@@ -12,9 +12,9 @@ volumes:
 
 configs:
   seed_sql:
-    file: ../seed.sql
+    file: docker/dev/seed.sql
   zero_schema:
-    file: ../../zero-schema.json
+    file: zero-schema.json
 
 services:
   frontend:
@@ -23,6 +23,15 @@ services:
       - ./.env
     networks:
       - vps_network
+    deploy:
+      replicas: 2
+      update_config:
+        parallelism: 1
+        delay: 10s
+        order: start-first
+        failure_action: rollback
+      rollback_config:
+        parallelism: 1
 
   postgres:
     image: postgres:16.2-alpine
@@ -57,6 +66,11 @@ services:
         target: /docker-entrypoint-initdb.d/seed.sql 
     networks:
       - vps_network
+    deploy:
+      replicas: 1
+      update_config:
+        parallelism: 1
+        delay: 30s
 
   zero:
     image: rocicorp/zero:0.12.2025013100
@@ -83,15 +97,25 @@ services:
         target: /opt/app/zero-schema.json
     networks:
       - vps_network
+    deploy:
+      replicas: 1
+      update_config:
+        parallelism: 1
+        delay: 10s
+        order: start-first
 
   clerk_webhook:
     image: ghcr.io/baranuel/clerk-casefiles:latest
+    env_file:
+      - ./.env
     ports:
       - published: 1111
         target: 1111
-    env_file:
-      - ./.env
     networks:
       - vps_network
     deploy:
-      replicas: 1
+      replicas: 2
+      update_config:
+        parallelism: 1
+        delay: 5s
+        order: start-first
