@@ -12,9 +12,9 @@ volumes:
 
 configs:
   seed_sql:
-    file: docker/dev/seed.sql
+    file: ../seed.sql
   zero_schema:
-    file: zero-schema.json
+    file: ../../zero-schema.json
 
 services:
   frontend:
