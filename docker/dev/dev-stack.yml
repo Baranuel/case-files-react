@@ -42,7 +42,7 @@ services:
       timeout: 5s
       retries: 5
     ports:
-      - published: 5430
+      - published: 5432
         target: 5432
     env_file:
       - ./.env
