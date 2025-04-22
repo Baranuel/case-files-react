@@ -24,7 +24,6 @@ services:
     networks:
       - vps_network
     deploy:
-      replicas: 2
       update_config:
         parallelism: 1
         delay: 10s
@@ -98,7 +97,6 @@ services:
     networks:
       - vps_network
     deploy:
-      replicas: 1
       update_config:
         parallelism: 1
         delay: 10s
@@ -114,7 +112,6 @@ services:
     networks:
       - vps_network
     deploy:
-      replicas: 2
       update_config:
         parallelism: 1
         delay: 5s
