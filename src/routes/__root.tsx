@@ -34,6 +34,7 @@ function RootComponent() {
     kvStore: "mem",
     auth: async (err) => {
       if(err === 'invalid-token') return await getToken({template:'casefiles'}) ?? token!
+      console.log('token', token)
       return token!
     },
   }), [userId, token, getToken]);
