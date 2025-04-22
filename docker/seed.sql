@@ -54,12 +54,4 @@ CREATE TABLE "element" (
 );
 
 
-INSERT INTO "user" ("id", "tier", "name", "imageUrl", "maxBoards")
-SELECT 'user_2uSIVEd9IWQcWA8BUWVmwsIkVFl', 'free', 'Samuel Baran', 'https://example.com/john-doe.jpg', 2
-WHERE NOT EXISTS (
-    SELECT 1 FROM "user" WHERE "id" = 'user_2uSIVEd9IWQcWA8BUWVmwsIkVFl'
-);
-
-
-
 
