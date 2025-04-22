@@ -78,7 +78,6 @@ services:
     env_file:
       - ./.env
     environment:
-      ZERO_AUTH_JWK: ${ZERO_AUTH_JWK}
       ZERO_UPSTREAM_DB: ${ZERO_UPSTREAM_DB}
       ZERO_CVR_DB:     ${ZERO_CVR_DB}
       ZERO_CHANGE_DB:  ${ZERO_CHANGE_DB}
