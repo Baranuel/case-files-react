@@ -4,15 +4,7 @@ volumes:
     driver: local
   zero_replica:
     driver: local
-
-configs:
-  seed:
-    name: seed_${GIT_COMMIT_HASH}
-    file: ./seed.sql
-  schema:
-    name: schema_${GIT_COMMIT_HASH}
-    file: ../../zero-schema.json
-
+    
 networks:
   vps:
     external: true
@@ -59,7 +51,7 @@ services:
       ZERO_CVR_DB:     "postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@postgres:5432/postgres"
       ZERO_CHANGE_DB:  "postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@postgres:5432/postgres"
       ZERO_REPLICA_FILE: /tmp/zstart_replica.db
-      ZERO_SCHEMA_FILE: ./zero-schema.json
+      ZERO_SCHEMA_FILE: /opt/app/zero-schema.json
     ports:
       - published: 4848
         target: 4848
