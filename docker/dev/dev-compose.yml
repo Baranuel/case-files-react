@@ -1,7 +1,6 @@
-version: "3.8"
 
 networks:
-  vps_network:
+  vps:
     external: true
 
 volumes:
@@ -10,45 +9,33 @@ volumes:
   zero_replica:
     driver: local
 
-configs:
-  seed_sql:
-    file: ../seed.sql
-  zero_schema:
-    file: ../../zero-schema.json
-
 services:
   frontend:
-    image: ghcr.io/baranuel/casefiles:${GIT_COMMIT_HASH:-latest}
+    build:
+      context: ../../
+      dockerfile: Dockerfile
     env_file:
       - ./.env
     networks:
-      - vps_network
-    deploy:
-      update_config:
-        parallelism: 1
-        delay: 10s
-        order: start-first
-        failure_action: rollback
-      rollback_config:
-        parallelism: 1
+      - vps
 
   postgres:
     image: postgres:16.2-alpine
     user: postgres
     healthcheck:
-      test: ["CMD‑SHELL", "pg_isready -U ${POSTGRES_USER} --dbname=postgres"]
+      test: 'pg_isready -U user --dbname=postgres'
       interval: 10s
       timeout: 5s
       retries: 5
+    env_file:
+      - ./.env
     ports:
       - published: 5432
         target: 5432
-    env_file:
-      - ./.env
     environment:
       POSTGRES_USER: ${POSTGRES_USER}
-      POSTGRES_DB: postgres
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: ${POSTGRES_DB}
     command: >
       postgres
       -c wal_level=logical
@@ -60,27 +47,21 @@ services:
       - type: volume
         source: zstart_pgdata
         target: /var/lib/postgresql/data
-    configs:
-      - source: seed_sql
+      - type: bind
+        source: ../seed.sql
         target: /docker-entrypoint-initdb.d/seed.sql 
     networks:
-      - vps_network
-    deploy:
-      replicas: 1
-      update_config:
-        parallelism: 1
-        delay: 30s
+      - vps
+
 
   zero:
     image: rocicorp/zero:0.12.2025013100
-    depends_on:
-      - postgres
     env_file:
       - ./.env
     environment:
-      ZERO_UPSTREAM_DB: ${ZERO_UPSTREAM_DB}
-      ZERO_CVR_DB:     ${ZERO_CVR_DB}
-      ZERO_CHANGE_DB:  ${ZERO_CHANGE_DB}
+      ZERO_UPSTREAM_DB: "postgresql://casefiles:a8f5f167f44f4964e6c998dee827110c@postgres:5432/zstart"
+      ZERO_CVR_DB:     "postgresql://casefiles:a8f5f167f44f4964e6c998dee827110c@postgres:5432/zstart_cvr"
+      ZERO_CHANGE_DB:  "postgresql://casefiles:a8f5f167f44f4964e6c998dee827110c@postgres:5432/zstart_cdb"
       ZERO_REPLICA_FILE: /tmp/zstart_replica.db
       ZERO_SCHEMA_FILE:  ./zero-schema.json
     ports:
@@ -90,16 +71,11 @@ services:
       - type: volume
         source: zero_replica
         target: /tmp
-    configs:
-      - source: zero_schema
+      - type: bind
+        source: ../../zero-schema.json
         target: /opt/app/zero-schema.json
     networks:
-      - vps_network
-    deploy:
-      update_config:
-        parallelism: 1
-        delay: 10s
-        order: start-first
+      - vps
 
   clerk_webhook:
     image: ghcr.io/baranuel/clerk-casefiles:latest
@@ -109,9 +85,4 @@ services:
       - published: 1111
         target: 1111
     networks:
-      - vps_network
-    deploy:
-      update_config:
-        parallelism: 1
-        delay: 5s
-        order: start-first
+      - vps

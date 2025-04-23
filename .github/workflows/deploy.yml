@@ -33,7 +33,7 @@ jobs:
         with:
           context: .
           push: true
-          platforms: linux/amd64
+          platforms: linux/amd64, linux/arm64
           tags: |
             ghcr.io/baranuel/casefiles:${{ github.sha }}
             ghcr.io/baranuel/casefiles:latest
@@ -55,12 +55,14 @@ jobs:
       - name: Docker Stack Deploy
         uses: cssnr/stack-deploy-action@v1
         with:
+          mode: compose
           name: dev_casefiles
+          prune: true 
           registry_auth: true
           registry_host: 'ghcr.io'
           registry_user: ${{ github.actor }}
           registry_pass: ${{ secrets.GITHUB_TOKEN }}
-          file: docker/dev/dev-stack.yml
+          file: docker/dev/dev-compose.yml
           host: ${{ secrets.SSH_HOST }}
           user: root
           ssh_key: ${{ secrets.SSH_PRIVATE_KEY }}
