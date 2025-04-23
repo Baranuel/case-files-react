@@ -9,6 +9,10 @@ volumes:
 configs:
   seed:
     file: ./seed.sql
+  schema:
+    file: ../../zero-schema.json
+
+
 
 # networks:
 #   vps:
@@ -53,13 +57,15 @@ services:
       ZERO_CVR_DB:     "postgresql://user:password@postgres:5432/postgres"
       ZERO_CHANGE_DB:  "postgresql://user:password@postgres:5432/postgres"
       ZERO_REPLICA_FILE: /tmp/zstart_replica.db
-      ZERO_SCHEMA_FILE:  ./zero-schema.json
+      ZERO_SCHEMA_FILE: /opt/app/zero-schema.json
     ports:
       - published: 4848
         target: 4848
+    configs:
+      - source: schema
+        target: /opt/app/zero-schema.json
     volumes:
       - zero_replica:/tmp
-      - ../../zero-schema.json:/opt/app/zero-schema.json
     # networks:
     #   - vps
 
