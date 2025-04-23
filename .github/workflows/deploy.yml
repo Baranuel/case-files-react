@@ -83,4 +83,5 @@ jobs:
             key: ${{ secrets.SSH_PRIVATE_KEY }}
             script: |
               echo "Cleanup process started"
+              chmod +x /scripts/delete-unused-docker-config.sh
               /scripts/delete-unused-docker-config.sh --delete
