@@ -42,12 +42,8 @@ services:
       -c hot_standby=on
       -c hot_standby_feedback=on
     volumes:
-      - type: volume
-        source: zstart_pgdata
-        target: /var/lib/postgresql/data
-      - type: bind
-        source: ../seed.sql
-        target: /docker-entrypoint-initdb.d/seed.sql 
+      - zstart_pgdata:/var/lib/postgresql/data
+      - ../seed.sql:/docker-entrypoint-initdb.d/seed.sql 
     networks:
       - vps
 
@@ -66,12 +62,8 @@ services:
       - published: 4848
         target: 4848
     volumes:
-      - type: volume
-        source: zero_replica
-        target: /tmp
-      - type: bind
-        source: ../../zero-schema.json
-        target: /opt/app/zero-schema.json
+      - zero_replica:/tmp
+      - ../../zero-schema.json:/opt/app/zero-schema.json
     networks:
       - vps
 
