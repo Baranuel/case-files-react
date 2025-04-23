@@ -17,6 +17,8 @@ services:
     ports:
       - published: 3000
         target: 3000
+    networks:
+      - vps
 
   postgres:
     build:
