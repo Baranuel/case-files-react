@@ -53,9 +53,9 @@ services:
     env_file:
       - ./.env
     environment:
-      ZERO_UPSTREAM_DB: "postgresql://casefiles:a8f5f167f44f4964e6c998dee827110c@dev_postgres:5432/zstart"
-      ZERO_CVR_DB:     "postgresql://casefiles:a8f5f167f44f4964e6c998dee827110c@dev_postgres:5432/zstart_cvr"
-      ZERO_CHANGE_DB:  "postgresql://casefiles:a8f5f167f44f4964e6c998dee827110c@dev_postgres:5432/zstart_cdb"
+      ZERO_UPSTREAM_DB: "postgresql://casefiles:a8f5f167f44f4964e6c998dee827110c@dev-postgres:5432/zstart"
+      ZERO_CVR_DB:     "postgresql://casefiles:a8f5f167f44f4964e6c998dee827110c@dev-postgres:5432/zstart_cvr"
+      ZERO_CHANGE_DB:  "postgresql://casefiles:a8f5f167f44f4964e6c998dee827110c@dev-postgres:5432/zstart_cdb"
       ZERO_REPLICA_FILE: /tmp/zstart_replica.db
       ZERO_SCHEMA_FILE:  ./zero-schema.json
     ports:
