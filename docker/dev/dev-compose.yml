@@ -2,6 +2,8 @@
 volumes:
   data:
     driver: local
+  zero_replica:
+    driver: local
 
 networks:
   vps:
@@ -41,7 +43,7 @@ services:
     image: rocicorp/zero:0.12.2025013100
     depends_on:
       - postgres
-      
+
     env_file:
       - ./.env
     environment:
