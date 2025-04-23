@@ -8,10 +8,10 @@ volumes:
 
 configs:
   seed:
-    name: seed_${github_sha}
+    name: seed_${GIT_COMMIT_HASH}
     file: ./seed.sql
   schema:
-    name: schema_${github_sha}
+    name: schema_${GIT_COMMIT_HASH}
     file: ../../zero-schema.json
 
 
