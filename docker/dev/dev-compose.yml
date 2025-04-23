@@ -4,6 +4,8 @@ volumes:
     driver: local
   zero_replica:
     driver: local
+  zero_schema:
+    driver: local
     
 networks:
   vps:
@@ -65,6 +67,7 @@ services:
         target: 4848
     volumes:
       - zero_replica:/tmp
+      - /files/zero-schema.json:/opt/app/zero-schema.json
     networks:
       - vps
 
