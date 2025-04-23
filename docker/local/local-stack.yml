@@ -1,18 +1,24 @@
-version: '3.8'
-
-configs:
-  seed_sql:
-    file: ./seed.sql
-
-volumes:
-  data:
-    driver: local
 
 networks:
   vps:
     external: true
-    
+
+volumes:
+  zstart_pgdata:
+    driver: local
+  zero_replica:
+    driver: local
+
 services:
+  frontend:
+    build:
+      context: ../../
+      dockerfile: Dockerfile
+    env_file:
+      - ./.env
+    networks:
+      - vps
+
   postgres:
     image: postgres:16.2-alpine
     shm_size: 1g
@@ -23,21 +29,55 @@ services:
       interval: 10s
       timeout: 5s
       retries: 5
-
+    ports:
+      - 5430:5432
+    env_file:
+      - ./.env
     environment:
-      POSTGRES_USER: user
+      POSTGRES_USER: ${POSTGRES_USER}
       POSTGRES_DB: postgres
-      POSTGRES_PASSWORD: password
-    command: |
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+    command: >
       postgres 
       -c wal_level=logical
       -c max_wal_senders=10 
       -c max_replication_slots=5 
       -c hot_standby=on 
       -c hot_standby_feedback=on
-    configs:
-      - source: seed_sql
-        target: /docker-entrypoint-initdb.d/seed.sql
     volumes:
-      - data:/var/lib/postgresql/data
+      - zstart_pgdata:/var/lib/postgresql/data
+      - ../:/docker-entrypoint-initdb.d
+    networks:
+      - vps
 
+
+  zero:
+    image: rocicorp/zero:0.12.2025013100
+    depends_on:
+      - postgres
+    env_file:
+      - ./.env
+    environment:
+      ZERO_UPSTREAM_DB: "postgresql://casefiles:a8f5f167f44f4964e6c998dee827110c@postgres:5432/zstart"
+      ZERO_CVR_DB:     "postgresql://casefiles:a8f5f167f44f4964e6c998dee827110c@postgres:5432/zstart_cvr"
+      ZERO_CHANGE_DB:  "postgresql://casefiles:a8f5f167f44f4964e6c998dee827110c@postgres:5432/zstart_cdb"
+      ZERO_REPLICA_FILE: /tmp/zstart_replica.db
+      ZERO_SCHEMA_FILE:  ./zero-schema.json
+    ports:
+      - published: 4848
+        target: 4848
+    volumes:
+      - zero_replica:/tmp
+      - ../../zero-schema.json:/opt/app/zero-schema.json
+    networks:
+      - vps
+
+  clerk_webhook:
+    image: ghcr.io/baranuel/clerk-casefiles:latest
+    env_file:
+      - ./.env
+    ports:
+      - published: 1111
+        target: 1111
+    networks:
+      - vps
