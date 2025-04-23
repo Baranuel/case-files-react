@@ -1,4 +1,3 @@
-version: '3.8'
 
 volumes:
   data:
@@ -15,10 +14,6 @@ configs:
     file: ../../zero-schema.json
 
 
-
-networks:
-  vps:
-    driver: overlay
 
 services:
   postgres:
@@ -47,9 +42,7 @@ services:
     configs:
       - source: seed
         target: /docker-entrypoint-initdb.d/seed.sql
-    networks:
-      vps:
-        alias: postgres
+
 
   zero:
     image: rocicorp/zero:0.12.2025013100
@@ -69,8 +62,6 @@ services:
         target: /opt/app/zero-schema.json
     volumes:
       - zero_replica:/tmp
-    networks:
-      vps:
-        alias: zero
+
 
 
