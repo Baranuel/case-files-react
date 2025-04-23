@@ -1,3 +1,4 @@
+version: '3.8'
 
 volumes:
   data:
@@ -5,16 +6,17 @@ volumes:
   zero_replica:
     driver: local
 
-networks:
-  vps:
-    external: true
+configs:
+  seed:
+    file: ./seed.sql
+
+# networks:
+#   vps:
+#     external: true
 
 services:
   postgres:
-    build:
-      context: .
-      dockerfile: db.Dockerfile
-    shm_size: 1g
+    image: postgres:16.2-alpine
     user: postgres
     restart: always
     healthcheck:
@@ -36,14 +38,14 @@ services:
       -c hot_standby_feedback=on
     volumes:
       - data:/var/lib/postgresql/data
-    networks:
-      - vps
+    configs:
+      - source: seed
+        target: /docker-entrypoint-initdb.d/seed.sql
+    # networks:
+    #   - vps
 
   zero:
     image: rocicorp/zero:0.12.2025013100
-    depends_on:
-      - postgres
-
     env_file:
       - ./.env
     environment:
@@ -58,7 +60,7 @@ services:
     volumes:
       - zero_replica:/tmp
       - ../../zero-schema.json:/opt/app/zero-schema.json
-    networks:
-      - vps
+    # networks:
+    #   - vps
 
 

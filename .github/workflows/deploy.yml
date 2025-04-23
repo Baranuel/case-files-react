@@ -55,9 +55,8 @@ jobs:
       - name: Docker Stack Deploy
         uses: cssnr/stack-deploy-action@v1
         with:
-          mode: compose
           name: 'dev'
-          args: --remove-orphans --force-recreate
+          prune: true
           registry_auth: true
           registry_host: 'ghcr.io'
           registry_user: ${{ github.actor }}
