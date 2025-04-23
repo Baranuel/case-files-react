@@ -1,7 +1,6 @@
 
-
 networks:
-  vps_network:
+  vps:
     external: true
 
 volumes:
@@ -9,40 +8,35 @@ volumes:
     driver: local
   zero_replica:
     driver: local
-  app_opt:
-    driver: local
 
 services:
   frontend:
-    container_name: frontend
     build:
       context: ../../
-      dockerfile: docker/local/Dockerfile
-
-    volumes:
-      - ../../src:/opt/app/src
+      dockerfile: Dockerfile
     env_file:
       - ./.env
     networks:
-      - vps_network
-    ports:
-      - published: 3000
-        target: 3000
+      - vps
 
   postgres:
-    container_name: postgres
     image: postgres:16.2-alpine
     user: postgres
-    ports:
-      - published: 5430
-        target: 5432
+    healthcheck:
+      test: 'pg_isready -U user --dbname=postgres'
+      interval: 10s
+      timeout: 5s
+      retries: 5
     env_file:
       - ./.env
+    ports:
+      - published: 5432
+        target: 5432
     environment:
       POSTGRES_USER: ${POSTGRES_USER}
-      POSTGRES_DB: postgres
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
-    command: >
+      POSTGRES_DB: ${POSTGRES_DB}
+    command: |
       postgres
       -c wal_level=logical
       -c max_wal_senders=10
@@ -50,44 +44,37 @@ services:
       -c hot_standby=on
       -c hot_standby_feedback=on
     volumes:
-      - type: volume
-        source: zstart_pgdata
-        target: /var/lib/postgresql/data
-      - type: bind
-        source: ../seed.sql
-        target: /docker-entrypoint-initdb.d/seed.sql 
+    - zstart_pgdata:/var/lib/postgresql/data
+    - type: bind
+      source: ../seed.sql 
+      target: /docker-entrypoint-initdb.d/seed.sql
+      read_only: true
     networks:
-      - vps_network
+      - vps
 
 
   zero:
     image: rocicorp/zero:0.12.2025013100
-    container_name: zero
     depends_on:
       - postgres
     env_file:
       - ./.env
     environment:
-      ZERO_UPSTREAM_DB: ${ZERO_UPSTREAM_DB}
-      ZERO_CVR_DB:     ${ZERO_CVR_DB}
-      ZERO_CHANGE_DB:  ${ZERO_CHANGE_DB}
+      ZERO_UPSTREAM_DB: "postgresql://casefiles:a8f5f167f44f4964e6c998dee827110c@postgres:5432/zstart"
+      ZERO_CVR_DB:     "postgresql://casefiles:a8f5f167f44f4964e6c998dee827110c@postgres:5432/zstart_cvr"
+      ZERO_CHANGE_DB:  "postgresql://casefiles:a8f5f167f44f4964e6c998dee827110c@postgres:5432/zstart_cdb"
       ZERO_REPLICA_FILE: /tmp/zstart_replica.db
+      ZERO_SCHEMA_FILE:  ./zero-schema.json
     ports:
       - published: 4848
         target: 4848
     volumes:
-      - type: volume
-        source: zero_replica
-        target: /tmp
-      - type: bind
-        source: ../../zero-schema.json
-        target: /opt/app/zero-schema.json
+      - zero_replica:/tmp
+      - ../../zero-schema.json:/opt/app/zero-schema.json
     networks:
-      - vps_network
-
+      - vps
 
   clerk_webhook:
-    container_name: clerk_webhook
     image: ghcr.io/baranuel/clerk-casefiles:latest
     env_file:
       - ./.env
@@ -95,4 +82,4 @@ services:
       - published: 1111
         target: 1111
     networks:
-      - vps_network
+      - vps
