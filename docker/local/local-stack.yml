@@ -14,6 +14,10 @@ services:
     build:
       context: ../../
       dockerfile: Dockerfile
+
+    ports:
+      - published: 4173
+        target: 4173
     env_file:
       - ./.env
     networks:
@@ -54,7 +58,9 @@ services:
   zero:
     image: rocicorp/zero:0.12.2025013100
     depends_on:
-      - postgres
+      postgres:
+        condition: service_healthy
+
     env_file:
       - ./.env
     environment:
