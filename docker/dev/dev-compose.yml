@@ -13,6 +13,10 @@ configs:
     name: schema_${GIT_COMMIT_HASH}
     file: ../../zero-schema.json
 
+networks:
+  vps:
+    external: true
+
 
 
 services:
@@ -39,6 +43,8 @@ services:
       -c hot_standby_feedback=on
     volumes:
       - data:/var/lib/postgresql/data
+    networks:
+      - vps
     configs:
       - source: seed
         target: /docker-entrypoint-initdb.d/seed.sql
@@ -62,6 +68,8 @@ services:
         target: /opt/app/zero-schema.json
     volumes:
       - zero_replica:/tmp
+    networks:
+      - vps
 
 
 
