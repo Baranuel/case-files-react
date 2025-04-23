@@ -32,9 +32,9 @@ services:
       retries: 5
 
     environment:
-      POSTGRES_USER: user
+      POSTGRES_USER: ${POSTGRES_USER}
       POSTGRES_DB: postgres
-      POSTGRES_PASSWORD: password
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
     command: |
       postgres 
       -c wal_level=logical
@@ -55,9 +55,9 @@ services:
     env_file:
       - ./.env
     environment:
-      ZERO_UPSTREAM_DB: "postgresql://user:password@postgres:5432/postgres"
-      ZERO_CVR_DB:     "postgresql://user:password@postgres:5432/postgres"
-      ZERO_CHANGE_DB:  "postgresql://user:password@postgres:5432/postgres"
+      ZERO_UPSTREAM_DB: "postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@postgres:5432/postgres"
+      ZERO_CVR_DB:     "postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@postgres:5432/postgres"
+      ZERO_CHANGE_DB:  "postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@postgres:5432/postgres"
       ZERO_REPLICA_FILE: /tmp/zstart_replica.db
       ZERO_SCHEMA_FILE: /opt/app/zero-schema.json
     ports:
