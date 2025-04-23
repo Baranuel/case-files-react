@@ -1,3 +1,17 @@
+version: '3.8'
+
+configs:
+  seed_sql:
+    file: ./seed.sql
+
+volumes:
+  data:
+    driver: local
+
+networks:
+  vps:
+    external: true
+    
 services:
   postgres:
     image: postgres:16.2-alpine
@@ -21,14 +35,9 @@ services:
       -c max_replication_slots=5 
       -c hot_standby=on 
       -c hot_standby_feedback=on
+    configs:
+      - source: seed_sql
+        target: /docker-entrypoint-initdb.d/seed.sql
     volumes:
       - data:/var/lib/postgresql/data
-      - ./seed.sql:/docker-entrypoint-initdb.d/seed.sql
 
-volumes:
-  data:
-    driver: local
-
-networks:
-  vps:
-    external: true
