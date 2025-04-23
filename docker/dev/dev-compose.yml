@@ -21,7 +21,9 @@ networks:
 
 services:
   postgres:
-    image: postgres:16.2-alpine
+    build:
+      context: .
+      dockerfile: dev-db.Dockerfile
     user: postgres
     restart: always
     healthcheck:
@@ -51,7 +53,9 @@ services:
 
 
   zero:
-    image: rocicorp/zero:0.12.2025013100
+    build:
+      context: .
+      dockerfile: dev-zero.Dockerfile
     env_file:
       - ./.env
     environment:
