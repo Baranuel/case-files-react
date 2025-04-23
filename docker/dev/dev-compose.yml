@@ -8,6 +8,7 @@ volumes:
     driver: local
   zero_replica:
     driver: local
+    
 
 services:
   frontend:
@@ -35,7 +36,7 @@ services:
       POSTGRES_USER: ${POSTGRES_USER}
       POSTGRES_DB: postgres
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
-    command: >
+    command: |
       postgres 
       -c wal_level=logical
       -c max_wal_senders=10 
@@ -44,7 +45,7 @@ services:
       -c hot_standby_feedback=on
     volumes:
       - zstart_pgdata:/var/lib/postgresql/data
-      - ../:/docker-entrypoint-initdb.d
+      - ./:/docker-entrypoint-initdb.d
     networks:
       - vps
 
