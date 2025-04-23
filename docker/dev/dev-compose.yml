@@ -47,10 +47,6 @@ services:
       - data:/var/lib/postgresql/data
     networks:
       - vps
-    configs:
-      - source: seed
-        target: /docker-entrypoint-initdb.d/seed.sql
-
 
   zero:
     build:
@@ -63,13 +59,10 @@ services:
       ZERO_CVR_DB:     "postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@postgres:5432/postgres"
       ZERO_CHANGE_DB:  "postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@postgres:5432/postgres"
       ZERO_REPLICA_FILE: /tmp/zstart_replica.db
-      ZERO_SCHEMA_FILE: /opt/app/zero-schema.json
+      ZERO_SCHEMA_FILE: ./zero-schema.json
     ports:
       - published: 4848
         target: 4848
-    configs:
-      - source: schema
-        target: /opt/app/zero-schema.json
     volumes:
       - zero_replica:/tmp
     networks:
