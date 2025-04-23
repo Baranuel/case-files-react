@@ -8,8 +8,10 @@ volumes:
 
 configs:
   seed:
+    name: seed_${github_sha}
     file: ./seed.sql
   schema:
+    name: schema_${github_sha}
     file: ../../zero-schema.json
 
 
