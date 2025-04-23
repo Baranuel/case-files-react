@@ -12,6 +12,12 @@ networks:
 
 
 services:
+  frontend:
+    image: ghcr.io/baranuel/casefiles:${GIT_COMMIT_HASH:-latest}
+    ports:
+      - published: 3000
+        target: 3000
+
   postgres:
     build:
       context: ../..
