@@ -26,7 +26,7 @@ services:
     user: postgres
     restart: always
     healthcheck:
-      test: 'pg_isready -U user --dbname=postgres'
+      test: pg_isready -U ${POSTGRES_USER} --dbname=postgres'
       interval: 10s
       timeout: 5s
       retries: 5
