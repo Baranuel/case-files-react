@@ -56,7 +56,7 @@ services:
       ZERO_CVR_DB:     "postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@postgres:5432/postgres"
       ZERO_CHANGE_DB:  "postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@postgres:5432/postgres"
       ZERO_REPLICA_FILE: /tmp/zstart_replica.db
-      ZERO_SCHEMA_FILE: /opt/app/zero-schema.json
+      ZERO_SCHEMA_FILE: ./zero-schema.json
     ports:
       - published: 4848
         target: 4848
