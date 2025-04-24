@@ -23,9 +23,7 @@ services:
       - vps
 
   postgres:
-    build:
-      context: ../..
-      dockerfile: docker/dev/dev-db.Dockerfile
+    image: postgres:16.2-alpine
     user: postgres
     restart: always
     healthcheck:
@@ -47,6 +45,7 @@ services:
       -c hot_standby_feedback=on
     volumes:
       - data:/var/lib/postgresql/data
+      - ./seed.sql:/docker-entrypoint-initdb.d/seed.sql
     networks:
       - vps
 
