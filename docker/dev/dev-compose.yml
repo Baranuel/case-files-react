@@ -51,9 +51,7 @@ services:
       - vps
 
   zero:
-    build:
-      context: ../..
-      dockerfile: docker/dev/dev-zero.Dockerfile
+    image: rocicorp/zero:0.12.2025013100
     env_file:
       - ./.env
     environment:
