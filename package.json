@@ -9,7 +9,7 @@
     "dev:zero-cache": "zero-cache-dev -p ./src/schema.ts",
     "dev:db-up": "docker compose --env-file ./docker/local/.env -f ./docker/local/local-stack.yml up -d",
     "dev:db-down": "docker compose --env-file ./docker/local/.env -f ./docker/local/local-stack.yml down",
-    "dev:stack": "docker compose --env-file ./docker/dev/.env -f ./docker/dev/dev-compose.yml up -d",
+    "dev:stack": "docker compose --env-file ./docker/local/.env -f ./docker/local/local-stack.yml up -d" ,
     "prod:clean": "source .env.production && docker volume rm -f docker_zstart_pgdata && rm -rf \"${ZERO_REPLICA_FILE}\"*",
     "dev:clean": "source .env && docker volume rm -f docker_zstart_pgdata && rm -rf \"${ZERO_REPLICA_FILE}\"*",
     "prod:build": "vite build --mode production",
