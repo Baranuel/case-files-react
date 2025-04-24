@@ -48,8 +48,8 @@ jobs:
       - name: rsync deployments
         uses: burnett01/rsync-deployments@7.0.2
         with:
-          switches: -avz --delete --exclude "node_modules"
-          path: .
+          switches: -avz --delete --exclude node_modules
+          path: ./
           remote_path: /apps/casefiles
           remote_host: ${{ secrets.SSH_HOST }}
           remote_key: ${{ secrets.SSH_PRIVATE_KEY }}
